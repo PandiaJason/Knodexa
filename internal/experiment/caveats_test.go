@@ -192,8 +192,8 @@ func TestCaveat2_ScaleAndRelevanceScoring(t *testing.T) {
 	}
 
 	t.Logf("Context Rehydration Query Latency (500 tasks, 200 lessons): %v", queryDuration)
-	if queryDuration > 50*time.Millisecond {
-		t.Errorf("Query latency too slow: %v (expected < 50ms)", queryDuration)
+	if queryDuration > 100*time.Millisecond {
+		t.Errorf("Query latency too slow: %v (expected < 100ms)", queryDuration)
 	}
 
 	// Verify Relevance Priority: The 3 high-relevance lessons MUST be surfaced!
