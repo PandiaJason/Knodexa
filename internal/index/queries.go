@@ -131,64 +131,122 @@ func (d *DB) GetUpstreamConstraints(taskID string) ([]string, error) {
 	return constraints, nil
 }
 
-// GetDecisionsForTask returns all verified decisions associated with taskID or its ancestors.
+// GetDecisionsForTask returns all verified decisions associated with taskID, its ancestors, or sibling subtasks.
 func (d *DB) GetDecisionsForTask(taskID string) ([]model.Node, error) {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
 
-	query := `
+	// Collect related task IDs (self, parent, siblings)
+	taskIDs := []string{taskID}
+	var parentID sql.NullString
+	_ = d.sqlDB.QueryRow(`SELECT parent_id FROM nodes WHERE id = ?;`, taskID).Scan(&parentID)
+	if parentID.Valid && parentID.String != "" {
+		taskIDs = append(taskIDs, parentID.String)
+		sRows, err := d.sqlDB.Query(`SELECT id FROM nodes WHERE parent_id = ?;`, parentID.String)
+		if err == nil {
+			for sRows.Next() {
+				var sibID string
+				if err := sRows.Scan(&sibID); err == nil && sibID != "" {
+					taskIDs = append(taskIDs, sibID)
+				}
+			}
+			sRows.Close()
+		}
+	}
+
+	placeholders := strings.Repeat("?,", len(taskIDs)-1) + "?"
+	args := make([]interface{}, len(taskIDs)*2)
+	for i, id := range taskIDs {
+		args[i] = id
+		args[len(taskIDs)+i] = id
+	}
+
+	query := fmt.Sprintf(`
 	SELECT id, type, parent_id, title, description, status,
 	       confidence, verification_status, source, created_at, updated_at,
 	       file_path, content_hash
 	FROM nodes
 	WHERE type = 'DECISION' AND status = 'VERIFIED'
-	  AND (parent_id = ? OR id IN (SELECT to_id FROM edges WHERE from_id = ? AND type = 'PRODUCED'))
+	  AND (parent_id IN (%s) OR id IN (SELECT to_id FROM edges WHERE from_id IN (%s) AND type = 'PRODUCED'))
 	ORDER BY created_at DESC;
-	`
-	rows, err := d.sqlDB.Query(query, taskID, taskID)
+	`, placeholders, placeholders)
+
+	rows, err := d.sqlDB.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	var decisions []model.Node
+	seen := make(map[string]bool)
 	for rows.Next() {
 		n, err := scanNode(rows)
 		if err != nil {
 			return nil, err
 		}
-		decisions = append(decisions, *n)
+		if !seen[n.ID] {
+			seen[n.ID] = true
+			decisions = append(decisions, *n)
+		}
 	}
 	return decisions, rows.Err()
 }
 
-// GetFailuresForTask returns recorded failures associated with taskID or its subtasks.
+// GetFailuresForTask returns recorded failures associated with taskID, its ancestors, or sibling subtasks.
 func (d *DB) GetFailuresForTask(taskID string) ([]model.FailureData, error) {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
 
-	query := `
+	taskIDs := []string{taskID}
+	var parentID sql.NullString
+	_ = d.sqlDB.QueryRow(`SELECT parent_id FROM nodes WHERE id = ?;`, taskID).Scan(&parentID)
+	if parentID.Valid && parentID.String != "" {
+		taskIDs = append(taskIDs, parentID.String)
+		sRows, err := d.sqlDB.Query(`SELECT id FROM nodes WHERE parent_id = ?;`, parentID.String)
+		if err == nil {
+			for sRows.Next() {
+				var sibID string
+				if err := sRows.Scan(&sibID); err == nil && sibID != "" {
+					taskIDs = append(taskIDs, sibID)
+				}
+			}
+			sRows.Close()
+		}
+	}
+
+	placeholders := strings.Repeat("?,", len(taskIDs)-1) + "?"
+	args := make([]interface{}, len(taskIDs))
+	for i, id := range taskIDs {
+		args[i] = id
+	}
+
+	query := fmt.Sprintf(`
 	SELECT id, task_id, summary, causal_details, attempted_at
 	FROM node_failures
-	WHERE task_id = ?
+	WHERE task_id IN (%s)
 	ORDER BY attempted_at DESC;
-	`
-	rows, err := d.sqlDB.Query(query, taskID)
+	`, placeholders)
+
+	rows, err := d.sqlDB.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	var failures []model.FailureData
+	seen := make(map[string]bool)
 	for rows.Next() {
 		var f model.FailureData
 		var dt string
 		if err := rows.Scan(&f.ID, &f.TaskID, &f.Summary, &f.CausalDetails, &dt); err != nil {
 			return nil, err
 		}
-		t, _ := time.Parse(time.RFC3339, dt)
-		f.AttemptedAt = t
-		failures = append(failures, f)
+		if !seen[f.ID] {
+			seen[f.ID] = true
+			t, _ := time.Parse(time.RFC3339, dt)
+			f.AttemptedAt = t
+			failures = append(failures, f)
+		}
 	}
 	return failures, rows.Err()
 }

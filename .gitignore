@@ -1,0 +1,7 @@
+# Binaries
+bin/
+knodexa
+
+# Ephemeral SQLite index and temp files
+.knodexa/cache.db*
+.knodexa/.tmp_*

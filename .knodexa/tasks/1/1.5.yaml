@@ -1,0 +1,7 @@
+id: "1.5"
+parent_id: "1"
+title: CLI & MCP Server
+goal: Machine and human interfaces via stdio JSON-RPC and CLI
+status: ACTIVE
+created_at: 2026-10-13T07:01:51.741078Z
+updated_at: 2026-10-13T07:01:51.741078Z

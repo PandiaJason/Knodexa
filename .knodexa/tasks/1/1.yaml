@@ -1,0 +1,10 @@
+id: "1"
+title: MVP Core Engine
+goal: Build deterministic local-first engineering memory core
+status: ACTIVE
+created_at: 2026-10-13T07:01:51.585504Z
+updated_at: 2026-10-13T07:01:51.585504Z
+constraints:
+    - Deterministic core
+    - No cloud dependencies
+    - Rebuildable SQLite index
