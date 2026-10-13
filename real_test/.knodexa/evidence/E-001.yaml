@@ -1,0 +1,9 @@
+id: E-001
+title: Heap Benchmark and Correctness Pass
+node_id: D-001
+evidence_type: BENCHMARK
+created_at: 2026-10-13T12:00:00Z
+command: go test -v -bench=. ./real_test/queue
+exit_code: 0
+output_summary: BenchmarkArrayHeapPushPop 347.3 ns/op, 0 goroutines leaked.
+verified_by: agent

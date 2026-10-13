@@ -1,0 +1,9 @@
+id: E-002
+title: Buffer Pool Cleanliness Test Pass
+node_id: L-017
+evidence_type: TEST_RUN
+created_at: 2026-10-13T12:00:00Z
+command: go test -v ./real_test/buffer
+exit_code: 0
+output_summary: TestBufferPoolCleanliness PASS
+verified_by: agent

@@ -1,0 +1,5 @@
+id: F-001
+task_id: A.1
+summary: Pointer-based linked list heap failed allocation budget
+causal_details: Heap node allocations caused 3.8x memory overhead and GC pressure.
+attempted_at: 2026-10-13T12:00:00Z

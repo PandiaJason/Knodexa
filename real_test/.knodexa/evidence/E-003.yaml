@@ -1,0 +1,9 @@
+id: E-003
+title: BulkEnqueue Buffer Reuse Test Pass
+node_id: D-002
+evidence_type: TEST_RUN
+created_at: 2026-10-13T12:00:00Z
+command: go test -v ./real_test/queue
+exit_code: 0
+output_summary: TestBulkEnqueueWithBufferReuse PASS
+verified_by: agent

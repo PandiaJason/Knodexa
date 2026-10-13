@@ -1,0 +1,9 @@
+id: A
+title: Priority Queue
+goal: Build concurrent priority queue
+status: ACTIVE
+created_at: 2026-10-13T07:14:24.881281Z
+updated_at: 2026-10-13T07:14:24.881281Z
+constraints:
+    - Preserve O(log N) heap invariant
+    - Zero background goroutine leaks

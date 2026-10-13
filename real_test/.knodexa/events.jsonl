@@ -1,0 +1,8 @@
+{"event_id":"evt-1791875664889350000","timestamp":"2026-10-13T07:14:24.881281Z","actor":"user","action":"CREATE_TASK","target_id":"A","payload":{"title":"Priority Queue"}}
+{"event_id":"evt-1791875664927374000","timestamp":"2026-10-13T07:14:24.921436Z","actor":"user","action":"CREATE_TASK","target_id":"A.1","payload":{"title":"Evaluate Heap Layout"}}
+{"event_id":"evt-1791875708785988000","timestamp":"2026-10-13T07:15:08.77834Z","actor":"user","action":"VERIFY_KNOWLEDGE","target_id":"D-001","payload":{"evidence_ids":["E-001"],"notes":""}}
+{"event_id":"evt-1791875719658304000","timestamp":"2026-10-13T07:15:19.65214Z","actor":"user","action":"CREATE_TASK","target_id":"B","payload":{"title":"Frame Buffer Pool"}}
+{"event_id":"evt-1791875719695680000","timestamp":"2026-10-13T07:15:19.690543Z","actor":"user","action":"CREATE_TASK","target_id":"B.1","payload":{"title":"Pool Recycling"}}
+{"event_id":"evt-1791875746760445000","timestamp":"2026-10-13T07:15:46.747226Z","actor":"user","action":"VERIFY_KNOWLEDGE","target_id":"L-017","payload":{"evidence_ids":["E-002"],"notes":""}}
+{"event_id":"evt-1791875761417028000","timestamp":"2026-10-13T07:16:01.411421Z","actor":"user","action":"CREATE_TASK","target_id":"A.2","payload":{"title":"BulkEnqueue with Pooling"}}
+{"event_id":"evt-1791875795315616000","timestamp":"2026-10-13T07:16:35.304564Z","actor":"user","action":"VERIFY_KNOWLEDGE","target_id":"D-002","payload":{"evidence_ids":["E-003"],"notes":""}}

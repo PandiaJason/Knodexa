@@ -1,0 +1,6 @@
+id: B
+title: Frame Buffer Pool
+goal: High-throughput buffer recycling
+status: ACTIVE
+created_at: 2026-10-13T07:15:19.65214Z
+updated_at: 2026-10-13T07:15:19.65214Z

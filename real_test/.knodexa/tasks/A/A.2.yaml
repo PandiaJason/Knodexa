@@ -1,0 +1,9 @@
+id: A.2
+parent_id: A
+title: BulkEnqueue with Pooling
+goal: Add bulk buffer ingestion
+status: ACTIVE
+created_at: 2026-10-13T07:16:01.411421Z
+updated_at: 2026-10-13T07:16:01.411421Z
+touches_files:
+    - queue/queue.go

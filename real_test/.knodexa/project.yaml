@@ -1,0 +1,12 @@
+id: proj_root
+name: RealWorld Continuity Test
+description: Testing agent continuity with live Go code
+status: ACTIVE
+created_at: 2026-10-13T07:14:16.441819Z
+updated_at: 2026-10-13T07:14:16.441819Z
+global_constraints:
+    - 'Deterministic behavior: zero LLM calls in core engine'
+    - Evidence-driven verification for decisions and lessons
+    - Preserve existing repository constraints and public APIs
+rules_files:
+    - AGENTS.md
