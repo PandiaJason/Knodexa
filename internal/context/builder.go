@@ -31,22 +31,26 @@ func (b *Builder) Build(taskID string, tokenBudget int) (*Package, error) {
 		tokenBudget = 1500
 	}
 
-	// 1. Retrieve task
-	taskData, err := b.store.ReadTask(taskID)
-	if err != nil {
-		// Fallback to SQLite
-		node, nErr := b.db.GetNode(taskID)
-		if nErr != nil {
-			return nil, fmt.Errorf("task not found: %s", taskID)
-		}
+	// 1. Retrieve task (check SQLite index first for sub-millisecond retrieval)
+	var taskData *model.TaskData
+	node, nErr := b.db.GetNode(taskID)
+	if nErr == nil && node != nil {
 		taskData = &model.TaskData{
-			ID:          node.ID,
-			ParentID:    node.ParentID,
-			Title:       node.Title,
-			Goal:        node.Description,
-			Status:      model.TaskStatus(node.Status),
-			CreatedAt:   node.CreatedAt,
-			UpdatedAt:   node.UpdatedAt,
+			ID:           node.ID,
+			ParentID:     node.ParentID,
+			Title:        node.Title,
+			Goal:         node.Description,
+			Status:       model.TaskStatus(node.Status),
+			CreatedAt:    node.CreatedAt,
+			UpdatedAt:    node.UpdatedAt,
+			TouchesFiles: node.TouchesFiles,
+		}
+	} else {
+		// Fallback to disk scan
+		var err error
+		taskData, err = b.store.ReadTask(taskID)
+		if err != nil {
+			return nil, fmt.Errorf("task not found: %s", taskID)
 		}
 	}
 

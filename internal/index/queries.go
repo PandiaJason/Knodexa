@@ -21,7 +21,24 @@ func (d *DB) GetNode(id string) (*model.Node, error) {
 	FROM nodes WHERE id = ? LIMIT 1;
 	`
 	row := d.sqlDB.QueryRow(query, id)
-	return scanNode(row)
+	node, err := scanNode(row)
+	if err != nil {
+		return nil, err
+	}
+
+	// Fetch touches files from node_files
+	fRows, fErr := d.sqlDB.Query(`SELECT file_path FROM node_files WHERE node_id = ?;`, id)
+	if fErr == nil {
+		for fRows.Next() {
+			var fp string
+			if fRows.Scan(&fp) == nil && fp != "" {
+				node.TouchesFiles = append(node.TouchesFiles, fp)
+			}
+		}
+		fRows.Close()
+	}
+
+	return node, nil
 }
 
 // GetNodesByType returns all nodes of a specific NodeType.
