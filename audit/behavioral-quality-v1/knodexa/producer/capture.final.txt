@@ -1,0 +1,3 @@
+Recorded `work-prod`’s established approach through Knodexa, including the `handlers/` scope, `handlers/reference.go` source reference, raw delegation and observer rules, and alias `production webhook delivery`.
+
+`go test ./...` passed. Implementation unchanged; no extension implemented.

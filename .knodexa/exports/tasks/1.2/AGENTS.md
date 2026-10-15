@@ -25,7 +25,11 @@ Implement continuity behavior in shared deterministic Go packages, with CLI and 
 - Prevent task-switch contamination through explicit relationships or unambiguous file scopes and return a target context boundary; never select authority by recency.
 - Resolve incoming requests against recorded work identity before creating tasks; preserve existing completion state and distinguish continuation, independent work, and intentional replacement.
 - Use Go for the application and required validation; retain one check wrapper and historical evidence rather than obsolete experiment scripts.
-- Reference: `internal/approach/approach.go`, recorded SHA256 `39bec4037609fdc6eecebf673471c1c772587eb5c58bb94327b4646b46e39c85`.
+- Reference: `internal/approach/approach.go`, recorded SHA256 `0e3b4957429ec9bc74508e29feedef79d8780a146273fa2f44b4bee8f0f771d2`.
 - Reference: `internal/continuity/resume.go`, recorded SHA256 `1634577f68815e4c488ad148220ff57cae555de4b86c74a212504a1a5ef3b608`.
 - Reference: `internal/identity/resolve.go`, recorded SHA256 `f12904a2d68f1e9f5701e591ab3c6146ec763b0cd689519d8b2a11e0cc679253`.
+- Required behavior check: continuity and adapter acceptance; command `go test -race ./internal/continuity ./internal/cli ./internal/mcp`.
+  - Protected test/specification: `internal/continuity/behavior_test.go`, SHA256 `14363a1a77426fb9657ff3b98ded892d9889a7bb0b03c4c4d48c4faf6822bec0`.
+  - Protected test/specification: `internal/cli/record_test.go`, SHA256 `387c14918486fd2e7eda8efa4f5c4ccc35c9de9629725e485f4b3fb09d27be9c`.
+  - Protected test/specification: `internal/mcp/behavior_test.go`, SHA256 `c27d90b12f2acb00a77800bec371d26dd5efb5f5c6aad0a521d72ed2f2916978`.
 

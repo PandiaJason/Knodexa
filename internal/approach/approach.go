@@ -130,6 +130,9 @@ func Reuse(store *storage.Storage, db *index.DB, idx *index.Indexer, taskID stri
 
 // Set records an explicitly selected approach and captures reference hashes.
 func ValidateValue(store *storage.Storage, value *model.TaskApproach) error {
+	if err := validateBehaviorChecks(store, value.BehaviorChecks); err != nil {
+		return err
+	}
 	for _, binding := range value.ReferenceReconciliations {
 		data, err := readWithin(store.RootDir(), binding.CurrentPath)
 		if err != nil {

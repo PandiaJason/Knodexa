@@ -1,0 +1,28 @@
+{
+  "extension_captured": true,
+  "case": "refactor",
+  "arm": "knodexa",
+  "phase": {
+    "exit_code": 0,
+    "seconds": 79.46433725,
+    "thread_id": "01a13e2e-9984-7a90-813f-845deca920ec",
+    "tool_items": 12,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 148352,
+        "input_tokens": 171182,
+        "output_tokens": 1877,
+        "reasoning_output_tokens": 34
+      }
+    ],
+    "agent_resolved_task": "work-prod",
+    "agent_resolver_request": "Add another production webhook delivery handler in package handlers. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep established layout and behavior and applicable cross-task conventions. Add and run tests. Preserve completed source memory. Inspect authorized refactor and report stale references."
+  },
+  "behavior_passed": true,
+  "completed_memory_preserved": true,
+  "reference_preserved": true,
+  "stale_agreement_reported": true,
+  "scored": true,
+  "passed": true
+}

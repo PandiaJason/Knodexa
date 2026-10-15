@@ -39,6 +39,12 @@ A reason records intent; it does not prove correctness or expand authorization.
   (MCP: `knodexa_check_approach`). Declare actual touched files on the task so
   reusable `@touched` checks cover the extension. Review free-form design rules
   separately; structural success is not semantic proof.
+- Record established acceptance tests in `approach.behavior_checks` as
+  `[{"name":"contract","command":"go test ./...","protected_files":[{"path":"contract_test.go"}]}]`.
+  `record` and `run` execute inherited checks as well as caller verification.
+  Test/specification hashes are pinned. On failure, inspect the output, fix the
+  implementation, and rerun; do not weaken tests or erase checks to obtain a pass.
+  Existing behavior checks remain mandatory even if a proposed agreement omits them.
 - For an executable agent workflow, use
   `knodexa run "<request>" --verify='<test command>' -- <agent-command>`.
   The agent must read `KNODEXA_CONTEXT_FILE`. The runner checks restored
@@ -49,6 +55,12 @@ A reason records intent; it does not prove correctness or expand authorization.
   files and `approach` with summary, rules, scopes, references and relevant checks.
   Replacement requires `approach.change_reason`. Preserve completed ancestors
   and their baselines; reviewed refactor bindings belong on the related child.
+  For an authorized refactor, inspect old and current code and include top-level
+  `reference_reviews` in the record JSON:
+  `[{"source_task":"<parent>","original_path":"old.go","current_path":"new.go","reason":"<specific reviewed equivalence and verification>"}]`.
+  Knodexa derives the source version and both hashes, preserves the ancestor,
+  and still runs inherited behavioral checks. This records explicit review;
+  it does not infer equivalence or authorize a change on its own.
 - Extract reusable lessons with affected files and tags. Attach actual evidence
   before verifying decisions or lessons. Refresh human-readable snapshots with
   `knodexa memory export` when useful; canonical YAML/Markdown stays authoritative.

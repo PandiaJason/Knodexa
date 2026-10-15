@@ -1,0 +1,4 @@
+=== RUN   TestLiveBehavioralQualityWorkflow
+--- PASS: TestLiveBehavioralQualityWorkflow (124.30s)
+PASS
+ok  	knodexa/internal/experiment	126.098s

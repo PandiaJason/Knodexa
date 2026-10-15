@@ -32,6 +32,8 @@ Knodexa makes continuity inspectable:
   knowledge points to a verified replacement.
 - **Coordinate task updates:** atomic alias merges retain concurrent additions;
   stale full-task replacements return a conflict.
+- **Enforce recorded behavior:** inherited acceptance commands run before verified
+  capture, with protected test/specification hashes and named failure output.
 
 Knodexa stores explicit project understanding, not hidden model reasoning.
 
@@ -106,6 +108,63 @@ knodexa agents install
 The installer adds a managed protocol block to `AGENTS.md`, preserving unrelated
 instructions. Configure your coding host to load project guidance and make the
 CLI available in its environment.
+
+### Preserve coding quality with executable acceptance
+
+Include explicit acceptance checks in an agreement's `approach`:
+
+```json
+{
+  "behavior_checks": [{
+    "name": "delivery contract",
+    "command": "go test -count=1 ./handlers",
+    "protected_files": [{"path": "handlers/contract_test.go"}]
+  }]
+}
+```
+
+Use tests that exercise the extension's required behavior: raw input, exact error
+identity, callback order, or other project-specific semantics. Tests covering only
+the old reference do not establish correctness of a new entrypoint. These checks
+are explicit repository commands; review their commands and coverage when recording
+the agreement. Knodexa captures input hashes and retains the checks in compact context.
+
+Both `record` and `run` execute inherited checks in addition to caller verification.
+A passing weak caller test cannot skip the recorded acceptance. Changed protected
+tests, failed behavior, or erased check definitions block verified capture. Failed
+commands leave their code/file edits in place for repair. Direct edits outside these
+workflows remain possible; this is an opt-in verification workflow.
+
+For an intentional acceptance change, review a complete approach JSON containing
+`change_reason`, install it with `knodexa approach set <task-id> --file=approach.json`,
+then verify and record the work. Installing an agreement defines expectations;
+it does not establish that code passes them.
+
+[Quality enforcement evidence](audit/behavioral-quality-v1/REPORT.md): four
+compilable behavior regressions were rejected despite passing weak caller tests;
+a fresh refactor agent passed independent checks and saved a valid child agreement.
+
+### Record an explicitly reviewed refactor
+
+After inspecting an authorized relocation or rename, a child agreement JSON can
+include this top-level field alongside `files` and `approach`:
+
+```json
+{
+  "reference_reviews": [{
+    "source_task": "delivery",
+    "original_path": "handlers/reference.go",
+    "current_path": "handlers/transport.go",
+    "reason": "Reviewed the authorized rename; raw delegation and acceptance remain unchanged"
+  }]
+}
+```
+
+`record` derives the inherited version and both hashes, runs the inherited
+acceptance, and saves the child-local binding. The completed parent's agreement
+and baseline stay intact. The reason records the caller's review; semantic
+equivalence still requires appropriate tests and review. `knodexa record --help`
+describes both fields.
 
 ### Establish an agreement after correct work
 

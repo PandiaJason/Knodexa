@@ -1,0 +1,69 @@
+{
+  "behavior_checks": [
+    {
+      "source_task": "work-prod",
+      "name": "production webhook acceptance",
+      "command": [
+        "/bin/sh",
+        "-c",
+        "cp quality/identity.go.txt handlers/hard_independent_test.go && cp quality/lesson.go.txt handlers/hard_lesson_test.go && go test -count=1 ./..."
+      ],
+      "exit_code": 0,
+      "output": "ok  \tidentitysample/contracts\t0.528s\nok  \tidentitysample/handlers\t0.712s\n"
+    },
+    {
+      "source_task": "webhook-extension",
+      "name": "contract",
+      "command": [
+        "/bin/sh",
+        "-c",
+        "go test ./..."
+      ],
+      "exit_code": 0,
+      "output": "ok  \tidentitysample/contracts\t(cached)\nok  \tidentitysample/handlers\t(cached)\n"
+    }
+  ],
+  "task_id": "webhook-extension",
+  "work_id": "work-prod",
+  "version": 1,
+  "recorded": true,
+  "verification": [
+    {
+      "command": [
+        "/bin/sh",
+        "-c",
+        "go test ./..."
+      ],
+      "exit_code": 0,
+      "output": "ok  \tidentitysample/contracts\t(cached)\nok  \tidentitysample/handlers\t0.523s\n"
+    }
+  ],
+  "checks": {
+    "task_id": "webhook-extension",
+    "structural_checks_passed": true,
+    "semantic_review_required": true,
+    "results": [
+      {
+        "source_task": "work-prod",
+        "path": "handlers/transport.go",
+        "kind": "reference",
+        "passed": true,
+        "detail": "reference unchanged"
+      },
+      {
+        "source_task": "webhook-extension",
+        "path": "handlers/transport.go",
+        "kind": "reference",
+        "passed": true,
+        "detail": "reference unchanged"
+      },
+      {
+        "source_task": "webhook-extension",
+        "path": "contracts/version.go",
+        "kind": "reference",
+        "passed": true,
+        "detail": "reference unchanged"
+      }
+    ]
+  }
+}

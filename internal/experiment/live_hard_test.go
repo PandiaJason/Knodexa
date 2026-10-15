@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"knodexa/internal/approach"
+	"knodexa/internal/codegraph"
 	"knodexa/internal/identity"
 	"knodexa/internal/index"
 	"knodexa/internal/model"
@@ -37,16 +38,17 @@ type hardFixture struct {
 	protected           []byte
 }
 type hardResult struct {
-	Case      string    `json:"case"`
-	Arm       string    `json:"arm"`
-	Phase     livePhase `json:"phase"`
-	Behavior  bool      `json:"behavior_passed"`
-	Memory    bool      `json:"completed_memory_preserved"`
-	Reference bool      `json:"reference_preserved"`
-	Stale     bool      `json:"stale_agreement_reported"`
-	Scored    bool      `json:"scored"`
-	Passed    bool      `json:"passed"`
-	Error     string    `json:"error,omitempty"`
+	ExtensionCaptured bool      `json:"extension_captured,omitempty"`
+	Case              string    `json:"case"`
+	Arm               string    `json:"arm"`
+	Phase             livePhase `json:"phase"`
+	Behavior          bool      `json:"behavior_passed"`
+	Memory            bool      `json:"completed_memory_preserved"`
+	Reference         bool      `json:"reference_preserved"`
+	Stale             bool      `json:"stale_agreement_reported"`
+	Scored            bool      `json:"scored"`
+	Passed            bool      `json:"passed"`
+	Error             string    `json:"error,omitempty"`
 }
 
 func hardWrite(t *testing.T, path, body string) {
@@ -327,6 +329,60 @@ func runHardCase(t *testing.T, base hardFixture, out, name string) hardResult {
 		result.Stale = result.Stale || strings.Contains(lower, word)
 	}
 	result.Passed = result.Scored && result.Behavior && result.Memory && result.Reference && (name != "refactor" || result.Stale)
+	if os.Getenv("KNODEXA_GRADE_EXTENSION_CAPTURE") == "1" && f.arm == "knodexa" {
+		store := storage.NewStorage(f.root)
+		db, err := index.Open(filepath.Join(store.KnodexaDir(), "cache.db"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer db.Close()
+		idx := index.NewIndexer(db, store)
+		if err := idx.Sync(); err != nil {
+			t.Fatal(err)
+		}
+		tasks, err := store.ListTasks()
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, task := range tasks {
+			if task.ID == "work-prod" || task.Approach == nil || len(task.CodeAnchors) == 0 {
+				continue
+			}
+			contracts, err := approach.Resolve(db, task.ID)
+			if err != nil {
+				continue
+			}
+			inherited := false
+			for _, contract := range contracts {
+				if contract.SourceTask == "work-prod" {
+					inherited = true
+				}
+			}
+			if !inherited {
+				continue
+			}
+			report, err := approach.Check(store, db, task.ID)
+			if err != nil || !report.StructuralChecksPassed {
+				continue
+			}
+			current := true
+			webhook := false
+			for _, saved := range task.CodeAnchors {
+				anchor, err := codegraph.Read(f.root, saved.Path)
+				if err != nil || anchor.SHA256 != saved.SHA256 {
+					current = false
+				}
+				for _, symbol := range saved.Symbols {
+					if symbol == "HandleWebhook" {
+						webhook = true
+					}
+				}
+			}
+			if current && webhook {
+				result.ExtensionCaptured = true
+			}
+		}
+	}
 	filepath.WalkDir(filepath.Join(f.root, "handlers"), func(path string, entry os.DirEntry, err error) error {
 		if err != nil {
 			return err

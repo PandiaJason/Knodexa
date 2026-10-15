@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"knodexa/internal/approach"
 	"knodexa/internal/model"
+	"os"
 	"strings"
 )
 
@@ -54,6 +55,7 @@ func (a *App) runApproach(args []string) error {
 
 	case "set":
 		fs := flag.NewFlagSet("approach set", flag.ContinueOnError)
+		file := fs.String("file", "", "Complete approach JSON, including behavior_checks; do not combine with inline agreement flags")
 		summary := fs.String("summary", "", "Established implementation pattern")
 		reason := fs.String("reason", "", "Reason for intentionally replacing an agreement")
 		var astChecks repeatedStrings
@@ -72,6 +74,24 @@ func (a *App) runApproach(args []string) error {
 			return fmt.Errorf("approach set needs exactly one task ID")
 		}
 		value := model.TaskApproach{Summary: *summary, Rules: rules, SkillFiles: skills, Scopes: scopes, ChangeReason: *reason}
+		if *file != "" {
+			mixed := false
+			fs.Visit(func(f *flag.Flag) {
+				if f.Name != "file" {
+					mixed = true
+				}
+			})
+			if mixed {
+				return fmt.Errorf("--file cannot be combined with inline agreement flags; include change_reason in JSON")
+			}
+			data, err := os.ReadFile(*file)
+			if err != nil {
+				return err
+			}
+			if err := json.Unmarshal(data, &value); err != nil {
+				return err
+			}
+		}
 		for _, spec := range astChecks {
 			parts := strings.SplitN(spec, "::", 3)
 			if len(parts) != 3 {

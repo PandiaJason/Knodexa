@@ -1,0 +1,8 @@
+id: E-protected-acceptance-lesson
+title: Reviewed behavioral gates and indexed live extension proof
+node_id: L-protect-executable-acceptance
+evidence_type: MANUAL_SIGN_OFF
+created_at: 2026-10-15T06:31:35Z
+exit_code: 0
+verified_by: Codex implementation and artifact review
+output_summary: 'Reviewed audit/behavioral-quality-v1/regression-tests.log, results.json, actual record-result.json and self-record.json. All declared live endpoints pass; root agreement version 10 is recorded after full vet/race/standalone validation. Historical superiority comparison unchanged. Coverage and direct-edit limitations are documented.'

@@ -1,0 +1,66 @@
+approach_history:
+    - version: 1
+      scopes:
+        - handlers/
+      summary: Production webhook delivery delegates raw input exactly once through the injected Transformer, with optional ordered observer hooks and unchanged result, error, and panic identity.
+      rules:
+        - Pass the original raw input to the injected service Transform exactly once; do not trim, normalize, coerce, or retry.
+        - Return the service result and error unchanged, including the result returned alongside an error.
+        - When an observer is present, call Started with the original input before invoking the service, and Finished with the original result only after success.
+        - Do not recover service or observer panics. A Started panic propagates unchanged before service invocation; a Finished panic propagates unchanged after exactly one successful service invocation.
+        - Preserve the existing public APIs and deterministic behavior with zero LLM calls in the core engine.
+        - Preserve the reviewed production implementation. Adding a future production handler entrypoint requires HandlerContractVersion() string returning raw-v1 under verified lesson L-sdk-contract; no extension is implemented in this capture.
+      references:
+        - path: handlers/reference.go
+          sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+      recorded_at: 2026-10-15T06:09:53.703735Z
+work_id: work-prod
+code_anchors:
+    - path: handlers/reference.go
+      sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+      symbols:
+        - Handle
+        - Observer
+        - Transformer
+aliases:
+    - production webhook delivery
+approach:
+    behavior_checks:
+        - name: production webhook acceptance
+          command: cp quality/identity.go.txt handlers/hard_independent_test.go && cp quality/lesson.go.txt handlers/hard_lesson_test.go && go test -count=1 ./...
+          protected_files:
+            - path: quality/identity.go.txt
+              sha256: 5517c5e82ef807d49e9e3b16b0b7fe0f9b1aff6b21a5147eda9d7a3c1e54ad41
+            - path: quality/lesson.go.txt
+              sha256: 76059a1f39fa018a5e2ab6a87d169fbbe39311031daab274a3bd9646454c4430
+    version: 2
+    change_reason: Owner attaches explicit protected acceptance templates for future production handler extensions
+    scopes:
+        - handlers/
+    summary: Production webhook delivery delegates raw input exactly once through the injected Transformer, with optional ordered observer hooks and unchanged result, error, and panic identity.
+    rules:
+        - Pass the original raw input to the injected service Transform exactly once; do not trim, normalize, coerce, or retry.
+        - Return the service result and error unchanged, including the result returned alongside an error.
+        - When an observer is present, call Started with the original input before invoking the service, and Finished with the original result only after success.
+        - Do not recover service or observer panics. A Started panic propagates unchanged before service invocation; a Finished panic propagates unchanged after exactly one successful service invocation.
+        - Preserve the existing public APIs and deterministic behavior with zero LLM calls in the core engine.
+        - Preserve the reviewed production implementation. Adding a future production handler entrypoint requires HandlerContractVersion() string returning raw-v1 under verified lesson L-sdk-contract; no extension is implemented in this capture.
+    references:
+        - path: handlers/reference.go
+          sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+    recorded_at: 2026-10-15T06:10:00.818563Z
+id: work-prod
+title: Production event forwarding
+goal: Production webhook delivery through injected service
+status: COMPLETED
+created_at: 0001-01-01T00:00:00Z
+updated_at: 2026-10-15T06:10:00.818563Z
+constraints:
+    - Raw input delegated exactly once; preserve result/error identity
+    - Observer Started before service; Finished only on success
+    - No trimming, coercion, retry or panic recovery
+touches_files:
+    - handlers/reference.go
+baseline_commit: 5a8b7d22dd87ffd64d7125faed38c7f02aac19e2
+required_verification:
+    - Raw inputs, service substitution, observer ordering and error identity

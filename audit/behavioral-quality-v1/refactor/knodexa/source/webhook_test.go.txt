@@ -1,0 +1,51 @@
+package handlers
+
+import (
+	"reflect"
+	"testing"
+)
+
+type panicObserver struct {
+	events *[]string
+	stage  string
+	token  any
+}
+
+func (o *panicObserver) Started(any) {
+	*o.events = append(*o.events, "started")
+	if o.stage == "started" {
+		panic(o.token)
+	}
+}
+func (o *panicObserver) Finished(any) {
+	*o.events = append(*o.events, "finished")
+	if o.stage == "finished" {
+		panic(o.token)
+	}
+}
+
+func TestWebhookObserverPanics(t *testing.T) {
+	for _, stage := range []string{"started", "finished"} {
+		t.Run(stage, func(t *testing.T) {
+			events := []string{}
+			token := &struct{}{}
+			service := &auditService{events: &events, result: token}
+			observer := &panicObserver{events: &events, stage: stage, token: token}
+			defer func() {
+				if got := recover(); got != token {
+					t.Fatalf("panic identity: %v", got)
+				}
+				wantCalls := 0
+				wantEvents := []string{"started"}
+				if stage == "finished" {
+					wantCalls = 1
+					wantEvents = []string{"started", "transform", "finished"}
+				}
+				if service.calls != wantCalls || !reflect.DeepEqual(events, wantEvents) {
+					t.Fatalf("calls=%d events=%v", service.calls, events)
+				}
+			}()
+			HandleWebhook(token, service, observer)
+		})
+	}
+}

@@ -25,10 +25,11 @@ type CommandOutcome struct {
 	Output   string   `json:"output"`
 }
 type RunResult struct {
-	Prepared *PreparedWork    `json:"prepared"`
-	Commands []CommandOutcome `json:"commands"`
-	Captured bool             `json:"captured"`
-	Checks   *approach.Report `json:"checks,omitempty"`
+	BehaviorChecks []BehaviorOutcome `json:"behavior_checks,omitempty"`
+	Prepared       *PreparedWork     `json:"prepared"`
+	Commands       []CommandOutcome  `json:"commands"`
+	Captured       bool              `json:"captured"`
+	Checks         *approach.Report  `json:"checks,omitempty"`
 }
 
 // Run is opt-in: it cannot intercept unrelated clients' edit tools. The invoked
@@ -44,6 +45,9 @@ func (s *Service) Run(request identity.Request, budget int, options RunOptions) 
 	result := &RunResult{Prepared: prepared}
 	if prepared.Status != "resolved" || prepared.NeedsReview {
 		return result, fmt.Errorf("work identity or established agreement needs review before execution")
+	}
+	if err := approach.CheckBehaviorInputs(s.store, prepared.Context.EstablishedApproach); err != nil {
+		return result, err
 	}
 	originalTask, err := s.db.GetTaskData(prepared.SelectedTask)
 	if err != nil {
@@ -100,7 +104,14 @@ func (s *Service) Run(request identity.Request, budget int, options RunOptions) 
 			return result, fmt.Errorf("verification failed; memory not captured")
 		}
 	}
+	result.BehaviorChecks, err = s.runBehaviorChecks(prepared.Context.EstablishedApproach, timeout)
+	if err != nil {
+		return result, err
+	}
 	if err := s.idx.Sync(); err != nil {
+		return result, err
+	}
+	if err := s.assertBehaviorContracts(prepared.SelectedTask, prepared.Context.EstablishedApproach); err != nil {
 		return result, err
 	}
 	// Evaluate the restored agreement, not an agreement the command could weaken.

@@ -61,3 +61,5 @@
 {"from_id":"L-b8262466707b3790ed1e458973c9dbb4","to_id":"E-c63f1b0f0d1f92ae346ea34805a34066","type":"VERIFIED_BY","created_at":"2026-10-15T03:54:29.469541Z"}
 {"from_id":"L-b8262466707b3790ed1e458973c9dbb4","to_id":"E-c63f1b0f0d1f92ae346ea34805a34066","type":"VERIFIED_BY","created_at":"2026-10-15T03:55:06.35872Z"}
 {"from_id":"L-grade-extension-persistence","to_id":"E-extension-persistence-review","type":"VERIFIED_BY","created_at":"2026-10-15T05:10:18.404839Z"}
+{"from_id":"L-protect-executable-acceptance","to_id":"E-protected-acceptance-lesson","type":"VERIFIED_BY","created_at":"2026-10-15T06:32:27.324358Z"}
+{"from_id":"D-behavioral-quality-contracts","to_id":"E-behavioral-quality-implementation","type":"VERIFIED_BY","created_at":"2026-10-15T06:33:10.267871Z"}

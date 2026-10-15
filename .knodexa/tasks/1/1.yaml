@@ -158,6 +158,26 @@ approach_history:
         - path: internal/identity/resolve.go
           sha256: f12904a2d68f1e9f5701e591ab3c6146ec763b0cd689519d8b2a11e0cc679253
       recorded_at: 2026-10-14T17:55:29.551195Z
+    - version: 9
+      change_reason: Verify cross-process task merge locks, stale-snapshot rejection and serialized SQLite initialization and synchronization; retain original failures and limited scope.
+      summary: Implement continuity behavior in shared deterministic Go packages, with CLI and MCP adapters using those packages.
+      rules:
+        - Keep canonical Markdown/YAML authoritative and the SQLite cache rebuildable
+        - Preserve the deterministic zero-LLM core
+        - Choose approach inheritance through explicit parent and reuse relationships, never task-name prefixes
+        - Preserve established rules and acceptance criteria when compacting context
+        - Treat reference/literal checks as structural evidence; review semantic design consistency separately
+        - Prevent task-switch contamination through explicit relationships or unambiguous file scopes and return a target context boundary; never select authority by recency.
+        - Resolve incoming requests against recorded work identity before creating tasks; preserve existing completion state and distinguish continuation, independent work, and intentional replacement.
+        - Use Go for the application and required validation; retain one check wrapper and historical evidence rather than obsolete experiment scripts.
+      references:
+        - path: internal/approach/approach.go
+          sha256: 39bec4037609fdc6eecebf673471c1c772587eb5c58bb94327b4646b46e39c85
+        - path: internal/continuity/resume.go
+          sha256: 1634577f68815e4c488ad148220ff57cae555de4b86c74a212504a1a5ef3b608
+        - path: internal/identity/resolve.go
+          sha256: f12904a2d68f1e9f5701e591ab3c6146ec763b0cd689519d8b2a11e0cc679253
+      recorded_at: 2026-10-14T18:26:55.455112Z
 work_id: "1"
 code_anchors:
     - path: internal/storage/fs.go
@@ -347,7 +367,7 @@ code_anchors:
         - knodexa/internal/storage
         - strings
     - path: internal/context/types.go
-      sha256: 806ab4d0ccea73b05b370c67802091bd653ef7154f33d3bf70097c5296e9ffc1
+      sha256: 0e1eec4435a9903b11782e3cfaaee07096ae5ca563a7c2f6321cdc3fe5d1174f
       symbols:
         - BaselineInfo
         - Boundary
@@ -381,10 +401,11 @@ code_anchors:
         - strings
         - time
     - path: internal/model/node.go
-      sha256: 6249fd67c216b177b2b05fc441ef8ce15dafc643b032cdc399bc0fa2ee26254d
+      sha256: 62e3844aca2a7c679d5fb207b39e1fd5b2994cac01122195e7f8089614d04e69
       symbols:
         - ApproachCheck
         - ApproachReference
+        - BehaviorCheck
         - DecisionDocument
         - DecisionFrontmatter
         - EvidenceData
@@ -409,7 +430,7 @@ code_anchors:
         - flag
         - fmt
     - path: internal/mcp/tools.go
-      sha256: e1a378d8f3dbe4e42b3ed20839bacc3360e7423d90b30b1edab701cdc0868e69
+      sha256: 0358ad16dcd11e1bd6d0b5895cdea6380d033aef353591cdf74c6925363e7cfb
       symbols:
         - ListTools
         - NewToolHandler
@@ -424,6 +445,7 @@ code_anchors:
         - ToolHandler.handleResumeTask
         - ToolHandler.handleTaskStatus
         - ToolHandler.handleVerify
+        - behaviorCheckSchema
         - contextOptions
         - newKnowledgeID
         - referenceReconciliationSchema
@@ -488,7 +510,7 @@ code_anchors:
         - strings
         - unicode
     - path: internal/continuity/record.go
-      sha256: fb1372c49cdc287f0466ffa2ab5e8e4ce27d0e7ded6ce6fcbd9365402bbddc04
+      sha256: c390d28e9c3b1eae3b11caa26c5a27e5ce740f84a1c9421b18adf47008d0de0e
       symbols:
         - RecordInput
         - RecordResult
@@ -520,7 +542,7 @@ code_anchors:
         - knodexa/internal/storage
         - time
     - path: internal/approach/approach.go
-      sha256: 39bec4037609fdc6eecebf673471c1c772587eb5c58bb94327b4646b46e39c85
+      sha256: 0e3b4957429ec9bc74508e29feedef79d8780a146273fa2f44b4bee8f0f771d2
       symbols:
         - Check
         - CheckContracts
@@ -550,13 +572,281 @@ code_anchors:
         - path/filepath
         - strings
         - time
+    - path: AGENTS.md
+      sha256: f92c2318dd4451a980b3dd76853a0af8058c357a1df5922b38557ad4aa8fbf3e
+    - path: README.md
+      sha256: b15126d2e7b4255759e2f2dc380bf0fca7dea486d8738db4aaa02fb7c561f1e8
+    - path: internal/approach/export.go
+      sha256: 73d1aff0093aba0b6c76b86c7fd16d9594fbdafb8e6ab34343a994f9137b7558
+      symbols:
+        - Export
+        - exportPath
+      imports:
+        - fmt
+        - gopkg.in/yaml.v3
+        - html
+        - knodexa/internal/index
+        - knodexa/internal/storage
+        - os
+        - path/filepath
+        - sort
+        - strings
+    - path: internal/cli/approach.go
+      sha256: 215c1cc0cccbedbfee3847528fa61bae29d66628e5eb194b114f5c20799d4a7d
+      symbols:
+        - App.runApproach
+        - App.runMemory
+        - repeatedStrings
+        - repeatedStrings.Set
+        - repeatedStrings.String
+      imports:
+        - encoding/json
+        - flag
+        - fmt
+        - knodexa/internal/approach
+        - knodexa/internal/model
+        - os
+        - strings
+    - path: internal/cli/cli.go
+      sha256: cb3baa2bf09d8bc2b0a78d90822d4d9e583df2d2656aebf8fb9eb2b0b1594c1b
+      symbols:
+        - App
+        - App.Run
+        - App.printHelp
+        - App.runContext
+        - App.runDecisions
+        - App.runDoctor
+        - App.runHistory
+        - App.runInit
+        - App.runLessons
+        - App.runRehydrate
+        - App.runReject
+        - App.runRelated
+        - App.runShow
+        - App.runTask
+        - App.runTree
+        - App.runVerify
+        - NewApp
+        - parseInterspersed
+      imports:
+        - database/sql
+        - encoding/json
+        - errors
+        - flag
+        - fmt
+        - knodexa/internal/approach
+        - knodexa/internal/context
+        - knodexa/internal/continuity
+        - knodexa/internal/git
+        - knodexa/internal/identity
+        - knodexa/internal/index
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - knodexa/internal/verify
+        - os
+        - path/filepath
+        - strings
+        - time
+    - path: internal/cli/record.go
+      sha256: c3f09091ff1669d82553965319d48eae2ba36a35eb037d0a1f3f3e5b63520b4e
+      symbols:
+        - App.runRecord
+      imports:
+        - encoding/json
+        - flag
+        - fmt
+        - knodexa/internal/continuity
+        - os
+        - time
+    - path: internal/cli/record_test.go
+      sha256: 387c14918486fd2e7eda8efa4f5c4ccc35c9de9629725e485f4b3fb09d27be9c
+      symbols:
+        - TestRecordCLIUsesOneVerifiedOperation
+        - TestRecordHelpAndBehaviorAgreementFile
+      imports:
+        - knodexa/internal/model
+        - os
+        - path/filepath
+        - strings
+        - testing
+    - path: internal/continuity/prepare.go
+      sha256: 72329152759743e72ee2fdc72fa21ce1a72bafd9f07563f5477c89ece049c01e
+      symbols:
+        - PreparedWork
+        - PreparedWork.FormatHuman
+        - ReferenceExcerpt
+        - Service.Prepare
+      imports:
+        - fmt
+        - knodexa/internal/approach
+        - knodexa/internal/codegraph
+        - knodexa/internal/identity
+        - os
+        - path/filepath
+        - strings
+    - path: internal/continuity/run.go
+      sha256: e8abe691eb5076b33cf36bf0b3bfd487d321872fce638aed6926ae4ae7dce48d
+      symbols:
+        - CommandOutcome
+        - RunOptions
+        - RunResult
+        - Service.Run
+        - cappedOutput
+        - cappedOutput.Write
+      imports:
+        - context
+        - encoding/json
+        - fmt
+        - knodexa/internal/approach
+        - knodexa/internal/codegraph
+        - knodexa/internal/identity
+        - os
+        - os/exec
+        - strings
+        - time
+    - path: internal/experiment/live_hard_test.go
+      sha256: 534c9cb3799c68389d5a89bc56345fd1628b898fb89622f548060dad44e42a86
+      symbols:
+        - TestHardFixtureAndIndependentGraders
+        - TestLiveHardContinuity
+        - hardCommand
+        - hardCopy
+        - hardFixture
+        - hardIndependentGrader
+        - hardJSON
+        - hardMemory
+        - hardResult
+        - hardSimilarTasks
+        - hardWrite
+        - runHardCase
+        - setupHardProducer
+      imports:
+        - bytes
+        - crypto/sha256
+        - encoding/hex
+        - encoding/json
+        - fmt
+        - knodexa/internal/approach
+        - knodexa/internal/codegraph
+        - knodexa/internal/identity
+        - knodexa/internal/index
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - os
+        - os/exec
+        - path/filepath
+        - strings
+        - testing
+        - time
+    - path: internal/integration/protocol.md
+      sha256: d36fb86bf157e818ded389ec53d46e4cf48ed12ed3e53d470a9f36333c031072
+    - path: internal/approach/behavior.go
+      sha256: ccd3970fefb2d67bfc469b0fce2ed6bb721241865e4d340841d58e7e96b86520
+      symbols:
+        - CheckBehaviorInputs
+        - validateBehaviorChecks
+      imports:
+        - crypto/sha256
+        - encoding/hex
+        - fmt
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - strings
+    - path: internal/continuity/behavior.go
+      sha256: 3739f174dfd86f74a932ce0eec5474bf5981143c65470c36ff76623ebb5332bc
+      symbols:
+        - BehaviorOutcome
+        - Service.assertBehaviorContracts
+        - Service.runBehaviorChecks
+        - retainBehaviorChecks
+      imports:
+        - context
+        - encoding/json
+        - fmt
+        - knodexa/internal/approach
+        - knodexa/internal/model
+        - os/exec
+        - reflect
+        - time
+    - path: internal/continuity/behavior_test.go
+      sha256: 14363a1a77426fb9657ff3b98ded892d9889a7bb0b03c4c4d48c4faf6822bec0
+      symbols:
+        - TestBehaviorContractsCaptureCorrectWorkAndStayInSmallContext
+        - TestBehaviorContractsRejectCompilableRegressions
+        - TestBehaviorContractsRejectWeakenedTestsBeforeVerification
+        - TestExplicitReferenceReviewCapturesRefactoredExtensionAndBehavior
+        - TestRecordCannotDropAnExistingBehaviorCheck
+        - TestRecordCannotReplaceBehaviorWithWeakerCommand
+        - TestRecordRejectsBehaviorAgreementChangedByVerification
+        - TestReferenceReviewRejectsUnrelatedOrUnreviewedMappings
+        - TestRunEnforcesRestoredBehaviorAndPinsAfterAgentExecution
+        - TestSuccessfulRecordRetainsOmittedBehaviorChecks
+        - newQualityFixture
+        - qualityFixture
+        - qualityFixture.unchanged
+      imports:
+        - bytes
+        - gopkg.in/yaml.v3
+        - knodexa/internal/approach
+        - knodexa/internal/context
+        - knodexa/internal/git
+        - knodexa/internal/identity
+        - knodexa/internal/index
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - os
+        - path/filepath
+        - strings
+        - testing
+    - path: internal/continuity/reference_review.go
+      sha256: 2b88de2a03ded4b0ab04357ed3375e1730e3260f1f9212a41f544bf9188ea58c
+      symbols:
+        - ReferenceReview
+        - Service.applyReferenceReviews
+      imports:
+        - fmt
+        - knodexa/internal/approach
+        - knodexa/internal/codegraph
+        - knodexa/internal/model
+        - strings
+    - path: internal/experiment/live_quality_test.go
+      sha256: b67d07d150ef31b9db19bc88038b47fb9cbdcc08f60846d4d2eac816e41514f5
+      symbols:
+        - TestLiveBehavioralQualityWorkflow
+      imports:
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - os
+        - path/filepath
+        - testing
+    - path: internal/mcp/behavior_test.go
+      sha256: c27d90b12f2acb00a77800bec371d26dd5efb5f5c6aad0a521d72ed2f2916978
+      symbols:
+        - TestMCPRecordExecutesBehaviorContract
+      imports:
+        - knodexa/internal/continuity
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - os
+        - path/filepath
+        - testing
 aliases:
     - Knodexa
     - work identity resolution
     - engineering memory
 approach:
-    version: 9
-    change_reason: Verify cross-process task merge locks, stale-snapshot rejection and serialized SQLite initialization and synchronization; retain original failures and limited scope.
+    behavior_checks:
+        - name: continuity and adapter acceptance
+          command: go test -race ./internal/continuity ./internal/cli ./internal/mcp
+          protected_files:
+            - path: internal/continuity/behavior_test.go
+              sha256: 14363a1a77426fb9657ff3b98ded892d9889a7bb0b03c4c4d48c4faf6822bec0
+            - path: internal/cli/record_test.go
+              sha256: 387c14918486fd2e7eda8efa4f5c4ccc35c9de9629725e485f4b3fb09d27be9c
+            - path: internal/mcp/behavior_test.go
+              sha256: c27d90b12f2acb00a77800bec371d26dd5efb5f5c6aad0a521d72ed2f2916978
+    version: 10
+    change_reason: Add inherited executable behavioral acceptance with protected test inputs, retain checks across routine refreshes, and explicitly reviewed refactor capture without manual hashes; preserve deterministic core and historical source agreement.
     summary: Implement continuity behavior in shared deterministic Go packages, with CLI and MCP adapters using those packages.
     rules:
         - Keep canonical Markdown/YAML authoritative and the SQLite cache rebuildable
@@ -569,18 +859,18 @@ approach:
         - Use Go for the application and required validation; retain one check wrapper and historical evidence rather than obsolete experiment scripts.
     references:
         - path: internal/approach/approach.go
-          sha256: 39bec4037609fdc6eecebf673471c1c772587eb5c58bb94327b4646b46e39c85
+          sha256: 0e3b4957429ec9bc74508e29feedef79d8780a146273fa2f44b4bee8f0f771d2
         - path: internal/continuity/resume.go
           sha256: 1634577f68815e4c488ad148220ff57cae555de4b86c74a212504a1a5ef3b608
         - path: internal/identity/resolve.go
           sha256: f12904a2d68f1e9f5701e591ab3c6146ec763b0cd689519d8b2a11e0cc679253
-    recorded_at: 2026-10-14T18:26:55.455112Z
+    recorded_at: 2026-10-15T06:31:19.123794Z
 id: "1"
 title: MVP Core Engine
 goal: Build deterministic local-first engineering memory core
 status: ACTIVE
 created_at: 2026-10-13T07:01:51.585504Z
-updated_at: 2026-10-14T18:26:55.455112Z
+updated_at: 2026-10-15T06:33:10.345294Z
 constraints:
     - Deterministic core
     - No cloud dependencies
@@ -605,4 +895,21 @@ touches_files:
     - internal/continuity/record.go
     - internal/continuity/resume.go
     - internal/approach/approach.go
+    - AGENTS.md
+    - README.md
+    - internal/approach/export.go
+    - internal/cli/approach.go
+    - internal/cli/cli.go
+    - internal/cli/record.go
+    - internal/cli/record_test.go
+    - internal/continuity/prepare.go
+    - internal/continuity/run.go
+    - internal/experiment/live_hard_test.go
+    - internal/integration/protocol.md
+    - internal/approach/behavior.go
+    - internal/continuity/behavior.go
+    - internal/continuity/behavior_test.go
+    - internal/continuity/reference_review.go
+    - internal/experiment/live_quality_test.go
+    - internal/mcp/behavior_test.go
 baseline_commit: 133bf2310370a679e592291a82e5087ed87d7747

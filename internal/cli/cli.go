@@ -72,7 +72,12 @@ func NewApp(rootDir string) (*App, error) {
 }
 
 // Run parses and executes CLI arguments.
-func (a *App) Run(args []string) error {
+func (a *App) Run(args []string) (resultErr error) {
+	defer func() {
+		if errors.Is(resultErr, flag.ErrHelp) {
+			resultErr = nil
+		}
+	}()
 	if len(args) == 0 {
 		a.printHelp()
 		return nil
@@ -464,6 +469,9 @@ func parseInterspersed(fs *flag.FlagSet, args []string) error {
 	var options, positional []string
 	for i := 0; i < len(args); i++ {
 		arg := args[i]
+		if arg == "-h" || arg == "--help" {
+			return fs.Parse([]string{"-h"})
+		}
 		if arg == "--" {
 			positional = append(positional, args[i+1:]...)
 			break
@@ -609,7 +617,7 @@ func (a *App) runVerify(args []string) error {
 	fs := flag.NewFlagSet("verify", flag.ContinueOnError)
 	evidence := fs.String("evidence", "", "Comma-separated list of supporting evidence IDs")
 	notes := fs.String("notes", "", "Verification notes")
-	if err := fs.Parse(args); err != nil {
+	if err := parseInterspersed(fs, args); err != nil {
 		return err
 	}
 

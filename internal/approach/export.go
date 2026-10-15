@@ -88,6 +88,12 @@ func Export(store *storage.Storage, db *index.DB) (string, error) {
 			for _, skill := range contract.Approach.SkillFiles {
 				fmt.Fprintf(&body, "- Read skill: `%s`.\n", skill)
 			}
+			for _, check := range contract.Approach.BehaviorChecks {
+				fmt.Fprintf(&body, "- Required behavior check: %s; command `%s`.\n", check.Name, check.Command)
+				for _, ref := range check.ProtectedFiles {
+					fmt.Fprintf(&body, "  - Protected test/specification: `%s`, SHA256 `%s`.\n", ref.Path, ref.SHA256)
+				}
+			}
 			for _, check := range contract.Approach.Checks {
 				if check.ASTKind != "" {
 					fmt.Fprintf(&body, "- Go AST check: `%s`, `%s`, `%s`.\n", check.Path, check.ASTKind, check.Symbol)

@@ -172,6 +172,7 @@ func ListTools() []ToolDefinition {
 			properties := definitions[i].InputSchema.(map[string]interface{})["properties"].(map[string]interface{})
 			properties["change_reason"] = map[string]interface{}{"type": "string"}
 			properties["reference_reconciliations"] = referenceReconciliationSchema()
+			properties["behavior_checks"] = behaviorCheckSchema()
 			checks := properties["checks"].(map[string]interface{})["items"].(map[string]interface{})["properties"].(map[string]interface{})
 			checks["ast_kind"] = map[string]interface{}{"type": "string", "enum": []string{"require-call", "forbid-call", "forbid-import", "require-function"}}
 			checks["symbol"] = map[string]interface{}{"type": "string"}
@@ -181,10 +182,22 @@ func ListTools() []ToolDefinition {
 		if definitions[i].Name == "knodexa_record_work" {
 			properties := definitions[i].InputSchema.(map[string]interface{})["properties"].(map[string]interface{})
 			agreement := properties["agreement"].(map[string]interface{})["properties"].(map[string]interface{})
-			agreement["approach"] = map[string]interface{}{"type": "object", "description": "summary, rules, scopes, references, checks, change_reason; optional reviewed inherited reference bindings", "properties": map[string]interface{}{"reference_reconciliations": referenceReconciliationSchema()}}
+			agreement["approach"] = map[string]interface{}{"type": "object", "description": "summary, rules, scopes, references, checks, behavior_checks, change_reason; restored behavioral checks must pass before capture", "properties": map[string]interface{}{"reference_reconciliations": referenceReconciliationSchema(), "behavior_checks": behaviorCheckSchema()}}
+			fields := map[string]interface{}{}
+			for _, field := range []string{"source_task", "original_path", "current_path", "reason"} {
+				fields[field] = map[string]interface{}{"type": "string", "minLength": 1}
+			}
+			agreement["reference_reviews"] = map[string]interface{}{"type": "array", "description": "Explicitly reviewed inherited refactors; derives source version and both hashes, never rewrites ancestors", "items": map[string]interface{}{"type": "object", "properties": fields, "required": []string{"source_task", "original_path", "current_path", "reason"}}}
 		}
 	}
 	return definitions
+}
+
+func behaviorCheckSchema() map[string]interface{} {
+	return map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "object", "properties": map[string]interface{}{
+		"name": map[string]interface{}{"type": "string", "minLength": 1}, "command": map[string]interface{}{"type": "string", "minLength": 1},
+		"protected_files": map[string]interface{}{"type": "array", "minItems": 1, "items": map[string]interface{}{"type": "object", "properties": map[string]interface{}{"path": map[string]interface{}{"type": "string"}, "sha256": map[string]interface{}{"type": "string"}}, "required": []string{"path"}}},
+	}, "required": []string{"name", "command", "protected_files"}}}
 }
 
 func referenceReconciliationSchema() map[string]interface{} {

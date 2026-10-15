@@ -1,0 +1,15 @@
+{
+  "baseline_commit": "542218e2cce61d8b3aeb1ae31667c9c5dbaf38ff",
+  "checks": "owner-provided independent Go tests, pinned as template inputs before return; command installs them and runs go test ./...",
+  "endpoints": [
+    "independent behavior and SDK lesson",
+    "unchanged completed parent facts and current source",
+    "explicit stale reference report",
+    "persisted child agreement with current code identity and valid inherited reference reconciliation"
+  ],
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "scope": "one real producer and fresh return agent, no native arm; implementation/workflow acceptance, never a coding quality superiority claim",
+  "stop_rule": "one attempt, preserve all errors; no scored retries",
+  "trial": "fresh-agent authorized refactor with executable acceptance and extension capture"
+}

@@ -129,6 +129,12 @@ func (p *Package) FormatHuman() string {
 			for _, skill := range contract.Approach.SkillFiles {
 				sb.WriteString("  skill: " + skill + "\n")
 			}
+			for _, check := range contract.Approach.BehaviorChecks {
+				fmt.Fprintf(&sb, "  behavior check: %s command=%q (required by record/run)\n", check.Name, check.Command)
+				for _, ref := range check.ProtectedFiles {
+					fmt.Fprintf(&sb, "    protected test/spec: %s (sha256 %s)\n", ref.Path, ref.SHA256)
+				}
+			}
 			for _, check := range contract.Approach.Checks {
 				if check.ASTKind != "" {
 					sb.WriteString(fmt.Sprintf("  AST check: %s %s %s\n", check.Path, check.ASTKind, check.Symbol))

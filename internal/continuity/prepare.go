@@ -2,6 +2,7 @@ package continuity
 
 import (
 	"fmt"
+	"knodexa/internal/approach"
 	"knodexa/internal/codegraph"
 	"knodexa/internal/identity"
 	"os"
@@ -110,6 +111,10 @@ func (s *Service) Prepare(request identity.Request, budget int, options ResumeOp
 	if report := resolved.Context.ApproachStatus; report != nil && !report.StructuralChecksPassed {
 		prepared.NeedsReview = true
 		prepared.ReviewReasons = append(prepared.ReviewReasons, "established approach checks failed")
+	}
+	if err := approach.CheckBehaviorInputs(s.store, resolved.Context.EstablishedApproach); err != nil {
+		prepared.NeedsReview = true
+		prepared.ReviewReasons = append(prepared.ReviewReasons, err.Error())
 	}
 	return prepared, nil
 }

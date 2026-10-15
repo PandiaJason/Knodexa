@@ -176,6 +176,7 @@ type FailureData struct {
 
 // TaskApproach captures the chosen implementation pattern, not hidden reasoning.
 type TaskApproach struct {
+	BehaviorChecks           []BehaviorCheck           `yaml:"behavior_checks,omitempty" json:"behavior_checks,omitempty"`
 	ReferenceReconciliations []ReferenceReconciliation `yaml:"reference_reconciliations,omitempty" json:"reference_reconciliations,omitempty"`
 	Version                  int                       `yaml:"version,omitempty" json:"version,omitempty"`
 	ChangeReason             string                    `yaml:"change_reason,omitempty" json:"change_reason,omitempty"`
@@ -186,6 +187,14 @@ type TaskApproach struct {
 	SkillFiles               []string                  `yaml:"skill_files,omitempty" json:"skill_files,omitempty"`
 	Checks                   []ApproachCheck           `yaml:"checks,omitempty" json:"checks,omitempty"`
 	RecordedAt               time.Time                 `yaml:"recorded_at" json:"recorded_at"`
+}
+
+// BehaviorCheck is an explicitly recorded local acceptance command. Protected
+// inputs pin the tests/specification it relies on; hashes never prove coverage.
+type BehaviorCheck struct {
+	Name           string              `yaml:"name" json:"name"`
+	Command        string              `yaml:"command" json:"command"`
+	ProtectedFiles []ApproachReference `yaml:"protected_files" json:"protected_files"`
 }
 
 // ReferenceReconciliation records a reviewed child-local binding to a historical

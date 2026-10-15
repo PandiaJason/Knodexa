@@ -13,17 +13,19 @@ import (
 )
 
 type RecordInput struct {
-	Aliases  []string           `json:"aliases"`
-	Files    []string           `json:"files"`
-	Approach model.TaskApproach `json:"approach"`
+	ReferenceReviews []ReferenceReview  `json:"reference_reviews,omitempty"`
+	Aliases          []string           `json:"aliases"`
+	Files            []string           `json:"files"`
+	Approach         model.TaskApproach `json:"approach"`
 }
 type RecordResult struct {
-	TaskID       string           `json:"task_id"`
-	WorkID       string           `json:"work_id"`
-	Version      int              `json:"version"`
-	Recorded     bool             `json:"recorded"`
-	Verification []CommandOutcome `json:"verification"`
-	Checks       *approach.Report `json:"checks,omitempty"`
+	BehaviorChecks []BehaviorOutcome `json:"behavior_checks,omitempty"`
+	TaskID         string            `json:"task_id"`
+	WorkID         string            `json:"work_id"`
+	Version        int               `json:"version"`
+	Recorded       bool              `json:"recorded"`
+	Verification   []CommandOutcome  `json:"verification"`
+	Checks         *approach.Report  `json:"checks,omitempty"`
 }
 
 // Record verifies current code, then installs identity and agreement together.
@@ -57,6 +59,33 @@ func (s *Service) Record(taskID string, input RecordInput, verify []string, time
 		timeout = 5 * time.Minute
 	}
 	result := &RecordResult{TaskID: taskID}
+	// Restore quality obligations before running any caller-provided command.
+	restored, err := approach.Resolve(s.db, taskID)
+	if err != nil {
+		return result, err
+	}
+	if task.Approach != nil && strings.TrimSpace(input.Approach.ChangeReason) == "" {
+		return result, fmt.Errorf("replacing an agreement requires approach.change_reason")
+	}
+	if err := s.applyReferenceReviews(task, &input); err != nil {
+		return result, err
+	}
+	if err := approach.ValidateValue(s.store, &input.Approach); err != nil {
+		return result, err
+	}
+	if err := retainBehaviorChecks(task.Approach, &input.Approach); err != nil {
+		return result, err
+	}
+	proposed := *task
+	proposed.Approach = &input.Approach
+	contracts, err := approach.ResolveProposed(s.db, &proposed)
+	if err != nil {
+		return result, err
+	}
+	quality := append(append([]approach.Contract{}, restored...), contracts...)
+	if err := approach.CheckBehaviorInputs(s.store, quality); err != nil {
+		return result, err
+	}
 	for _, command := range verify {
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
 		cmd := exec.CommandContext(ctx, "/bin/sh", "-c", command)
@@ -87,6 +116,9 @@ func (s *Service) Record(taskID string, input RecordInput, verify []string, time
 	if err := s.idx.Sync(); err != nil {
 		return result, err
 	}
+	if err := s.assertBehaviorContracts(taskID, restored); err != nil {
+		return result, err
+	}
 	task, err = s.db.GetTaskData(taskID)
 	if err != nil {
 		return result, err
@@ -94,13 +126,24 @@ func (s *Service) Record(taskID string, input RecordInput, verify []string, time
 	if task.Approach != nil && strings.TrimSpace(input.Approach.ChangeReason) == "" {
 		return result, fmt.Errorf("replacing an agreement requires approach.change_reason")
 	}
+	// Tests may edit files: revalidate hashes without blessing new behavior inputs.
 	if err := approach.ValidateValue(s.store, &input.Approach); err != nil {
 		return result, err
 	}
-	proposed := *task
+	proposed = *task
 	proposed.Approach = &input.Approach
-	contracts, err := approach.ResolveProposed(s.db, &proposed)
+	contracts, err = approach.ResolveProposed(s.db, &proposed)
 	if err != nil {
+		return result, err
+	}
+	result.BehaviorChecks, err = s.runBehaviorChecks(quality, timeout)
+	if err != nil {
+		return result, err
+	}
+	if err := s.idx.Sync(); err != nil {
+		return result, err
+	}
+	if err := s.assertBehaviorContracts(taskID, restored); err != nil {
 		return result, err
 	}
 	result.Checks = approach.CheckContracts(s.store, taskID, input.Files, contracts, "explicit")

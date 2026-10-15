@@ -1,0 +1,42 @@
+=== RUN   TestBehaviorContractsRejectCompilableRegressions
+=== RUN   TestBehaviorContractsRejectCompilableRegressions/normalization
+=== RUN   TestBehaviorContractsRejectCompilableRegressions/error-swallowing
+=== RUN   TestBehaviorContractsRejectCompilableRegressions/retry
+=== RUN   TestBehaviorContractsRejectCompilableRegressions/observer-order
+--- PASS: TestBehaviorContractsRejectCompilableRegressions (8.74s)
+    --- PASS: TestBehaviorContractsRejectCompilableRegressions/normalization (2.16s)
+    --- PASS: TestBehaviorContractsRejectCompilableRegressions/error-swallowing (2.20s)
+    --- PASS: TestBehaviorContractsRejectCompilableRegressions/retry (2.21s)
+    --- PASS: TestBehaviorContractsRejectCompilableRegressions/observer-order (2.17s)
+=== RUN   TestBehaviorContractsCaptureCorrectWorkAndStayInSmallContext
+--- PASS: TestBehaviorContractsCaptureCorrectWorkAndStayInSmallContext (2.26s)
+=== RUN   TestBehaviorContractsRejectWeakenedTestsBeforeVerification
+--- PASS: TestBehaviorContractsRejectWeakenedTestsBeforeVerification (0.10s)
+=== RUN   TestRunEnforcesRestoredBehaviorAndPinsAfterAgentExecution
+=== RUN   TestRunEnforcesRestoredBehaviorAndPinsAfterAgentExecution/bad-code
+=== RUN   TestRunEnforcesRestoredBehaviorAndPinsAfterAgentExecution/changed-tests
+--- PASS: TestRunEnforcesRestoredBehaviorAndPinsAfterAgentExecution (1.50s)
+    --- PASS: TestRunEnforcesRestoredBehaviorAndPinsAfterAgentExecution/bad-code (1.36s)
+    --- PASS: TestRunEnforcesRestoredBehaviorAndPinsAfterAgentExecution/changed-tests (0.14s)
+=== RUN   TestRecordCannotDropAnExistingBehaviorCheck
+--- PASS: TestRecordCannotDropAnExistingBehaviorCheck (1.28s)
+=== RUN   TestSuccessfulRecordRetainsOmittedBehaviorChecks
+--- PASS: TestSuccessfulRecordRetainsOmittedBehaviorChecks (1.40s)
+=== RUN   TestRecordCannotReplaceBehaviorWithWeakerCommand
+--- PASS: TestRecordCannotReplaceBehaviorWithWeakerCommand (0.04s)
+=== RUN   TestRecordRejectsBehaviorAgreementChangedByVerification
+--- PASS: TestRecordRejectsBehaviorAgreementChangedByVerification (0.08s)
+=== RUN   TestExplicitReferenceReviewCapturesRefactoredExtensionAndBehavior
+--- PASS: TestExplicitReferenceReviewCapturesRefactoredExtensionAndBehavior (2.20s)
+=== RUN   TestReferenceReviewRejectsUnrelatedOrUnreviewedMappings
+=== RUN   TestReferenceReviewRejectsUnrelatedOrUnreviewedMappings/otherreviewed
+=== RUN   TestReferenceReviewRejectsUnrelatedOrUnreviewedMappings/parent
+=== RUN   TestReferenceReviewRejectsUnrelatedOrUnreviewedMappings/childreviewed
+=== RUN   TestReferenceReviewRejectsUnrelatedOrUnreviewedMappings/parentreviewed
+--- PASS: TestReferenceReviewRejectsUnrelatedOrUnreviewedMappings (0.16s)
+    --- PASS: TestReferenceReviewRejectsUnrelatedOrUnreviewedMappings/otherreviewed (0.06s)
+    --- PASS: TestReferenceReviewRejectsUnrelatedOrUnreviewedMappings/parent (0.04s)
+    --- PASS: TestReferenceReviewRejectsUnrelatedOrUnreviewedMappings/childreviewed (0.03s)
+    --- PASS: TestReferenceReviewRejectsUnrelatedOrUnreviewedMappings/parentreviewed (0.03s)
+PASS
+ok  	knodexa/internal/continuity	19.035s

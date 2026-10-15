@@ -1,0 +1,9 @@
+id: E-behavioral-quality-implementation
+title: Behavioral regression gates and successful fresh-agent refactor capture
+node_id: D-behavioral-quality-contracts
+evidence_type: TEST_RUN
+created_at: 2026-10-15T06:31:35Z
+command: './scripts/check.sh'
+verified_by: Codex authenticated local test runner
+exit_code: 0
+output_summary: 'Self-record version 10 verified full Go vet/race/standalone checks and inherited acceptance, recorded in audit/behavioral-quality-v1/self-record.json. Controlled tests reject four compilable behavior regressions despite passing caller smoke tests, altered protected tests, erased acceptance definitions, weak command replacement and omitted future checks. Correct reviewed refactors record and restore. One real producer plus fresh agent trial passed independent behavior/SDK lesson, parent/reference preservation, explicit stale report and persisted reconciled extension. The actual CLI record output shows successful inherited and child behavior checks. This is enforcement/workflow evidence, not coding-quality superiority.'

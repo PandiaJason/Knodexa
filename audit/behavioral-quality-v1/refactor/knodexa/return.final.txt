@@ -1,0 +1,5 @@
+Added `HandleWebhook` and `HandlerContractVersion()` returning `"raw-v1"`, preserving the existing dispatch behavior.
+
+Passed Go tests, inherited acceptance checks, observer panic tests, and Knodexa approach checks.
+
+Reported stale memory: missing `handlers/reference.go` and saved baseline `5a8b7d2`, preceding refactor `4dd480f`. Recorded the reviewed replacement reference on child `webhook-extension`; the original completed agreement and baseline remain unchanged.
