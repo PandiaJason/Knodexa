@@ -1,0 +1,5 @@
+Added `HandleWebhook` using the established handler behavior and `HandlerContractVersion()` returning `raw-v1`.
+
+Tests cover raw values, result/error identity, hook ordering, and unchanged panic propagation without retries. `go test ./...` passes.
+
+Preserved completed source memory and pre-existing edits. Baseline and all saved source hashes match; no missing references.

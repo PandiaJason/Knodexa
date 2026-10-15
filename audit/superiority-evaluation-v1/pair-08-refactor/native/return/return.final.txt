@@ -1,0 +1,5 @@
+Added `HandleWebhook` delegating to `DispatchProduction`, plus `HandlerContractVersion()` returning `"raw-v1"`.
+
+Tests cover delivery identity, observer ordering, errors, and panic propagation. `go test ./...` passes.
+
+Recorded stale references: missing `handlers/reference.go`, renamed `Handle`, changed test hash, and changed HEAD. Preserved the original completed agreement and baseline; appended extension details to `memory/work-prod.json`.

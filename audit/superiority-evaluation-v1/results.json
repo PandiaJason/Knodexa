@@ -1,0 +1,453 @@
+{
+  "knodexa_wins": 0,
+  "native_wins": 0,
+  "one_sided_sign_p": 1,
+  "pairs": [
+    {
+      "arms": {
+        "knodexa": {
+          "case": "fresh-handoff",
+          "arm": "knodexa",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 65.001423958,
+            "thread_id": "01a13de0-e481-7942-a0f7-9d9d05cb052d",
+            "tool_items": 8,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 113536,
+                "input_tokens": 129878,
+                "output_tokens": 1689,
+                "reasoning_output_tokens": 17
+              }
+            ],
+            "agent_resolved_task": "work-prod",
+            "agent_resolver_request": "Add another production webhook delivery handler in package handlers. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep the established layout and behavior and applicable cross-task conventions. Add and run tests. Preserve completed source memory."
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": false,
+          "scored": true,
+          "passed": true
+        },
+        "native": {
+          "case": "fresh-handoff",
+          "arm": "native",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 77.697667166,
+            "thread_id": "01a13dde-f759-7332-90f4-8de2b60a565d",
+            "tool_items": 9,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 136832,
+                "input_tokens": 160007,
+                "output_tokens": 2618,
+                "reasoning_output_tokens": 76
+              }
+            ]
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": false,
+          "scored": true,
+          "passed": true
+        }
+      },
+      "case": "fresh-handoff",
+      "outcome": "tie",
+      "pair": 1
+    },
+    {
+      "arms": {
+        "native": {
+          "case": "similar-tasks",
+          "arm": "native",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 72.499556292,
+            "thread_id": "01a13de3-2aea-7542-a76f-d8da432b2170",
+            "tool_items": 9,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 116352,
+                "input_tokens": 125908,
+                "output_tokens": 2511,
+                "reasoning_output_tokens": 63
+              }
+            ]
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": false,
+          "scored": true,
+          "passed": true
+        }
+      },
+      "case": "similar-tasks",
+      "outcome": "unscored",
+      "pair": 2
+    },
+    {
+      "arms": {
+        "knodexa": {
+          "case": "recorded-failure",
+          "arm": "knodexa",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 46.066693958,
+            "thread_id": "01a13de6-a4c2-74e0-93fd-9e9ad827a979",
+            "tool_items": 8,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 113408,
+                "input_tokens": 128747,
+                "output_tokens": 1791,
+                "reasoning_output_tokens": 28
+              }
+            ],
+            "agent_resolved_task": "work-prod",
+            "agent_resolver_request": "Add another production webhook delivery handler in package handlers. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep the established layout and behavior and applicable cross-task conventions. Add and run tests. Preserve completed source memory. Add resilience while respecting the recorded observer failure contract; do not repeat past failed approaches."
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": false,
+          "scored": true,
+          "passed": true
+        },
+        "native": {
+          "case": "recorded-failure",
+          "arm": "native",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 64.87536525,
+            "thread_id": "01a13de4-fcaf-7ea2-9a61-96f93b0140ba",
+            "tool_items": 8,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 134272,
+                "input_tokens": 154576,
+                "output_tokens": 2686,
+                "reasoning_output_tokens": 89
+              }
+            ]
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": true,
+          "scored": true,
+          "passed": true
+        }
+      },
+      "case": "recorded-failure",
+      "outcome": "tie",
+      "pair": 3
+    },
+    {
+      "arms": {
+        "knodexa": {
+          "case": "refactor",
+          "arm": "knodexa",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 59.378902459,
+            "thread_id": "01a13de7-fe60-7f53-ac42-31a92596330d",
+            "tool_items": 15,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 153856,
+                "input_tokens": 183606,
+                "output_tokens": 2338,
+                "reasoning_output_tokens": 59
+              }
+            ],
+            "agent_resolved_task": "work-prod",
+            "agent_resolver_request": "production webhook delivery"
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": true,
+          "scored": true,
+          "passed": true
+        },
+        "native": {
+          "case": "refactor",
+          "arm": "native",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 54.130468875,
+            "thread_id": "01a13de9-7c63-7c02-bd55-4cb0ba7b579a",
+            "tool_items": 6,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 98304,
+                "input_tokens": 107766,
+                "output_tokens": 2463,
+                "reasoning_output_tokens": 55
+              }
+            ]
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": true,
+          "scored": true,
+          "passed": true
+        }
+      },
+      "case": "refactor",
+      "outcome": "tie",
+      "pair": 4
+    },
+    {
+      "arms": {
+        "knodexa": {
+          "case": "fresh-handoff",
+          "arm": "knodexa",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 49.483404667,
+            "thread_id": "01a13dec-6c67-7cd1-b396-926a9e1bd59c",
+            "tool_items": 7,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 109568,
+                "input_tokens": 128950,
+                "output_tokens": 2008,
+                "reasoning_output_tokens": 24
+              }
+            ],
+            "agent_resolved_task": "work-prod",
+            "agent_resolver_request": "Add another production webhook delivery handler in package handlers. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep the established layout and behavior and applicable cross-task conventions. Add and run tests. Preserve completed source memory."
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": false,
+          "scored": true,
+          "passed": true
+        },
+        "native": {
+          "case": "fresh-handoff",
+          "arm": "native",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 53.301976083,
+            "thread_id": "01a13dea-f7d1-7e40-b410-a604e18f28ee",
+            "tool_items": 6,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 97408,
+                "input_tokens": 110340,
+                "output_tokens": 2436,
+                "reasoning_output_tokens": 77
+              }
+            ]
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": true,
+          "scored": true,
+          "passed": true
+        }
+      },
+      "case": "fresh-handoff",
+      "outcome": "tie",
+      "pair": 5
+    },
+    {
+      "arms": {
+        "native": {
+          "case": "similar-tasks",
+          "arm": "native",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 61.58378175,
+            "thread_id": "01a13dee-584c-7423-9e81-3716137886b5",
+            "tool_items": 9,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 139904,
+                "input_tokens": 150384,
+                "output_tokens": 2506,
+                "reasoning_output_tokens": 87
+              }
+            ]
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": false,
+          "scored": true,
+          "passed": true
+        }
+      },
+      "case": "similar-tasks",
+      "outcome": "unscored",
+      "pair": 6
+    },
+    {
+      "arms": {
+        "knodexa": {
+          "case": "recorded-failure",
+          "arm": "knodexa",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 45.374921959,
+            "thread_id": "01a13df1-465b-7f73-8d8a-a8771c981688",
+            "tool_items": 6,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 106752,
+                "input_tokens": 127155,
+                "output_tokens": 1716,
+                "reasoning_output_tokens": 27
+              }
+            ],
+            "agent_resolved_task": "work-prod",
+            "agent_resolver_request": "Add another production webhook delivery handler in package handlers. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep the established layout and behavior and applicable cross-task conventions. Add and run tests. Preserve completed source memory. Add resilience while respecting the recorded observer failure contract; do not repeat past failed approaches."
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": false,
+          "scored": true,
+          "passed": true
+        },
+        "native": {
+          "case": "recorded-failure",
+          "arm": "native",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 57.142107167,
+            "thread_id": "01a13def-d8f4-7253-ba32-4266be99b8b6",
+            "tool_items": 7,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 91776,
+                "input_tokens": 111149,
+                "output_tokens": 2546,
+                "reasoning_output_tokens": 90
+              }
+            ]
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": false,
+          "scored": true,
+          "passed": true
+        }
+      },
+      "case": "recorded-failure",
+      "outcome": "tie",
+      "pair": 7
+    },
+    {
+      "arms": {
+        "knodexa": {
+          "case": "refactor",
+          "arm": "knodexa",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 57.155847291,
+            "thread_id": "01a13df2-920c-7291-bc68-379f67d564fc",
+            "tool_items": 11,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 153856,
+                "input_tokens": 171960,
+                "output_tokens": 2209,
+                "reasoning_output_tokens": 87
+              }
+            ],
+            "agent_resolver_request": "Add another production webhook delivery handler in package handlers. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep the established layout and behavior and applicable cross-task conventions. Add and run tests. Preserve completed source memory. The repository had an authorized refactor after the saved checkpoint. Inspect the current implementation, explicitly report stale agreements/references, and preserve the original completed agreement and baseline."
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": true,
+          "scored": true,
+          "passed": true
+        },
+        "native": {
+          "case": "refactor",
+          "arm": "native",
+          "phase": {
+            "exit_code": 0,
+            "seconds": 84.610843458,
+            "thread_id": "01a13df4-2921-7ef0-92e0-0b91ff48e698",
+            "tool_items": 8,
+            "usage": [
+              {
+                "cache_write_input_tokens": 0,
+                "cached_input_tokens": 115712,
+                "input_tokens": 124877,
+                "output_tokens": 2420,
+                "reasoning_output_tokens": 53
+              }
+            ]
+          },
+          "behavior_passed": true,
+          "completed_memory_preserved": true,
+          "reference_preserved": true,
+          "stale_agreement_reported": true,
+          "scored": true,
+          "passed": true
+        }
+      },
+      "case": "refactor",
+      "outcome": "tie",
+      "pair": 8
+    }
+  ],
+  "plan": {
+    "advantage_gate": "all eight pairs scored, Knodexa wins exceed losses, one-sided p \u003c 0.05; scope limited to this fixed suite",
+    "analysis": "one-sided exact paired sign test on discordant quality outcomes, alpha 0.05; ties excluded, unscored pairs never counted as losses",
+    "background_memories": false,
+    "baseline": "Codex CLI native tools with organized memory, explicit retrieval guidance, identical canonical facts",
+    "cases": [
+      "fresh-handoff",
+      "similar-tasks",
+      "recorded-failure",
+      "refactor",
+      "fresh-handoff",
+      "similar-tasks",
+      "recorded-failure",
+      "refactor"
+    ],
+    "limitations": "one Go fixture, four related scenarios, one model; no forced compaction or all-agent comparison; return timing excludes setup and producer capture",
+    "model": "gpt-6.1-sol",
+    "order": "native first on odd pairs; Knodexa first on even pairs, producers and returns",
+    "pairs": 8,
+    "primary": "behavior including transferred lesson, completed-memory facts, reference preservation; refactor also reports stale agreement",
+    "producer": "separate real agent capture in each arm of every pair; independently verified fixed source, not agent-authored initial implementation",
+    "reasoning_effort": "low",
+    "return": "fresh independent agent session without producer transcript; equivalent task request and grading",
+    "source_commit": "c3de3561ebe1eb4031d76d334e6c1700663e87d9",
+    "stop_rule": "attempt all eight once; retain failures and timeouts; no outcome-based retries or optional stopping"
+  },
+  "suite_quality_advantage_demonstrated": false,
+  "ties": 6,
+  "unscored": 2
+}

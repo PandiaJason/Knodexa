@@ -1,0 +1,5 @@
+Added `HandleWebhook(value any, service Transformer, observer Observer) (any, error)` using established `Handle` behavior, plus `HandlerContractVersion()` returning `raw-v1`.
+
+Tests cover identity, observer ordering, errors, and panic propagation. `go test ./...` passed.
+
+Preserved completed source memory and appended the extension record. The baseline changed; all saved references still match.

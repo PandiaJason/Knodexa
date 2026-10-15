@@ -220,6 +220,10 @@ func hardSimilarTasks(t *testing.T, f hardFixture) {
 		task := &model.TaskData{ID: "work-" + name, Title: strings.Title(name) + " event forwarding", Goal: name + " webhook delivery with different conventions", Status: model.TaskStatusCompleted, Aliases: []string{name + " webhook delivery"}, TouchesFiles: []string{path}, Approach: &model.TaskApproach{Summary: "Distinct " + name + " workflow", Rules: []string{"Use " + name + " conventions; not production's observer semantics"}, Scopes: []string{name + "/"}, References: []model.ApproachReference{{Path: path}}}}
 		if f.arm == "knodexa" {
 			store := storage.NewStorage(f.root)
+			// Install the initial agreement through approach.Set, not twice via
+			// SaveTask then Set (which is an intentional replacement).
+			initialApproach := *task.Approach
+			task.Approach = nil
 			if err := store.SaveTask(task); err != nil {
 				t.Fatal(err)
 			}
@@ -228,7 +232,7 @@ func hardSimilarTasks(t *testing.T, f hardFixture) {
 				t.Fatal(err)
 			}
 			idx := index.NewIndexer(db, store)
-			if err := approach.Set(store, db, idx, task.ID, *task.Approach); err != nil {
+			if err := approach.Set(store, db, idx, task.ID, initialApproach); err != nil {
 				db.Close()
 				t.Fatal(err)
 			}

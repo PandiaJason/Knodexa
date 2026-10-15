@@ -1,0 +1,26 @@
+{
+  "advantage_gate": "all eight pairs scored, Knodexa wins exceed losses, one-sided p \u003c 0.05; scope limited to this fixed suite",
+  "analysis": "one-sided exact paired sign test on discordant quality outcomes, alpha 0.05; ties excluded, unscored pairs never counted as losses",
+  "background_memories": false,
+  "baseline": "Codex CLI native tools with organized memory, explicit retrieval guidance, identical canonical facts",
+  "cases": [
+    "fresh-handoff",
+    "similar-tasks",
+    "recorded-failure",
+    "refactor",
+    "fresh-handoff",
+    "similar-tasks",
+    "recorded-failure",
+    "refactor"
+  ],
+  "limitations": "one Go fixture, four related scenarios, one model; no forced compaction or all-agent comparison; return timing excludes setup and producer capture",
+  "model": "gpt-6.1-sol",
+  "order": "native first on odd pairs; Knodexa first on even pairs, producers and returns",
+  "pairs": 8,
+  "primary": "behavior including transferred lesson, completed-memory facts, reference preservation; refactor also reports stale agreement",
+  "producer": "separate real agent capture in each arm of every pair; independently verified fixed source, not agent-authored initial implementation",
+  "reasoning_effort": "low",
+  "return": "fresh independent agent session without producer transcript; equivalent task request and grading",
+  "source_commit": "c3de3561ebe1eb4031d76d334e6c1700663e87d9",
+  "stop_rule": "attempt all eight once; retain failures and timeouts; no outcome-based retries or optional stopping"
+}

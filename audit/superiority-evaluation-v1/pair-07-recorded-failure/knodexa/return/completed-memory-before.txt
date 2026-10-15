@@ -1,0 +1,40 @@
+work_id: work-prod
+code_anchors:
+    - path: handlers/reference.go
+      sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+      symbols:
+        - Handle
+        - Observer
+        - Transformer
+aliases:
+    - production webhook delivery
+approach:
+    version: 1
+    scopes:
+        - handlers/
+    summary: Delegate raw production webhook input through an injected Transformer with optional synchronous observer hooks, preserving service result and error identity.
+    rules:
+        - Pass the original raw input unchanged to the injected service Transform exactly once; do not trim, coerce, normalize, or retry.
+        - Return the exact service result and error unchanged, including a result returned together with an error.
+        - When an observer is present, call Started with the original input before Transform and Finished with the original result only when Transform succeeds.
+        - Do not recover service or observer panics. A Started panic propagates unchanged before any service invocation; a Finished panic propagates unchanged after exactly one successful service invocation.
+        - Preserve the existing public APIs and implementation. The SDK compatibility marker lesson applies when adding a future production handler entrypoint; no extension is implemented in this capture.
+    references:
+        - path: handlers/reference.go
+          sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+    recorded_at: 2026-10-15T05:02:57.090776Z
+id: work-prod
+title: Production event forwarding
+goal: Production webhook delivery through injected service
+status: COMPLETED
+created_at: 0001-01-01T00:00:00Z
+updated_at: 2026-10-15T05:02:57.090776Z
+constraints:
+    - Raw input delegated exactly once; preserve result/error identity
+    - Observer Started before service; Finished only on success
+    - No trimming, coercion, retry or panic recovery
+touches_files:
+    - handlers/reference.go
+baseline_commit: e953c4d3041231486e1d9fea36bbb191cd084fb3
+required_verification:
+    - Raw inputs, service substitution, observer ordering and error identity

@@ -1,0 +1,98 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+func TestWebhookDelivery(t *testing.T) {
+	for _, observed := range []bool{false, true} {
+		for _, value := range []any{" hello ", "", nil, 17, &struct{ N int }{3}} {
+			for _, serviceErr := range []error{nil, errors.New("delivery")} {
+				events := []string{}
+				resultValue := &struct{ N int }{7}
+				service := &auditService{events: &events, result: resultValue, err: serviceErr}
+				observer := &auditObserver{events: &events}
+				var hook Observer
+				if observed {
+					hook = observer
+				}
+				result, err := HandleWebhook(value, service, hook)
+				if result != resultValue || err != serviceErr || service.calls != 1 || service.received != value {
+					t.Fatal("raw delegation or result/error identity changed")
+				}
+				expected := []string{"transform"}
+				if observed {
+					expected = []string{"started", "transform"}
+					if serviceErr == nil {
+						expected = append(expected, "finished")
+					}
+					if observer.started != value || (serviceErr == nil && observer.finished != resultValue) {
+						t.Fatal("observer payload changed")
+					}
+				}
+				if !reflect.DeepEqual(events, expected) {
+					t.Fatalf("events: %v, want %v", events, expected)
+				}
+			}
+		}
+	}
+}
+
+type panicObserver struct {
+	events *[]string
+	stage  string
+	token  any
+}
+
+func (o *panicObserver) Started(any) {
+	*o.events = append(*o.events, "started")
+	if o.stage == "started" {
+		panic(o.token)
+	}
+}
+func (o *panicObserver) Finished(any) {
+	*o.events = append(*o.events, "finished")
+	if o.stage == "finished" {
+		panic(o.token)
+	}
+}
+
+func TestWebhookPanicPropagation(t *testing.T) {
+	for _, stage := range []string{"started", "transform", "finished"} {
+		t.Run(stage, func(t *testing.T) {
+			events := []string{}
+			token := &struct{ N int }{9}
+			service := &auditService{events: &events}
+			if stage == "transform" {
+				service.panicValue = token
+			}
+			observer := &panicObserver{events: &events, stage: stage, token: token}
+			defer func() {
+				if recover() != token {
+					t.Fatal("panic identity changed")
+				}
+				expected := []string{"started"}
+				calls := 0
+				if stage != "started" {
+					expected = append(expected, "transform")
+					calls = 1
+				}
+				if stage == "finished" {
+					expected = append(expected, "finished")
+				}
+				if service.calls != calls || !reflect.DeepEqual(events, expected) {
+					t.Fatalf("calls=%d events=%v", service.calls, events)
+				}
+			}()
+			HandleWebhook(" raw ", service, observer)
+		})
+	}
+}
+
+func TestHandlerContractVersion(t *testing.T) {
+	if got := HandlerContractVersion(); got != "raw-v1" {
+		t.Fatalf("contract: %q", got)
+	}
+}

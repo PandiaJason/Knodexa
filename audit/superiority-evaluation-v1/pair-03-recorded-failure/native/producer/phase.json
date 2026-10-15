@@ -1,0 +1,15 @@
+{
+  "exit_code": 0,
+  "seconds": 40.398153333,
+  "thread_id": "01a13de4-5d57-7650-a2e8-642baf9b729c",
+  "tool_items": 5,
+  "usage": [
+    {
+      "cache_write_input_tokens": 0,
+      "cached_input_tokens": 73088,
+      "input_tokens": 82635,
+      "output_tokens": 1340,
+      "reasoning_output_tokens": 37
+    }
+  ]
+}

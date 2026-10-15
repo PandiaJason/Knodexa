@@ -1,0 +1,3 @@
+Recorded `work-prod` agreement v1 with alias `production webhook delivery`, `handlers/` scope, the source reference, and raw delegation, identity, observer-ordering, and panic-propagation rules.
+
+`go test ./...` passed. The implementation is unchanged; no extension was implemented.

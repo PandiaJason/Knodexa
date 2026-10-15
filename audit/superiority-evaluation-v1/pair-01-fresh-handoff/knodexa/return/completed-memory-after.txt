@@ -1,0 +1,41 @@
+work_id: work-prod
+code_anchors:
+    - path: handlers/reference.go
+      sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+      symbols:
+        - Handle
+        - Observer
+        - Transformer
+aliases:
+    - production webhook delivery
+approach:
+    version: 1
+    scopes:
+        - handlers/
+    summary: 'Preserve the established production handler: delegate raw input exactly once to the injected Transformer, with optional observer notifications and unchanged result, error, and panic identity.'
+    rules:
+        - Delegate the original raw input to the injected service Transform exactly once; support service substitution without trimming, coercion, normalization, or validation.
+        - Return the service result and error unchanged, preserving identity even when both are non-nil.
+        - When an observer is present, call Started with the original input before Transform; call Finished with the original result only when Transform succeeds.
+        - Do not retry or recover panics. Started panics propagate unchanged before service invocation; service panics propagate unchanged; Finished panics propagate unchanged after one successful service invocation.
+        - Preserve existing public APIs and deterministic behavior with zero LLM calls in the core engine.
+        - Keep this existing unversioned reference handler unchanged. L-sdk-contract applies when adding a new production handler entrypoint; any future extension must review that lesson and its evidence separately.
+    references:
+        - path: handlers/reference.go
+          sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+    recorded_at: 2026-10-15T04:45:02.610463Z
+id: work-prod
+title: Production event forwarding
+goal: Production webhook delivery through injected service
+status: COMPLETED
+created_at: 0001-01-01T00:00:00Z
+updated_at: 2026-10-15T04:45:02.610463Z
+constraints:
+    - Raw input delegated exactly once; preserve result/error identity
+    - Observer Started before service; Finished only on success
+    - No trimming, coercion, retry or panic recovery
+touches_files:
+    - handlers/reference.go
+baseline_commit: f4f920a99a34e85c9c1ea2bd4e4d77f06ff9180f
+required_verification:
+    - Raw inputs, service substitution, observer ordering and error identity

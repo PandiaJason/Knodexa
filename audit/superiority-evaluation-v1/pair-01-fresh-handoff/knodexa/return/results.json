@@ -1,0 +1,27 @@
+{
+  "case": "fresh-handoff",
+  "arm": "knodexa",
+  "phase": {
+    "exit_code": 0,
+    "seconds": 65.001423958,
+    "thread_id": "01a13de0-e481-7942-a0f7-9d9d05cb052d",
+    "tool_items": 8,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 113536,
+        "input_tokens": 129878,
+        "output_tokens": 1689,
+        "reasoning_output_tokens": 17
+      }
+    ],
+    "agent_resolved_task": "work-prod",
+    "agent_resolver_request": "Add another production webhook delivery handler in package handlers. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep the established layout and behavior and applicable cross-task conventions. Add and run tests. Preserve completed source memory."
+  },
+  "behavior_passed": true,
+  "completed_memory_preserved": true,
+  "reference_preserved": true,
+  "stale_agreement_reported": false,
+  "scored": true,
+  "passed": true
+}

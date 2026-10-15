@@ -1,0 +1,5 @@
+Added `HandleWebhook` and `HandlerContractVersion()` returning `raw-v1`.
+
+Tests cover raw input identity, service substitution, observer ordering, exact result/error propagation, and unchanged panics without retries.
+
+`go test ./...` and `go vet ./...` pass. Completed source memory and the existing agreement remain preserved.

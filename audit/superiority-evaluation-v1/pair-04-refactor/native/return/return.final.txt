@@ -1,0 +1,5 @@
+Added `HandleWebhook` using the existing production dispatcher, plus `HandlerContractVersion()` returning `raw-v1`.
+
+Tests cover raw values, identity, observer ordering, errors, and panic propagation. `go test ./...` passes.
+
+Reported the changed baseline, missing `handlers/reference.go`, and stale test hash. Preserved the original completed memory and baseline; appended the extension record.

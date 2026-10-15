@@ -1,0 +1,25 @@
+{
+  "case": "refactor",
+  "arm": "native",
+  "phase": {
+    "exit_code": 0,
+    "seconds": 54.130468875,
+    "thread_id": "01a13de9-7c63-7c02-bd55-4cb0ba7b579a",
+    "tool_items": 6,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 98304,
+        "input_tokens": 107766,
+        "output_tokens": 2463,
+        "reasoning_output_tokens": 55
+      }
+    ]
+  },
+  "behavior_passed": true,
+  "completed_memory_preserved": true,
+  "reference_preserved": true,
+  "stale_agreement_reported": true,
+  "scored": true,
+  "passed": true
+}

@@ -1,0 +1,41 @@
+work_id: work-prod
+code_anchors:
+    - path: handlers/reference.go
+      sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+      symbols:
+        - Handle
+        - Observer
+        - Transformer
+aliases:
+    - production webhook delivery
+approach:
+    version: 1
+    scopes:
+        - handlers/
+    summary: Production webhook delivery delegates raw input through an injected Transformer with optional ordered observer callbacks.
+    rules:
+        - Delegate the original raw input to the injected service Transform exactly once; do not trim, coerce, normalize or retry.
+        - Preserve service substitution and return the exact service result and error unchanged, including a result accompanying an error.
+        - When an observer is present, call Started with the original input before Transform; call Finished with the original result only when Transform succeeds.
+        - Do not recover or replace service or observer panics. A Started panic propagates before service invocation; a Finished panic propagates after one successful invocation. Never retry Transform.
+        - Preserve existing public APIs and deterministic behavior with zero LLM calls in the core engine.
+        - Preserve the reviewed implementation. The SDK lesson requiring HandlerContractVersion() returning raw-v1 applies to future new production handler entrypoints, not this existing source capture.
+    references:
+        - path: handlers/reference.go
+          sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+    recorded_at: 2026-10-15T05:04:19.952816Z
+id: work-prod
+title: Production event forwarding
+goal: Production webhook delivery through injected service
+status: COMPLETED
+created_at: 0001-01-01T00:00:00Z
+updated_at: 2026-10-15T05:04:19.952816Z
+constraints:
+    - Raw input delegated exactly once; preserve result/error identity
+    - Observer Started before service; Finished only on success
+    - No trimming, coercion, retry or panic recovery
+touches_files:
+    - handlers/reference.go
+baseline_commit: 1835c7d9b8d9de2c12e3277cc0838413f198543d
+required_verification:
+    - Raw inputs, service substitution, observer ordering and error identity

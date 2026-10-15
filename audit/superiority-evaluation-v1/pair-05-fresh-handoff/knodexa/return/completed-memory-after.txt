@@ -1,0 +1,42 @@
+work_id: work-prod
+code_anchors:
+    - path: handlers/reference.go
+      sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+      symbols:
+        - Handle
+        - Observer
+        - Transformer
+aliases:
+    - production webhook delivery
+approach:
+    version: 1
+    scopes:
+        - handlers/
+    summary: Production handlers forward raw input through an injected Transformer, with optional observer hooks and unchanged return values.
+    rules:
+        - Delegate the original raw input to the injected service Transform exactly once; permit service substitution.
+        - Preserve result and error identity, including a result returned alongside an error.
+        - When an observer is present, call Started with the raw input before Transform and Finished with the raw result only after success.
+        - Do not trim, coerce, retry, or recover panics from the service or observer.
+        - A Started panic propagates unchanged before service invocation; a Finished panic propagates unchanged after one successful invocation.
+        - Keep core behavior deterministic with zero LLM calls and preserve existing public APIs and repository constraints.
+        - Preserve the established implementation; new entrypoints and the SDK compatibility marker belong to a future extension.
+    references:
+        - path: handlers/reference.go
+          sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+    recorded_at: 2026-10-15T04:57:38.4Z
+id: work-prod
+title: Production event forwarding
+goal: Production webhook delivery through injected service
+status: COMPLETED
+created_at: 0001-01-01T00:00:00Z
+updated_at: 2026-10-15T04:57:38.4Z
+constraints:
+    - Raw input delegated exactly once; preserve result/error identity
+    - Observer Started before service; Finished only on success
+    - No trimming, coercion, retry or panic recovery
+touches_files:
+    - handlers/reference.go
+baseline_commit: 206466a5e446fae2ffd09668939ebac67e74c52d
+required_verification:
+    - Raw inputs, service substitution, observer ordering and error identity

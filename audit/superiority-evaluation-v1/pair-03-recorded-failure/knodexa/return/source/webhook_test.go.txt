@@ -1,0 +1,124 @@
+package handlers
+
+import (
+	"errors"
+	"fmt"
+	"reflect"
+	"testing"
+)
+
+type webhookTransformer func(any) (any, error)
+
+func (f webhookTransformer) Transform(value any) (any, error) { return f(value) }
+
+type webhookObserver struct {
+	started  func(any)
+	finished func(any)
+}
+
+func (o webhookObserver) Started(value any)  { o.started(value) }
+func (o webhookObserver) Finished(value any) { o.finished(value) }
+
+func TestHandleWebhookContract(t *testing.T) {
+	pointer := &struct{ N int }{7}
+	originalError := errors.New("delivery failed")
+	for i, value := range []any{"hello", " hello \n", "", nil, 17, pointer} {
+		for _, observed := range []bool{false, true} {
+			for _, serviceError := range []error{nil, originalError} {
+				t.Run(fmt.Sprintf("input%d/observed%t/error%t", i, observed, serviceError != nil), func(t *testing.T) {
+					var events []string
+					calls := 0
+					resultValue := &struct{ N int }{9}
+					service := webhookTransformer(func(received any) (any, error) {
+						calls++
+						if received != value {
+							t.Fatal("raw input identity changed")
+						}
+						events = append(events, "transform")
+						return resultValue, serviceError
+					})
+					var observer Observer
+					if observed {
+						observer = webhookObserver{
+							started: func(received any) {
+								if received != value {
+									t.Fatal("Started input changed")
+								}
+								events = append(events, "started")
+							},
+							finished: func(received any) {
+								if received != resultValue {
+									t.Fatal("Finished result changed")
+								}
+								events = append(events, "finished")
+							},
+						}
+					}
+					result, err := HandleWebhook(value, service, observer)
+					if result != resultValue || err != serviceError || calls != 1 {
+						t.Fatal("result/error identity or invocation count changed")
+					}
+					expected := []string{"transform"}
+					if observed {
+						expected = []string{"started", "transform"}
+						if serviceError == nil {
+							expected = append(expected, "finished")
+						}
+					}
+					if !reflect.DeepEqual(events, expected) {
+						t.Fatalf("events = %v, want %v", events, expected)
+					}
+				})
+			}
+		}
+	}
+}
+
+func TestHandleWebhookPanicContract(t *testing.T) {
+	for _, stage := range []string{"started", "transform", "finished"} {
+		t.Run(stage, func(t *testing.T) {
+			sentinel := &struct{ Stage string }{stage}
+			var events []string
+			calls := 0
+			visit := func(current string) {
+				events = append(events, current)
+				if stage == current {
+					panic(sentinel)
+				}
+			}
+			service := webhookTransformer(func(any) (any, error) {
+				calls++
+				visit("transform")
+				return sentinel, nil
+			})
+			observer := webhookObserver{
+				started:  func(any) { visit("started") },
+				finished: func(any) { visit("finished") },
+			}
+			defer func() {
+				if recovered := recover(); recovered != sentinel {
+					t.Fatalf("panic = %v, want original sentinel", recovered)
+				}
+				expectedCalls := 1
+				expected := []string{"started", "transform", "finished"}
+				if stage == "started" {
+					expectedCalls = 0
+					expected = expected[:1]
+				}
+				if stage == "transform" {
+					expected = expected[:2]
+				}
+				if calls != expectedCalls || !reflect.DeepEqual(events, expected) {
+					t.Fatalf("calls = %d, events = %v", calls, events)
+				}
+			}()
+			HandleWebhook(" raw ", service, observer)
+		})
+	}
+}
+
+func TestHandlerContractVersion(t *testing.T) {
+	if got := HandlerContractVersion(); got != "raw-v1" {
+		t.Fatalf("contract version = %q", got)
+	}
+}

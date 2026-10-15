@@ -1,0 +1,119 @@
+{
+  "aliases": [
+    "production webhook delivery"
+  ],
+  "applicable_knowledge": [
+    "F-observer-panic: preserve observer panic identity and invocation ordering; never retry Transform. Existing tests do not directly exercise observer panics; the current implementation has no recovery.",
+    "L-sdk-contract: a future new production handler entrypoint must expose HandlerContractVersion() string returning raw-v1. Preserve this requirement for the extension; do not add it during this review."
+  ],
+  "approach": "Preserve the established handlers.Handle implementation: inject a Transformer and optional Observer, notify Started with the raw input, delegate directly to Transform, notify Finished with the exact result only on success, and return the exact service result and error. This review records the existing production behavior only; no extension is implemented.",
+  "baseline_commit": "b48aa008349bd4fc2b99e45cb6bc92c41e150bf8",
+  "baseline_review": "Initial review: the existing record had no baseline_commit or saved reference hashes. All listed source paths exist. Current HEAD and source hashes are recorded as the initial baseline, not as acceptance of a changed baseline.",
+  "constraints": [
+    "Raw input delegated exactly once; preserve result/error identity",
+    "Observer Started before service; Finished only on success",
+    "No trimming, coercion, retry or panic recovery"
+  ],
+  "created_at": "0001-01-01T00:00:00Z",
+  "goal": "Production webhook delivery through injected service",
+  "id": "work-prod",
+  "raw_delegation_rules": [
+    "Pass the original any value unchanged, including whitespace, empty strings, nil and non-string values; do not trim, normalize or coerce.",
+    "Use the injected Transformer; invoke Transform exactly once when Started returns normally. Never retry.",
+    "Return the exact result and error from Transform, including a non-nil result paired with an error; do not wrap or replace either.",
+    "With a non-nil observer, call Started with the original input before Transform; call Finished with the exact result only when Transform returns a nil error.",
+    "Do not recover panics. A Started panic propagates unchanged before service invocation; a service panic propagates unchanged without Finished; a Finished panic propagates unchanged after one successful service invocation."
+  ],
+  "required_verification": [
+    "Raw inputs, service substitution, observer ordering and error identity"
+  ],
+  "scopes": [
+    "handlers/: established production webhook delivery via Handle, Transformer and Observer",
+    "Memory documentation and verification only; preserve implementation and existing tests"
+  ],
+  "source_references": [
+    {
+      "path": "handlers/reference.go",
+      "role": "Established production handler and injected interfaces",
+      "sha256": "af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540"
+    },
+    {
+      "path": "handlers/reference_test.go",
+      "role": "Existing raw-input, substitution, ordering, identity and service-panic verification",
+      "sha256": "e3826afde68bf0656f17f9f3d08fa48fdc7391186bdcf7eecf072eed3c46bc00"
+    },
+    {
+      "path": "contracts/version.go",
+      "role": "Existing raw-v1 contract constant; no handler entrypoint extension in this review",
+      "sha256": "fd22829b597b46bee5a82356f5467e93d76c2fd0b4e89eee5636e4ce08a2b297"
+    }
+  ],
+  "status": "COMPLETED",
+  "title": "Production event forwarding",
+  "touches_files": [
+    "handlers/reference.go"
+  ],
+  "updated_at": "2026-10-15T00:00:00Z",
+  "verification": {
+    "command": "go test ./...",
+    "implementation_preserved": true,
+    "result": "PASS: identitysample/contracts and identitysample/handlers"
+  },
+  "extensions": [
+  {
+    "aliases": [
+      "production webhook delivery",
+      "HandleWebhook"
+    ],
+    "approach": "Delegate HandleWebhook directly to the inspected DispatchProduction implementation. Expose HandlerContractVersion using contracts.Version. Preserve current layout, dispatcher and TraceTag.",
+    "baseline_review": "Original baseline b48aa008349bd4fc2b99e45cb6bc92c41e150bf8 differs from current HEAD. User authorizes extension after refactor; original completed agreement and baseline remain preserved, not replaced or silently reaccepted.",
+    "inspected_commit": "3191d8fab295343ef535cb5bf4d5ae7c8498f947",
+    "rules": [
+      "Original raw_delegation_rules apply unchanged",
+      "F-observer-panic: no panic recovery or retries; preserve identity and ordering",
+      "L-sdk-contract: HandlerContractVersion returns raw-v1"
+    ],
+    "scopes": [
+      "handlers/webhook.go",
+      "handlers/webhook_test.go",
+      "Append extension metadata to the selected work-prod record; preserve all original fields"
+    ],
+    "source_references": [
+      {
+        "path": "handlers/transport.go",
+        "sha256": "1cf7565ff10c275c0505a33efa1110319b569c6494c07ed9a4cc802f881d547d"
+      },
+      {
+        "path": "handlers/reference_test.go",
+        "sha256": "6004913b370e970642ca7824571769abc4c34eb4931d738ce5dea791846c9721"
+      },
+      {
+        "path": "contracts/version.go",
+        "sha256": "fd22829b597b46bee5a82356f5467e93d76c2fd0b4e89eee5636e4ce08a2b297"
+      },
+      {
+        "path": "handlers/webhook.go",
+        "sha256": "cc94131aacfdc802567fe2f877ed49559464920e4f8b42ed7d2cfee28838924e"
+      },
+      {
+        "path": "handlers/webhook_test.go",
+        "sha256": "ed29b80c69288a8c6fe6f8098dd6164183642f9c736b9bf438a80b3c6d6aa98a"
+      }
+    ],
+    "stale_agreements_and_references": [
+      "Original Handle implementation agreement is stale: current entrypoint is DispatchProduction in handlers/transport.go, with unchanged raw delivery semantics and TraceTag delivery-v2.",
+      "handlers/reference.go is missing after authorized relocation; its saved hash is historical.",
+      "handlers/reference_test.go exists but saved hash differs; tests now invoke DispatchProduction.",
+      "contracts/version.go hash matches the saved reference.",
+      "L-sdk-contract related_files reference handlers/reference.go is stale; its raw-v1 requirement still applies."
+    ],
+    "status": "COMPLETED",
+    "title": "Production webhook delivery entrypoint",
+    "verification": {
+      "command": "go test ./...",
+      "coverage": "Raw input identity, service substitution, result/error identity, optional observer order, Started/service/Finished panic identity and call counts, raw-v1 contract",
+      "result": "PASS: identitysample/contracts and identitysample/handlers"
+    }
+  }
+  ]
+}

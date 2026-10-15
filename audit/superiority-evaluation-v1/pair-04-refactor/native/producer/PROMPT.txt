@@ -1,0 +1,1 @@
+Known initial work work-prod. The existing production handler is already correct and its tests pass. Review it and record its established approach, handlers/ scope, source reference, raw delegation rules, and alias production webhook delivery using your documented memory mechanism. Run tests. Preserve the implementation. Do not implement the extension yet.

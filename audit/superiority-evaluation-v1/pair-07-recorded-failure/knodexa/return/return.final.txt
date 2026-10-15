@@ -1,0 +1,5 @@
+Added `HandleWebhook` and `HandlerContractVersion()` returning `"raw-v1"`.
+
+Preserved raw input, result/error identity, observer ordering, exact-once delivery, and unchanged panic propagation without recovery or retries. Completed source memory and the reference handler remain untouched.
+
+Added tests for delivery and failure contracts. `go test ./...` and `git diff --check` pass.

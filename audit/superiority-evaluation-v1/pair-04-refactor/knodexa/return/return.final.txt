@@ -1,0 +1,5 @@
+Added `HandleWebhook` using the current `DispatchProduction` behavior, plus `HandlerContractVersion()` returning `raw-v1`.
+
+Tests cover raw input, result/error identity, observer ordering, and panic propagation. `go test ./...` passes.
+
+Stale memory reported: `handlers/reference.go` is missing after relocation to `handlers/transport.go`; saved baseline `94f27d0` differs from current `987c702`. The original completed agreement, baseline, and source record remain unchanged.

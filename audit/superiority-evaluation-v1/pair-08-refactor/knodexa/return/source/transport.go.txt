@@ -1,0 +1,20 @@
+package handlers
+
+type Transformer interface{ Transform(any) (any, error) }
+type Observer interface {
+	Started(any)
+	Finished(any)
+}
+
+func DispatchProduction(value any, service Transformer, observer Observer) (any, error) {
+	if observer != nil {
+		observer.Started(value)
+	}
+	result, err := service.Transform(value)
+	if err == nil && observer != nil {
+		observer.Finished(result)
+	}
+	return result, err
+}
+
+func TraceTag() string { return "delivery-v2" }

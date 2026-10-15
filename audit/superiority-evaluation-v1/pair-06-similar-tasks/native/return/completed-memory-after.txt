@@ -1,0 +1,118 @@
+{
+  "aliases": [
+    "production webhook delivery"
+  ],
+  "approach": "Handle is a thin synchronous adapter over the injected Transformer. Pass the original any value directly to Transform and return its result and error unchanged. The optional Observer sees Started before delegation and Finished with the original result only on success.",
+  "baseline_commit": "ca86ece6ae3e08fd918c71e71836ef65382ebfca",
+  "baseline_review": "Initial capture: no prior baseline_commit or saved source hashes existed. All referenced files were present. Existing implementation reviewed and preserved; no extension implemented.",
+  "constraints": [
+    "Raw input delegated exactly once; preserve result/error identity",
+    "Observer Started before service; Finished only on success",
+    "No trimming, coercion, retry or panic recovery"
+  ],
+  "created_at": "0001-01-01T00:00:00Z",
+  "goal": "Production webhook delivery through injected service",
+  "id": "work-prod",
+  "raw_delegation_rules": [
+    "Pass raw input unchanged, including whitespace, empty strings, nil and non-string values; no trimming, coercion or validation",
+    "Invoke the injected Transform exactly once when Started returns normally; no retries or service substitution inside the handler",
+    "Return the exact service result and error, including a non-nil result paired with an error",
+    "With an observer, call Started with raw input before Transform; call Finished with the raw result only when the service error is nil",
+    "Do not recover panics: Started panic propagates unchanged before service invocation; service panic propagates unchanged; Finished panic propagates unchanged after one successful service invocation"
+  ],
+  "required_verification": [
+    "Raw inputs, service substitution, observer ordering and error identity"
+  ],
+  "scopes": [
+    "handlers/: established Handle entrypoint, Transformer and Observer interfaces; reference tests document existing behavior",
+    "Documentation only for this initial capture; preserve implementation and completed source records on future extensions"
+  ],
+  "source_references": [
+    {
+      "path": "handlers/reference.go",
+      "role": "Established implementation and interface contract",
+      "sha256": "af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540"
+    },
+    {
+      "path": "handlers/reference_test.go",
+      "role": "Existing delegation, identity, observer ordering and service panic checks; observer panic requirements additionally come from F-observer-panic",
+      "sha256": "e3826afde68bf0656f17f9f3d08fa48fdc7391186bdcf7eecf072eed3c46bc00"
+    },
+    {
+      "path": "contracts/version.go",
+      "role": "Existing raw-v1 constant; context for future entrypoints",
+      "sha256": "fd22829b597b46bee5a82356f5467e93d76c2fd0b4e89eee5636e4ce08a2b297"
+    },
+    {
+      "path": "memory/knowledge.json",
+      "role": "F-observer-panic and L-sdk-contract reviewed; future new production entrypoints must expose HandlerContractVersion() string returning raw-v1. Existing Handle remains unchanged.",
+      "sha256": "c003d7fbf112a9aeb362586e97450ce00a1b1cd5d1fca120afb605908b9ef6a3"
+    }
+  ],
+  "status": "COMPLETED",
+  "title": "Production event forwarding",
+  "touches_files": [
+    "handlers/reference.go"
+  ],
+  "updated_at": "0001-01-01T00:00:00Z",
+  "verification": {
+    "command": "go test ./...",
+    "implementation_preserved": true,
+    "result": "PASS: identitysample/contracts and identitysample/handlers"
+  },
+  "extensions": [
+    {
+      "aliases": [
+        "another production webhook delivery handler",
+        "HandleWebhook"
+      ],
+      "approach": "Delegate HandleWebhook to the established Handle implementation; expose HandlerContractVersion through contracts.Version. Test raw input and output identity, injected services, success/error observer order, and all panic stages.",
+      "baseline_commit": "8eb47caea0a5c093092dd9b156fb3c19531146aa",
+      "baseline_review": "Saved completed-source baseline ca86ece6ae3e08fd918c71e71836ef65382ebfca differs from current HEAD. All four saved references exist and hashes match; git diff between baselines for handlers and contracts is empty. Current implementation inspected before extension; original baseline and agreement retained.",
+      "goal": "Expose HandleWebhook and the raw-v1 integration version in package handlers",
+      "id": "work-prod-handle-webhook",
+      "rules": [
+        "Preserve all work-prod raw_delegation_rules",
+        "Apply F-observer-panic: propagate panic identity and never retry",
+        "Apply L-sdk-contract: HandlerContractVersion returns raw-v1"
+      ],
+      "scopes": [
+        "handlers/webhook.go",
+        "handlers/webhook_test.go",
+        "memory/work-prod.json: append extension only; completed source agreement preserved"
+      ],
+      "source_references": [
+        {
+          "path": "handlers/reference.go",
+          "sha256": "af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540"
+        },
+        {
+          "path": "handlers/reference_test.go",
+          "sha256": "e3826afde68bf0656f17f9f3d08fa48fdc7391186bdcf7eecf072eed3c46bc00"
+        },
+        {
+          "path": "contracts/version.go",
+          "sha256": "fd22829b597b46bee5a82356f5467e93d76c2fd0b4e89eee5636e4ce08a2b297"
+        },
+        {
+          "path": "memory/knowledge.json",
+          "sha256": "c003d7fbf112a9aeb362586e97450ce00a1b1cd5d1fca120afb605908b9ef6a3"
+        },
+        {
+          "path": "handlers/webhook.go",
+          "sha256": "7e95f26459a7759efe51c20410ff387356324d1466c26eba43282eb95d7d5de3"
+        },
+        {
+          "path": "handlers/webhook_test.go",
+          "sha256": "ef46be6823a23bbbf9793fe94ef1b6bb33c4f6d5f9be3a1e51d31c9fe6940656"
+        }
+      ],
+      "status": "COMPLETED",
+      "title": "Additional production webhook delivery entrypoint",
+      "verification": {
+        "command": "go test ./...",
+        "result": "PASS"
+      }
+    }
+  ]
+}

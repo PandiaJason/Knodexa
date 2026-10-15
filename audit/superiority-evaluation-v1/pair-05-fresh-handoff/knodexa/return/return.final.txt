@@ -1,0 +1,5 @@
+Added `HandleWebhook` using the established handler behavior, plus `HandlerContractVersion()` returning `"raw-v1"`.
+
+Tests cover raw inputs, injected services, observer ordering, result/error identity, and panic propagation. `go test ./...` passes.
+
+Preserved the existing implementation, completed source memory, and agreement.

@@ -1,0 +1,8 @@
+id: E-extension-persistence-review
+title: Reviewed eight-pair outcomes and rejected extension recording
+node_id: L-grade-extension-persistence
+evidence_type: MANUAL_SIGN_OFF
+created_at: 2026-10-15T05:09:35Z
+exit_code: 0
+verified_by: Codex retained artifact review
+output_summary: 'Reviewed all eight planned outcomes, per-return independent checks, source and completed-memory snapshots, summary metrics, rendered chart, and narrow trace excerpts. Six scored pairs tied, two similar-task pairs are unscored for a fixture API misuse. The live process exited 1 for setup errors; offline fixture regression, vet/race/standalone checks exited 0. Pair 8 Knodexa reported extension recording blocked; explicit structural rejection is retained in workflow-findings.json. Quality directional p=1; no advantage gate met. Comparable return totals: native 391.758s/44 actions, Knodexa 322.461s/55 actions. Producer totals retained separately.'

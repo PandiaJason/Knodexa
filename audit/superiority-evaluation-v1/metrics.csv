@@ -1,0 +1,17 @@
+pair,case,arm,scored,passed,paired_outcome,producer_seconds,return_seconds,return_tool_actions,producer_tool_actions
+1,fresh-handoff,native,True,True,tie,43.034363958,77.697667166,9,6
+1,fresh-handoff,knodexa,True,True,tie,39.901638834,65.001423958,8,12
+2,similar-tasks,native,True,True,unscored,39.913726,72.499556292,9,5
+2,similar-tasks,knodexa,False,False,unscored,30.860913583,,,12
+3,recorded-failure,native,True,True,tie,40.398153333,64.87536525,8,5
+3,recorded-failure,knodexa,True,True,tie,36.595580292,46.066693958,8,13
+4,refactor,native,True,True,tie,32.244016875,54.130468875,6,5
+4,refactor,knodexa,True,True,tie,31.750296958,59.378902459,15,8
+5,fresh-handoff,native,True,True,tie,39.343868125,53.301976083,6,6
+5,fresh-handoff,knodexa,True,True,tie,35.90627875,49.483404667,7,14
+6,similar-tasks,native,True,True,unscored,35.088513959,61.58378175,9,7
+6,similar-tasks,knodexa,False,False,unscored,31.712276375,,,13
+7,recorded-failure,native,True,True,tie,32.866507625,57.142107167,7,5
+7,recorded-failure,knodexa,True,True,tie,29.86693675,45.374921959,6,8
+8,refactor,native,True,True,tie,40.352449084,84.610843458,8,6
+8,refactor,knodexa,True,True,tie,30.694051333,57.155847291,11,13

@@ -1,0 +1,5 @@
+Updated [memory/work-prod.json](memory/work-prod.json) with the established approach, `handlers/` scope, raw delegation rules, source hashes, baseline commit, and existing alias `production webhook delivery`.
+
+No prior baseline or hashes existed; all references were present. Implementation preserved; extension not implemented.
+
+`go test ./...` and `git diff --check` passed.

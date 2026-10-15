@@ -1,0 +1,55 @@
+=== RUN   TestLiveSuperiorityComparison
+=== RUN   TestLiveSuperiorityComparison/pair-01-fresh-handoff-native
+=== RUN   TestLiveSuperiorityComparison/pair-01-fresh-handoff-knodexa
+=== NAME  TestLiveSuperiorityComparison
+    live_superiority_test.go:113: pair 1/8 fresh-handoff: tie; K wins=0 native wins=0 ties=1 unscored=0
+=== RUN   TestLiveSuperiorityComparison/pair-02-similar-tasks-knodexa
+    live_hard_test.go:233: replacing an agreement requires change_reason
+=== RUN   TestLiveSuperiorityComparison/pair-02-similar-tasks-native
+=== NAME  TestLiveSuperiorityComparison
+    live_superiority_test.go:113: pair 2/8 similar-tasks: unscored; K wins=0 native wins=0 ties=1 unscored=1
+=== RUN   TestLiveSuperiorityComparison/pair-03-recorded-failure-native
+=== RUN   TestLiveSuperiorityComparison/pair-03-recorded-failure-knodexa
+=== NAME  TestLiveSuperiorityComparison
+    live_superiority_test.go:113: pair 3/8 recorded-failure: tie; K wins=0 native wins=0 ties=2 unscored=1
+=== RUN   TestLiveSuperiorityComparison/pair-04-refactor-knodexa
+=== RUN   TestLiveSuperiorityComparison/pair-04-refactor-native
+=== NAME  TestLiveSuperiorityComparison
+    live_superiority_test.go:113: pair 4/8 refactor: tie; K wins=0 native wins=0 ties=3 unscored=1
+=== RUN   TestLiveSuperiorityComparison/pair-05-fresh-handoff-native
+=== RUN   TestLiveSuperiorityComparison/pair-05-fresh-handoff-knodexa
+=== NAME  TestLiveSuperiorityComparison
+    live_superiority_test.go:113: pair 5/8 fresh-handoff: tie; K wins=0 native wins=0 ties=4 unscored=1
+=== RUN   TestLiveSuperiorityComparison/pair-06-similar-tasks-knodexa
+    live_hard_test.go:233: replacing an agreement requires change_reason
+=== RUN   TestLiveSuperiorityComparison/pair-06-similar-tasks-native
+=== NAME  TestLiveSuperiorityComparison
+    live_superiority_test.go:113: pair 6/8 similar-tasks: unscored; K wins=0 native wins=0 ties=4 unscored=2
+=== RUN   TestLiveSuperiorityComparison/pair-07-recorded-failure-native
+=== RUN   TestLiveSuperiorityComparison/pair-07-recorded-failure-knodexa
+=== NAME  TestLiveSuperiorityComparison
+    live_superiority_test.go:113: pair 7/8 recorded-failure: tie; K wins=0 native wins=0 ties=5 unscored=2
+=== RUN   TestLiveSuperiorityComparison/pair-08-refactor-knodexa
+=== RUN   TestLiveSuperiorityComparison/pair-08-refactor-native
+=== NAME  TestLiveSuperiorityComparison
+    live_superiority_test.go:113: pair 8/8 refactor: tie; K wins=0 native wins=0 ties=6 unscored=2
+--- FAIL: TestLiveSuperiorityComparison (1521.02s)
+    --- PASS: TestLiveSuperiorityComparison/pair-01-fresh-handoff-native (125.72s)
+    --- PASS: TestLiveSuperiorityComparison/pair-01-fresh-handoff-knodexa (113.70s)
+    --- FAIL: TestLiveSuperiorityComparison/pair-02-similar-tasks-knodexa (36.14s)
+    --- PASS: TestLiveSuperiorityComparison/pair-02-similar-tasks-native (119.84s)
+    --- PASS: TestLiveSuperiorityComparison/pair-03-recorded-failure-native (111.80s)
+    --- PASS: TestLiveSuperiorityComparison/pair-03-recorded-failure-knodexa (89.24s)
+    --- PASS: TestLiveSuperiorityComparison/pair-04-refactor-knodexa (101.83s)
+    --- PASS: TestLiveSuperiorityComparison/pair-04-refactor-native (92.54s)
+    --- PASS: TestLiveSuperiorityComparison/pair-05-fresh-handoff-native (96.22s)
+    --- PASS: TestLiveSuperiorityComparison/pair-05-fresh-handoff-knodexa (91.74s)
+    --- FAIL: TestLiveSuperiorityComparison/pair-06-similar-tasks-knodexa (36.81s)
+    --- PASS: TestLiveSuperiorityComparison/pair-06-similar-tasks-native (101.32s)
+    --- PASS: TestLiveSuperiorityComparison/pair-07-recorded-failure-native (93.89s)
+    --- PASS: TestLiveSuperiorityComparison/pair-07-recorded-failure-knodexa (81.65s)
+    --- PASS: TestLiveSuperiorityComparison/pair-08-refactor-knodexa (96.76s)
+    --- PASS: TestLiveSuperiorityComparison/pair-08-refactor-native (131.73s)
+FAIL
+FAIL	knodexa/internal/experiment	1522.459s
+FAIL

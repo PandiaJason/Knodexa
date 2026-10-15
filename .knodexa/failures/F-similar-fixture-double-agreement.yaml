@@ -1,0 +1,5 @@
+id: F-similar-fixture-double-agreement
+task_id: '1'
+summary: Similar-task live benchmark fixture attempted to install the same initial agreement twice.
+causal_details: 'The fixture saved a task with Approach populated, then called approach.Set without a replacement change_reason. Current safety checks correctly reject that operation. Pair 2 Knodexa failed before a return agent ran, so it is unscored and cannot count as an agent-quality loss. Fix the fixture by saving the task without Approach and then installing its initial agreement once. The running compiled eight-pair suite retains the original setup failure, and its remaining similar-task case will have the same limitation. Add a model-free regression for all six distractor records; do not rerun scored outcomes.'
+attempted_at: 2026-10-15T04:47:48Z

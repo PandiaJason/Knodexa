@@ -1,0 +1,27 @@
+{
+  "case": "recorded-failure",
+  "arm": "knodexa",
+  "phase": {
+    "exit_code": 0,
+    "seconds": 46.066693958,
+    "thread_id": "01a13de6-a4c2-74e0-93fd-9e9ad827a979",
+    "tool_items": 8,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 113408,
+        "input_tokens": 128747,
+        "output_tokens": 1791,
+        "reasoning_output_tokens": 28
+      }
+    ],
+    "agent_resolved_task": "work-prod",
+    "agent_resolver_request": "Add another production webhook delivery handler in package handlers. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep the established layout and behavior and applicable cross-task conventions. Add and run tests. Preserve completed source memory. Add resilience while respecting the recorded observer failure contract; do not repeat past failed approaches."
+  },
+  "behavior_passed": true,
+  "completed_memory_preserved": true,
+  "reference_preserved": true,
+  "stale_agreement_reported": false,
+  "scored": true,
+  "passed": true
+}

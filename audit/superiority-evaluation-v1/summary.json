@@ -1,0 +1,26 @@
+{
+  "knodexa_wins": 0,
+  "native_wins": 0,
+  "ties": 6,
+  "unscored": 2,
+  "one_sided_sign_p": 1,
+  "suite_quality_advantage_demonstrated": false,
+  "paired_metrics": {
+    "native": {
+      "paired_returns": 6,
+      "passed_paired_returns": 6,
+      "return_seconds": 391.758427999,
+      "return_actions": 44,
+      "producer_seconds": 228.239359,
+      "producer_actions": 33
+    },
+    "knodexa": {
+      "paired_returns": 6,
+      "passed_paired_returns": 6,
+      "return_seconds": 322.461194292,
+      "return_actions": 55,
+      "producer_seconds": 204.714782917,
+      "producer_actions": 68
+    }
+  }
+}

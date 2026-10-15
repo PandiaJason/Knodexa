@@ -1,0 +1,5 @@
+Recorded the established approach, `handlers/` scope, source hashes, raw delegation rules, and alias `production webhook delivery` in [memory/work-prod.json](memory/work-prod.json).
+
+No prior baseline or source references existed; recorded current HEAD as the initial baseline. Preserved the implementation and deferred the extension.
+
+`go test ./...` passes.

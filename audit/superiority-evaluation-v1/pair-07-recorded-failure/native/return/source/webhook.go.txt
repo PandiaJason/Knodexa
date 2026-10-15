@@ -1,0 +1,14 @@
+package handlers
+
+import "identitysample/contracts"
+
+// HandleWebhook delivers the original value using the established handler contract.
+// Service and observer panics propagate unchanged; delivery is never retried.
+func HandleWebhook(value any, service Transformer, observer Observer) (any, error) {
+	return Handle(value, service, observer)
+}
+
+// HandlerContractVersion identifies the production handler integration contract.
+func HandlerContractVersion() string {
+	return contracts.Version
+}

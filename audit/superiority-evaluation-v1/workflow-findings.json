@@ -1,0 +1,16 @@
+[
+  {
+    "pair_directory": "pair-08-refactor",
+    "observation": "record help unavailable",
+    "shell_exit_code": 1,
+    "output_excerpt": "package handlers\n\ntype Transformer interface{ Transform(any) (any, error) }\ntype Observer interface {\n\tStarted(any)\n\tFinished(any)\n}\n\nfunc Handle(value any, service Transformer, observer Observer) (any, error) {\n\tif observer != nil {\n\t\tobserver.Started(value)\n\t}\n\tresult, err := service.Transform(value)\n\tif err == nil && observer != nil {\n\t\tobserver.Finished(result)\n\t}\n\treturn result, err\n}\nmodule identitysample\n\ngo 1.26.0\nError: unknown flag: --help\n",
+    "caveat": "A combined shell command can exit zero after an earlier record command fails; use the explicit error output."
+  },
+  {
+    "pair_directory": "pair-08-refactor",
+    "observation": "extension recording rejected for stale inherited reference",
+    "shell_exit_code": 0,
+    "output_excerpt": "{\"task_id\":\"webhook-delivery\",\"work_id\":\"\",\"version\":0,\"recorded\":false,\"verification\":[{\"command\":[\"/bin/sh\",\"-c\",\"go test ./...\"],\"exit_code\":0,\"output\":\"ok  \\tidentitysample/contracts\\t(cached)\\nok  \\tidentitysample/handlers\\t(cached)\\n\"}],\"checks\":{\"task_id\":\"webhook-delivery\",\"structural_checks_passed\":false,\"semantic_review_required\":true,\"results\":[{\"source_task\":\"work-prod\",\"path\":\"handlers/reference.go\",\"kind\":\"reference\",\"passed\":false,\"detail\":\"reference missing or unreadable\"},{\"source_task\":\"webhook-delivery\",\"path\":\"handlers/transport.go\",\"kind\":\"reference\",\"passed\":true,\"detail\":\"reference unchanged\"},{\"source_task\":\"webhook-delivery\",\"path\":\"contracts/version.go\",\"kind\":\"reference\",\"passed\":true,\"detail\":\"reference unchanged\"}]}}\nError: structural checks failed; memory unchanged\n .knodexa/events.jsonl | 1 +\n 1 file changed, 1 insertion(+)\n M .knodexa/events.jsonl\n?? .knodexa/tasks/work-prod/webhook-delivery.yaml\n?? handlers/webhook.go\n?? handlers/webhook_test.go\n?? webhook-agreement.json\n",
+    "caveat": "A combined shell command can exit zero after an earlier record command fails; use the explicit error output."
+  }
+]

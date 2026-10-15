@@ -1,0 +1,106 @@
+{
+  "aliases": [
+    "production webhook delivery"
+  ],
+  "approach": "Keep Handle as a thin adapter over injected Transformer and optional Observer. Pass the original value to Started and Transform, invoke Transform once, notify Finished with its result only when err is nil, and return the exact result and error. Preserve the existing implementation; no extension is implemented.",
+  "baseline_commit": "d40af9d0bccebb5e8318e90371f0b198374b791a",
+  "baseline_review": "Initial record had no baseline_commit or reference hashes; current HEAD and reviewed source hashes are recorded for future comparisons. No missing source references found.",
+  "constraints": [
+    "Raw input delegated exactly once; preserve result/error identity",
+    "Observer Started before service; Finished only on success",
+    "No trimming, coercion, retry or panic recovery"
+  ],
+  "created_at": "0001-01-01T00:00:00Z",
+  "extensions": [
+    {
+      "aliases": [
+        "HandleWebhook",
+        "another production webhook delivery handler"
+      ],
+      "approach": "Delegate HandleWebhook to DispatchProduction; expose HandlerContractVersion using contracts.Version. Preserve existing production code and completed source memory.",
+      "baseline_commit": "9ce165f1f945dc393c86accd938bfe8fed0611e7",
+      "baseline_review": "Original completed agreement and baseline preserved. Authorized refactor relocated handlers/reference.go to handlers/transport.go, renamed Handle to DispatchProduction, added TraceTag, and changed reference tests. Original source path is missing and saved reference test hash is stale. knowledge.json hash remains current. Reviewed current code and baseline diff; behavior remains compatible.",
+      "goal": "Add HandleWebhook using current production dispatch behavior",
+      "id": "work-prod-webhook",
+      "rules": [
+        "Inherit original raw delegation, identity, observer ordering and panic propagation rules",
+        "Apply F-observer-panic and L-sdk-contract; never retry or recover panics",
+        "Return raw-v1 through HandlerContractVersion"
+      ],
+      "scopes": [
+        "handlers/"
+      ],
+      "source_references": [
+        {
+          "path": "handlers/transport.go",
+          "sha256": "1cf7565ff10c275c0505a33efa1110319b569c6494c07ed9a4cc802f881d547d"
+        },
+        {
+          "path": "handlers/reference_test.go",
+          "sha256": "6004913b370e970642ca7824571769abc4c34eb4931d738ce5dea791846c9721"
+        },
+        {
+          "path": "memory/knowledge.json",
+          "sha256": "c003d7fbf112a9aeb362586e97450ce00a1b1cd5d1fca120afb605908b9ef6a3"
+        },
+        {
+          "path": "contracts/version.go",
+          "sha256": "fd22829b597b46bee5a82356f5467e93d76c2fd0b4e89eee5636e4ce08a2b297"
+        }
+      ],
+      "status": "COMPLETED",
+      "touches_files": [
+        "handlers/webhook.go",
+        "handlers/webhook_test.go"
+      ],
+      "verification": {
+        "command": "go test ./...",
+        "result": "PASS: identitysample/contracts and identitysample/handlers",
+        "review": "Tests cover raw values and pointer identity, optional observer, success/error ordering, exact result/error identity, one service call, Started/service/Finished panic identity and invocation ordering, and raw-v1 contract. Original completed fields verified unchanged against HEAD."
+      }
+    }
+  ],
+  "goal": "Production webhook delivery through injected service",
+  "id": "work-prod",
+  "required_verification": [
+    "Raw inputs, service substitution, observer ordering and error identity"
+  ],
+  "rules": [
+    "Delegate any raw input unchanged, including whitespace, empty strings, nil and non-string values, to the injected service exactly once",
+    "Return service result and error unchanged, including a non-nil result paired with an error",
+    "With an observer, call Started with raw input before Transform and Finished with raw result only on success; nil observer is supported",
+    "Do not trim, coerce, retry, wrap errors or recover panics",
+    "Started panic propagates unchanged before service invocation; Finished panic propagates unchanged after one successful service invocation; service panic propagates unchanged"
+  ],
+  "scopes": [
+    "handlers/"
+  ],
+  "source_references": [
+    {
+      "path": "handlers/reference.go",
+      "role": "Established production handler and injected interfaces",
+      "sha256": "af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540"
+    },
+    {
+      "path": "handlers/reference_test.go",
+      "role": "Raw input, injection, observer ordering, result/error identity and service panic verification",
+      "sha256": "e3826afde68bf0656f17f9f3d08fa48fdc7391186bdcf7eecf072eed3c46bc00"
+    },
+    {
+      "path": "memory/knowledge.json",
+      "role": "F-observer-panic applies to this contract; L-sdk-contract applies when adding a future production entrypoint and does not alter this older reference handler",
+      "sha256": "c003d7fbf112a9aeb362586e97450ce00a1b1cd5d1fca120afb605908b9ef6a3"
+    }
+  ],
+  "status": "COMPLETED",
+  "title": "Production event forwarding",
+  "touches_files": [
+    "handlers/reference.go"
+  ],
+  "updated_at": "2026-10-15T04:54:12Z",
+  "verification": {
+    "command": "go test ./...",
+    "result": "PASS: identitysample/contracts and identitysample/handlers",
+    "review": "Current implementation satisfies raw delegation and panic propagation rules. Existing tests cover service panic; observer panic behavior was checked by source review. Implementation and tests preserved."
+  }
+}

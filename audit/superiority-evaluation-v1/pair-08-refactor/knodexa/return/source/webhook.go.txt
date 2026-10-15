@@ -1,0 +1,9 @@
+package handlers
+
+// HandleWebhook delivers the original value through the production dispatcher.
+func HandleWebhook(value any, service Transformer, observer Observer) (any, error) {
+	return DispatchProduction(value, service, observer)
+}
+
+// HandlerContractVersion identifies the raw-input delivery contract.
+func HandlerContractVersion() string { return "raw-v1" }

@@ -1,0 +1,56 @@
+work_id: work-prod
+code_anchors:
+    - path: handlers/reference.go
+      sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+      symbols:
+        - Handle
+        - Observer
+        - Transformer
+    - path: handlers/reference_test.go
+      sha256: e3826afde68bf0656f17f9f3d08fa48fdc7391186bdcf7eecf072eed3c46bc00
+      symbols:
+        - TestIndependentIdentityContract
+        - auditObserver
+        - auditObserver.Finished
+        - auditObserver.Started
+        - auditService
+        - auditService.Transform
+      imports:
+        - errors
+        - reflect
+        - testing
+aliases:
+    - production webhook delivery
+approach:
+    version: 1
+    scopes:
+        - handlers/
+    summary: Production webhook delivery delegates raw values through an injected Transformer with optional observer hooks, preserving input, result, error and panic identity.
+    rules:
+        - Delegate the original raw input to the injected Transformer.Transform exactly once; do not trim, normalize, coerce, validate or retry.
+        - Return the service result and error unchanged, including a non-nil result returned alongside an error; preserve their identity.
+        - When an observer is present, call Started with the original input before invoking the service; call Finished with the unchanged result only when the service returns no error.
+        - A nil observer skips hooks without changing delegation.
+        - Do not recover or replace service or observer panics. A Started panic propagates unchanged before any service call; a Finished panic propagates unchanged after exactly one successful service call. Never retry Transform.
+        - Preserve existing repository constraints, public APIs and deterministic behavior with zero LLM calls in the core engine.
+        - Preserve the reviewed implementation for initial capture. The SDK compatibility lesson requires HandlerContractVersion returning raw-v1 when a new production handler entrypoint is added; no extension or new entrypoint is implemented in this capture.
+    references:
+        - path: handlers/reference.go
+          sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+    recorded_at: 2026-10-15T04:52:44.929862Z
+id: work-prod
+title: Production event forwarding
+goal: Production webhook delivery through injected service
+status: COMPLETED
+created_at: 0001-01-01T00:00:00Z
+updated_at: 2026-10-15T04:52:44.929862Z
+constraints:
+    - Raw input delegated exactly once; preserve result/error identity
+    - Observer Started before service; Finished only on success
+    - No trimming, coercion, retry or panic recovery
+touches_files:
+    - handlers/reference.go
+    - handlers/reference_test.go
+baseline_commit: 94f27d0c5ce6e8181bc3c5d36675d769467f6109
+required_verification:
+    - Raw inputs, service substitution, observer ordering and error identity

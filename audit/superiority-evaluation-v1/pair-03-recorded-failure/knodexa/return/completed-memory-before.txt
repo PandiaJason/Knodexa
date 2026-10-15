@@ -1,0 +1,42 @@
+work_id: work-prod
+code_anchors:
+    - path: handlers/reference.go
+      sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+      symbols:
+        - Handle
+        - Observer
+        - Transformer
+aliases:
+    - production webhook delivery
+approach:
+    version: 1
+    scopes:
+        - handlers/
+    summary: Production webhook delivery uses a thin handler that delegates raw input to an injected Transformer and optionally notifies an Observer.
+    rules:
+        - Delegate the original raw input exactly once to the injected service.Transform; preserve service substitution through the Transformer interface.
+        - Return the exact service result and error unchanged, including a result returned with an error.
+        - Do not trim, normalize, coerce, validate or otherwise transform raw input, including whitespace, empty strings, nil and non-string values.
+        - When an observer is present, call Started with the original input before Transform and Finished with the exact result only when Transform succeeds.
+        - Do not retry or recover panics. Started panics propagate unchanged before any service invocation; service panics propagate unchanged; Finished panics propagate unchanged after one successful service invocation.
+        - Preserve the established public APIs and deterministic behavior with zero LLM calls in the core engine.
+        - The SDK lesson requiring HandlerContractVersion() string returning raw-v1 applies when adding a new production handler entrypoint; preserve the existing unversioned reference handler during this capture.
+    references:
+        - path: handlers/reference.go
+          sha256: af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540
+    recorded_at: 2026-10-15T04:51:18.447523Z
+id: work-prod
+title: Production event forwarding
+goal: Production webhook delivery through injected service
+status: COMPLETED
+created_at: 0001-01-01T00:00:00Z
+updated_at: 2026-10-15T04:51:18.447523Z
+constraints:
+    - Raw input delegated exactly once; preserve result/error identity
+    - Observer Started before service; Finished only on success
+    - No trimming, coercion, retry or panic recovery
+touches_files:
+    - handlers/reference.go
+baseline_commit: 2cbd79093540781cdea2a1f46b4241ba75f3f907
+required_verification:
+    - Raw inputs, service substitution, observer ordering and error identity

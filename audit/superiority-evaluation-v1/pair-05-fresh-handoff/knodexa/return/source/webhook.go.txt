@@ -1,0 +1,13 @@
+package handlers
+
+import "identitysample/contracts"
+
+// HandleWebhook delivers the raw value through the supplied service and observer.
+func HandleWebhook(value any, service Transformer, observer Observer) (any, error) {
+	return Handle(value, service, observer)
+}
+
+// HandlerContractVersion reports the handler compatibility contract.
+func HandlerContractVersion() string {
+	return contracts.Version
+}

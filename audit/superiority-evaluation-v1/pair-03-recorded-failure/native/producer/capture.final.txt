@@ -1,0 +1,5 @@
+Recorded the established approach, `handlers/` scope, source hashes, raw delegation rules, and existing alias in [memory/work-prod.json](memory/work-prod.json).
+
+No prior baseline or hashes existed; recorded the current commit as the initial snapshot. Reviewed the applicable failure and SDK lesson.
+
+Implementation preserved; extension deferred. `go test ./...` passes.

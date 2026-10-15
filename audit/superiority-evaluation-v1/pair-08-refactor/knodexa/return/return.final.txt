@@ -1,0 +1,5 @@
+Added `HandleWebhook` using `DispatchProduction`, plus `HandlerContractVersion()` returning `"raw-v1"`.
+
+Tests pass with `go test ./...`, covering input/result/error identity, callback ordering, and panic propagation.
+
+The saved agreement references missing `handlers/reference.go` and the old baseline `1835c7d`; current code is in `handlers/transport.go` after refactor `84747b3`. The original completed agreement and baseline remain unchanged. Extension recording was blocked by the inherited stale reference; its agreement is saved in `webhook-agreement.json`.

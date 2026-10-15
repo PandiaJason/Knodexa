@@ -1,0 +1,5 @@
+Updated [memory/work-prod.json](memory/work-prod.json) with the established approach, `handlers/` scope, source hashes, raw delegation rules, alias, and applicable lessons.
+
+No prior baseline or hashes existed; recorded the reviewed current commit. All references exist.
+
+`go test ./...` passed. Implementation preserved; no extension implemented.

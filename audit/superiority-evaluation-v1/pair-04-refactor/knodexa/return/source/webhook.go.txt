@@ -1,0 +1,11 @@
+package handlers
+
+import "identitysample/contracts"
+
+// HandleWebhook delivers the raw value using the production dispatch contract.
+func HandleWebhook(value any, service Transformer, observer Observer) (any, error) {
+	return DispatchProduction(value, service, observer)
+}
+
+// HandlerContractVersion identifies the handler contract for SDK integrations.
+func HandlerContractVersion() string { return contracts.Version }

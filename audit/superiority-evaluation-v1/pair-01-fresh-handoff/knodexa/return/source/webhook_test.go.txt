@@ -1,0 +1,113 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+type webhookTransformer func(any) (any, error)
+
+func (f webhookTransformer) Transform(value any) (any, error) { return f(value) }
+
+type webhookObserver struct {
+	start, finish func(any)
+}
+
+func (o webhookObserver) Started(value any)  { o.start(value) }
+func (o webhookObserver) Finished(value any) { o.finish(value) }
+
+func TestWebhookDelivery(t *testing.T) {
+	inputPointer := new(int)
+	for _, input := range []any{nil, "", " raw \n", 17, inputPointer} {
+		for _, observed := range []bool{false, true} {
+			for _, failure := range []error{nil, errors.New("delivery failed")} {
+				events := []string{}
+				output := new(int)
+				service := webhookTransformer(func(value any) (any, error) {
+					if value != input {
+						t.Fatalf("input changed: %#v", value)
+					}
+					events = append(events, "transform")
+					return output, failure
+				})
+				var observer Observer
+				if observed {
+					observer = webhookObserver{
+						start: func(value any) {
+							if value != input {
+								t.Fatal("Started input changed")
+							}
+							events = append(events, "started")
+						},
+						finish: func(value any) {
+							if value != output {
+								t.Fatal("Finished result changed")
+							}
+							events = append(events, "finished")
+						},
+					}
+				}
+				result, err := HandleWebhook(input, service, observer)
+				if result != output || err != failure {
+					t.Fatal("result or error identity changed")
+				}
+				want := []string{"transform"}
+				if observed {
+					want = []string{"started", "transform"}
+					if failure == nil {
+						want = append(want, "finished")
+					}
+				}
+				if !reflect.DeepEqual(events, want) {
+					t.Fatalf("events = %v, want %v", events, want)
+				}
+			}
+		}
+	}
+}
+
+func TestWebhookPanicIdentityAndOrder(t *testing.T) {
+	for _, stage := range []string{"started", "transform", "finished"} {
+		t.Run(stage, func(t *testing.T) {
+			marker := new(int)
+			events := []string{}
+			visit := func(name string) {
+				events = append(events, name)
+				if name == stage {
+					panic(marker)
+				}
+			}
+			service := webhookTransformer(func(any) (any, error) {
+				visit("transform")
+				return marker, nil
+			})
+			observer := webhookObserver{
+				start:  func(any) { visit("started") },
+				finish: func(any) { visit("finished") },
+			}
+			defer func() {
+				if recover() != marker {
+					t.Fatal("panic identity changed")
+				}
+				want := []string{"started"}
+				if stage != "started" {
+					want = append(want, "transform")
+				}
+				if stage == "finished" {
+					want = append(want, "finished")
+				}
+				if !reflect.DeepEqual(events, want) {
+					t.Fatalf("events = %v, want %v", events, want)
+				}
+			}()
+			HandleWebhook(marker, service, observer)
+		})
+	}
+}
+
+func TestHandlerContractVersion(t *testing.T) {
+	if got := HandlerContractVersion(); got != "raw-v1" {
+		t.Fatalf("contract version = %q", got)
+	}
+}

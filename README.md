@@ -37,8 +37,23 @@ Knodexa stores explicit project understanding, not hidden model reasoning.
 
 ## Evidence, not promises
 
+The latest predeclared eight-pair audit produced **six quality ties, zero wins for
+either arm, and two unscored similar-task setup failures**. Both arms passed every
+fully scored fresh-handoff, recorded-failure and refactor return. Knodexa used
+**322.5 seconds / 55 return tool actions**, versus **391.8 seconds / 44 actions**
+for organized files: about 18% less observed return time and 25% more actions.
+These timings exclude producer capture and harness setup, and do not establish a
+general speed advantage. The fixture failure was corrected offline without
+rerunning scored outcomes. One Knodexa refactor agent also failed to index its
+extension agreement despite passing behavior; that workflow limitation is retained.
+
+![Eight-pair continuity audit](docs/assets/superiority-evaluation.png)
+
+[Latest plan, all outcomes, metrics and limitations](audit/superiority-evaluation-v1/REPORT.md).
+**Quality superiority remains unproven.**
+
 <!-- release-results:begin -->
-A fresh paired evaluation against **Codex with organized memory files** found:
+An earlier paired evaluation against **Codex with organized memory files** found:
 
 | Scenario | Organized files | Knodexa |
 |---|---|---|

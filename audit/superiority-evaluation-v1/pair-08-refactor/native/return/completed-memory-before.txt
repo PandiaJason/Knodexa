@@ -1,0 +1,62 @@
+{
+  "aliases": [
+    "production webhook delivery"
+  ],
+  "applicable_knowledge": [
+    "F-observer-panic: preserve observer panic identity and invocation ordering; never retry Transform. Existing tests do not directly exercise observer panics; the current implementation has no recovery.",
+    "L-sdk-contract: a future new production handler entrypoint must expose HandlerContractVersion() string returning raw-v1. Preserve this requirement for the extension; do not add it during this review."
+  ],
+  "approach": "Preserve the established handlers.Handle implementation: inject a Transformer and optional Observer, notify Started with the raw input, delegate directly to Transform, notify Finished with the exact result only on success, and return the exact service result and error. This review records the existing production behavior only; no extension is implemented.",
+  "baseline_commit": "b48aa008349bd4fc2b99e45cb6bc92c41e150bf8",
+  "baseline_review": "Initial review: the existing record had no baseline_commit or saved reference hashes. All listed source paths exist. Current HEAD and source hashes are recorded as the initial baseline, not as acceptance of a changed baseline.",
+  "constraints": [
+    "Raw input delegated exactly once; preserve result/error identity",
+    "Observer Started before service; Finished only on success",
+    "No trimming, coercion, retry or panic recovery"
+  ],
+  "created_at": "0001-01-01T00:00:00Z",
+  "goal": "Production webhook delivery through injected service",
+  "id": "work-prod",
+  "raw_delegation_rules": [
+    "Pass the original any value unchanged, including whitespace, empty strings, nil and non-string values; do not trim, normalize or coerce.",
+    "Use the injected Transformer; invoke Transform exactly once when Started returns normally. Never retry.",
+    "Return the exact result and error from Transform, including a non-nil result paired with an error; do not wrap or replace either.",
+    "With a non-nil observer, call Started with the original input before Transform; call Finished with the exact result only when Transform returns a nil error.",
+    "Do not recover panics. A Started panic propagates unchanged before service invocation; a service panic propagates unchanged without Finished; a Finished panic propagates unchanged after one successful service invocation."
+  ],
+  "required_verification": [
+    "Raw inputs, service substitution, observer ordering and error identity"
+  ],
+  "scopes": [
+    "handlers/: established production webhook delivery via Handle, Transformer and Observer",
+    "Memory documentation and verification only; preserve implementation and existing tests"
+  ],
+  "source_references": [
+    {
+      "path": "handlers/reference.go",
+      "role": "Established production handler and injected interfaces",
+      "sha256": "af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540"
+    },
+    {
+      "path": "handlers/reference_test.go",
+      "role": "Existing raw-input, substitution, ordering, identity and service-panic verification",
+      "sha256": "e3826afde68bf0656f17f9f3d08fa48fdc7391186bdcf7eecf072eed3c46bc00"
+    },
+    {
+      "path": "contracts/version.go",
+      "role": "Existing raw-v1 contract constant; no handler entrypoint extension in this review",
+      "sha256": "fd22829b597b46bee5a82356f5467e93d76c2fd0b4e89eee5636e4ce08a2b297"
+    }
+  ],
+  "status": "COMPLETED",
+  "title": "Production event forwarding",
+  "touches_files": [
+    "handlers/reference.go"
+  ],
+  "updated_at": "2026-10-15T00:00:00Z",
+  "verification": {
+    "command": "go test ./...",
+    "implementation_preserved": true,
+    "result": "PASS: identitysample/contracts and identitysample/handlers"
+  }
+}
