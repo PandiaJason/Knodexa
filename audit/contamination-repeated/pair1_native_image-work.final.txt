@@ -1,0 +1,3 @@
+Created `images/normalize.py` with inline trimming, whitespace collapse, and uppercase conversion. Nonstrings return `""`; no service injection or hooks.
+
+Added and ran 16 representative tests—all passed. Only image source and image tests changed in this task.

@@ -1,0 +1,16 @@
+{
+  "cases": [
+    "fresh-handoff",
+    "similar-tasks",
+    "recorded-failure",
+    "refactor"
+  ],
+  "model": "gpt-6.1-sol",
+  "order": "alternating arms by case",
+  "pairs_per_case": 1,
+  "primary": "independent behavior, transferred lesson, completed memory and current source preserved; refactor also reports stale agreement",
+  "producer": "real agent captures independently verified fixed source fixture; it does not author initial source",
+  "reasoning_effort": "low",
+  "return": "fresh agent context, same canonical facts in both arms",
+  "stop_rule": "run all declared cases, retain failure/timeouts; no selective reruns"
+}

@@ -1,0 +1,73 @@
+{
+  "plan": {
+    "cases": [
+      "agents-md",
+      "skill-discovery-path",
+      "skill-distribution-path"
+    ],
+    "model": "gpt-6.1-sol",
+    "prompt": "Add ForwardWebhook(value any, service Transformer) (any, error) in handlers/webhook.go for production webhook delivery. Add relevant tests and verify the implementation.",
+    "reasoning_effort": "low",
+    "scope": "Fresh ephemeral Codex CLI, AGENTS.md versus implicit skill discovery versus distribution-path negative control. No direct Knodexa or skill invocation in prompt; not a quality comparison or all-host test.",
+    "timeout_seconds": 180
+  },
+  "results": [
+    {
+      "case": "agents-md",
+      "checked_agreement": true,
+      "commands": 12,
+      "completed": true,
+      "completed_parent_unchanged": true,
+      "ephemeral": true,
+      "independent_behavior_passed": true,
+      "input_tokens": 188075,
+      "integration_pass": true,
+      "output_tokens": 1824,
+      "read_skill": false,
+      "restored_before_edit": true,
+      "scored": true,
+      "seconds": 76.29262225,
+      "thread_id": "01a13b97-7c92-7302-ae7e-3d4151feaca0",
+      "timeout": false,
+      "used_knodexa": true
+    },
+    {
+      "case": "skill-discovery-path",
+      "checked_agreement": true,
+      "commands": 13,
+      "completed": true,
+      "completed_parent_unchanged": true,
+      "ephemeral": true,
+      "independent_behavior_passed": true,
+      "input_tokens": 160639,
+      "integration_pass": true,
+      "output_tokens": 1761,
+      "read_skill": true,
+      "restored_before_edit": true,
+      "scored": true,
+      "seconds": 70.597297917,
+      "thread_id": "01a13b98-aca1-7670-b37b-a01dce3270cf",
+      "timeout": false,
+      "used_knodexa": true
+    },
+    {
+      "case": "skill-distribution-path",
+      "checked_agreement": true,
+      "commands": 11,
+      "completed": true,
+      "completed_parent_unchanged": true,
+      "ephemeral": true,
+      "independent_behavior_passed": true,
+      "input_tokens": 181083,
+      "integration_pass": true,
+      "output_tokens": 1850,
+      "read_skill": true,
+      "restored_before_edit": true,
+      "scored": true,
+      "seconds": 78.529052416,
+      "thread_id": "01a13b99-c870-7de2-abdc-6b9257a8a550",
+      "timeout": false,
+      "used_knodexa": true
+    }
+  ]
+}

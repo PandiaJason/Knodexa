@@ -1,0 +1,9 @@
+{
+  "case": "fresh-context-return",
+  "classification": "provider_account_usage_limit",
+  "knodexa_phase": "switch",
+  "native_phase": "establish",
+  "provider_message": "You've hit your usage limit.",
+  "quality_scored": false,
+  "interpretation": "Neither arm reached a scored return. This is not evidence of a coding-quality failure."
+}

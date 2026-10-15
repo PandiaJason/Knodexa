@@ -1,0 +1,9 @@
+id: E-54c5fdb2d99338ea795aad386f83cc8c
+title: Persistent child reconciliation and immutable parent tested
+node_id: L-af27d2a26f4a86ad6cf18813669bfb01
+evidence_type: TEST_RUN
+created_at: 2026-10-14T17:12:34.885219Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: 'Full Go checks passed including rejection of stale bindings, repeated recording, inherited criteria restoration, drift detection and retained refactor replay. Report: audit/reference-reconciliation/REPORT.md.'
+verified_by: agent

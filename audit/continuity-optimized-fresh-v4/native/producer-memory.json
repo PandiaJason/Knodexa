@@ -1,0 +1,43 @@
+{
+  "aliases": [
+    "webhook handler"
+  ],
+  "approach": "Handle calls Started for a non-nil observer, delegates the original input to the injected Transformer exactly once, calls Finished with the original result only when the error is nil, and returns the original result and error unchanged.",
+  "baseline_commit": "ea43322a13ea776c3166f294a4049a70ef9db04a",
+  "constraints": [
+    "Delegate raw values exactly once; do not normalize or coerce",
+    "Preserve result and error identity",
+    "Observer started before service; finished only on success"
+  ],
+  "created_at": "0001-01-01T00:00:00Z",
+  "explicit_rules": [
+    "Do not trim, uppercase, coerce, retry, recover panics, or replace values",
+    "Preserve raw input, result, and error identity, including a result returned alongside an error",
+    "Started precedes Transform for a non-nil observer; Finished runs only on success"
+  ],
+  "goal": "Deliver raw events through injected services with observer ordering",
+  "id": "work-17",
+  "references": [
+    {
+      "path": "handlers/reference.go"
+    },
+    {
+      "path": "handlers/reference_test.go"
+    }
+  ],
+  "required_verification": [
+    "Service substitution, error identity, and observer ordering tests"
+  ],
+  "scopes": [
+    "handlers",
+    "handlers/reference.go",
+    "raw event forwarding with injected Transformer and Observer"
+  ],
+  "status": "COMPLETED",
+  "title": "Event forwarding adapters",
+  "touches_files": [
+    "handlers/reference.go"
+  ],
+  "updated_at": "0001-01-01T00:00:00Z",
+  "verification": "go test ./... passed; covers service substitution, exactly-once delegation, identities, ordering, nil observers, raw values, and panic propagation"
+}

@@ -1,0 +1,26 @@
+{
+  "aliases": [
+    "original",
+    "worker-4",
+    "worker-2",
+    "worker-1"
+  ],
+  "approach": {
+    "version": 1,
+    "summary": "Established",
+    "rules": [
+      "Keep original design"
+    ],
+    "recorded_at": "0001-01-01T00:00:00Z"
+  },
+  "id": "shared",
+  "title": "",
+  "goal": "",
+  "status": "COMPLETED",
+  "created_at": "0001-01-01T00:00:00Z",
+  "updated_at": "2026-10-14T18:03:06.999323Z",
+  "constraints": [
+    "Preserve raw input"
+  ],
+  "baseline_commit": "unchanged-baseline"
+}

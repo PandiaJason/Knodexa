@@ -1,0 +1,9 @@
+id: E-cd4ffcd1b60c2aab90aafd00a0fe6905
+title: Verified continuation lesson evidence
+node_id: L-8d0c20b4204a6aa1713e8cf93a78b959
+evidence_type: TEST_RUN
+created_at: 2026-10-14T09:53:24.133154Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: Full Go checks passed, including source relocation, ambiguity, stale agreement blocking, context-before-execution, no capture after failed tests, syntax checks and agreement history. Implementation evidence only.
+verified_by: agent

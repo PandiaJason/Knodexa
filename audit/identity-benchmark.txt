@@ -1,0 +1,9 @@
+goos: darwin
+goarch: amd64
+pkg: knodexa/internal/identity
+cpu: VirtualApple @ 2.50GHz
+BenchmarkRequestResolution-10    	       5	   3103300 ns/op	 1344168 B/op	   13180 allocs/op
+BenchmarkRequestResolution-10    	       5	   3133625 ns/op	 1344193 B/op	   13180 allocs/op
+BenchmarkRequestResolution-10    	       5	   3276633 ns/op	 1344177 B/op	   13180 allocs/op
+PASS
+ok  	knodexa/internal/identity	18.061s

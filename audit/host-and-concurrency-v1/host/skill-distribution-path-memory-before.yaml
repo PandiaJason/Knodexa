@@ -1,0 +1,29 @@
+aliases:
+    - production webhook delivery
+approach:
+    version: 1
+    scopes:
+        - handlers/
+    summary: Thin service delegation
+    rules:
+        - Do not normalize, coerce or replace raw values
+    references:
+        - path: handlers/reference.go
+          sha256: e4199513e6c299539468b6877fa0282fd4067d0adccf786507c30b4136e41759
+    checks:
+        - ast_kind: forbid-import
+          symbol: strings
+          path: '@touched'
+    recorded_at: 2026-10-14T18:08:16.002594Z
+id: production
+title: Production webhook delivery
+goal: ""
+status: COMPLETED
+created_at: 0001-01-01T00:00:00Z
+updated_at: 2026-10-14T18:08:16.002594Z
+constraints:
+    - Delegate raw input exactly once; preserve result and error identity
+touches_files:
+    - handlers/reference.go
+required_verification:
+    - Service substitution and raw-value/error identity

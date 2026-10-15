@@ -1,0 +1,15 @@
+def validate_claims(claims, now):
+    """Validate claims using an explicit time and seven seconds of skew."""
+    if not isinstance(claims, dict):
+        return False
+    subject = claims.get("sub")
+    if not isinstance(subject, str) or not subject.strip():
+        return False
+    expiry = claims.get("exp")
+    for timestamp in (expiry, now):
+        # bool subclasses int, but is not a timestamp.
+        if isinstance(timestamp, bool) or not isinstance(timestamp, int):
+            return False
+    if expiry <= 0 or now < 0:
+        return False
+    return now < expiry + 7

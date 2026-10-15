@@ -1,0 +1,65 @@
+{
+  "detail_level": "compact",
+  "detail_hint": "Full rationale and evidence IDs: knodexa show <id> or knodexa_get_detail",
+  "context_pruned": false,
+  "token_budget": 1500,
+  "budget_exceeded": false,
+  "task": {
+    "id": "A.2",
+    "parent_id": "A",
+    "title": "A.2",
+    "goal": "Expiry validation",
+    "status": "ACTIVE"
+  },
+  "accepted_constraints": [
+    "Never read the wall clock, add third-party dependencies, or modify caller dictionaries.",
+    "Require dict claims and a string sub that is nonempty after stripping whitespace.",
+    "Require exp > 0 and now >= 0; valid only while now < exp + 7.",
+    "Require integer exp and now, explicitly excluding bool; reject strings, floats, NaN, and other types.",
+    "Use standard-library Python and preserve validate_claims(claims, now) -> bool; invalid inputs return False without raising.",
+    "Deterministic behavior: zero LLM calls in core engine",
+    "Evidence-driven verification for decisions and lessons",
+    "Preserve existing repository constraints and public APIs"
+  ],
+  "previous_decisions": [
+    {
+      "summary": "Implemented A.1 in expiry.py and added validation tests.",
+      "id": "D-expiry",
+      "title": "Expiry contract",
+      "status": "VERIFIED",
+      "confidence": 1
+    }
+  ],
+  "previous_failures": [
+    {
+      "id": "F-coercion",
+      "summary": "F-001: Prior int(value) coercion accepted numeric strings and truncated fractional timestamps.",
+      "causal_details": "Conversion normalized invalid input instead of enforcing the required integer types."
+    }
+  ],
+  "relevant_lessons": [
+    {
+      "description": "Python bool subclasses int. Reject isinstance(value, bool) before accepting isinstance(value, int).",
+      "applicability": "Apply this check whenever an integer API must reject boolean values.",
+      "id": "L-bool",
+      "title": "L-001: Explicitly exclude bool from integer timestamps",
+      "source_task": "A.1",
+      "confidence": 1,
+      "relevance": "high",
+      "verification_status": "VERIFIED"
+    }
+  ],
+  "baseline": {
+    "stored_commit": "3b5fa99355d2630049f4113e1468209b67aef82b",
+    "mismatch": true,
+    "commit": "b6856ef",
+    "branch": "main",
+    "dirty": true
+  },
+  "required_verification": [
+    "Deterministic validation and public bool API preserved.",
+    "Malformed inputs and strict seven-second skew boundary covered.",
+    "python3 -m unittest -v passed all 6 tests."
+  ],
+  "estimated_tokens": 453
+}

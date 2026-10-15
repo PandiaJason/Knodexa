@@ -1,0 +1,25 @@
+{
+  "case": "recorded-failure",
+  "arm": "native",
+  "phase": {
+    "exit_code": 0,
+    "seconds": 66.247411041,
+    "thread_id": "01a13b4a-a40f-7712-92ab-43765330ee9f",
+    "tool_items": 9,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 91392,
+        "input_tokens": 114573,
+        "output_tokens": 2614,
+        "reasoning_output_tokens": 40
+      }
+    ]
+  },
+  "behavior_passed": true,
+  "completed_memory_preserved": true,
+  "reference_preserved": true,
+  "stale_agreement_reported": false,
+  "scored": true,
+  "passed": true
+}

@@ -1,0 +1,17 @@
+package handlers
+
+import "testing"
+
+func TestHandleWebhook(t *testing.T) {
+	testHandler(t, HandleWebhook)
+}
+
+func TestHandleWebhookPropagatesPanic(t *testing.T) {
+	marker := &struct{ Message string }{"delivery panic"}
+	defer func() {
+		if got := recover(); got != marker {
+			t.Fatalf("panic = %v, want original marker", got)
+		}
+	}()
+	HandleWebhook(nil, transformFunc(func(any) (any, error) { panic(marker) }), nil)
+}

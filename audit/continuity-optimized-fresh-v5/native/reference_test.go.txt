@@ -1,0 +1,107 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+type transformFunc func(any) (any, error)
+
+func (f transformFunc) Transform(value any) (any, error) { return f(value) }
+
+type observerFuncs struct {
+	started  func(any)
+	finished func(any)
+}
+
+func (o observerFuncs) Started(value any)  { o.started(value) }
+func (o observerFuncs) Finished(value any) { o.finished(value) }
+
+func TestHandle(t *testing.T) {
+	inputPointer := &struct{ text string }{" raw "}
+	resultPointer := &struct{ text string }{" result "}
+	sentinel := errors.New("original error")
+	for _, input := range []any{" raw Mixed Case ", inputPointer, 42, nil} {
+		for _, serviceError := range []error{nil, sentinel} {
+			for _, observed := range []bool{false, true} {
+				calls := 0
+				var events []string
+				var observer Observer
+				if observed {
+					observer = observerFuncs{
+						started: func(value any) {
+							if value != input {
+								t.Fatalf("Started input changed: %#v", value)
+							}
+							events = append(events, "started")
+						},
+						finished: func(value any) {
+							if value != resultPointer {
+								t.Fatal("Finished result identity changed")
+							}
+							events = append(events, "finished")
+						},
+					}
+				}
+				result, err := Handle(input, transformFunc(func(value any) (any, error) {
+					calls++
+					if value != input {
+						t.Fatalf("Transform input changed: %#v", value)
+					}
+					events = append(events, "transform")
+					return resultPointer, serviceError
+				}), observer)
+				if calls != 1 || result != resultPointer || err != serviceError {
+					t.Fatalf("calls=%d result=%v error=%v", calls, result, err)
+				}
+				want := []string{"transform"}
+				if observed {
+					want = []string{"started", "transform"}
+					if serviceError == nil {
+						want = append(want, "finished")
+					}
+				}
+				if !reflect.DeepEqual(events, want) {
+					t.Fatalf("events=%v want=%v", events, want)
+				}
+			}
+		}
+	}
+}
+
+func TestHandlePreservesNilResult(t *testing.T) {
+	result, err := Handle(nil, transformFunc(func(any) (any, error) {
+		return nil, nil
+	}), observerFuncs{
+		started: func(any) {},
+		finished: func(result any) {
+			if result != nil {
+				t.Fatal("nil result replaced")
+			}
+		},
+	})
+	if result != nil || err != nil {
+		t.Fatalf("got (%v, %v)", result, err)
+	}
+}
+
+func TestHandlePropagatesPanic(t *testing.T) {
+	panicValue := &struct{}{}
+	calls := 0
+	defer func() {
+		if recovered := recover(); recovered != panicValue {
+			t.Fatalf("panic changed or recovered: %v", recovered)
+		}
+		if calls != 1 {
+			t.Fatalf("Transform called %d times", calls)
+		}
+	}()
+	Handle(" raw ", transformFunc(func(any) (any, error) {
+		calls++
+		panic(panicValue)
+	}), observerFuncs{
+		started:  func(any) {},
+		finished: func(any) { t.Fatal("Finished called after panic") },
+	})
+}

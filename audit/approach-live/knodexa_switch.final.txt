@@ -1,0 +1,3 @@
+Created `labels.py` with `normalize_label(value)` and `test_labels.py`. Nonstrings return `""`; strings have surrounding whitespace removed and internal whitespace collapsed.
+
+Both tests passed, covering nonstrings, empty strings, mixed whitespace, and Unicode whitespace. Only the two requested files were added.

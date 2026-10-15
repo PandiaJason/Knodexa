@@ -1,0 +1,5 @@
+id: F-resume-reactivated-completed-source
+task_id: '1'
+summary: Resume implicitly reactivated completed source work during a correctly implemented fresh-context extension.
+causal_details: 'audit/continuity-optimized-fresh-v4 shows prepare followed by resume work-17. Handler behavior and source passed, but completed_memory_preserved failed because resume set the task ACTIVE. Fixed default resume to preserve completed task bytes and baseline; reactivation requires --reopen. Git-backed TestResumeCompletedWorkRequiresExplicitReopen verifies both safe retrieval and explicit reopening. Retain the failed paired score.'
+attempted_at: 2026-10-14T16:00:02Z

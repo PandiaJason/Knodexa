@@ -33,6 +33,7 @@ func (nt NodeType) IsValid() bool {
 
 // Node represents a generic indexed entity in Knodexa's SQLite and graph engine.
 type Node struct {
+	MatchReason        string                 `json:"match_reason,omitempty" yaml:"-"`
 	ID                 string                 `json:"id" yaml:"id"`
 	Type               NodeType               `json:"type" yaml:"type"`
 	ParentID           string                 `json:"parent_id,omitempty" yaml:"parent_id,omitempty"`
@@ -66,32 +67,45 @@ type ProjectConfig struct {
 
 // TaskData represents a task or subtask stored in .knodexa/tasks/<dir>/<id>.yaml.
 type TaskData struct {
-	ID                   string     `yaml:"id" json:"id"`
-	ParentID             string     `yaml:"parent_id,omitempty" json:"parent_id,omitempty"`
-	Title                string     `yaml:"title" json:"title"`
-	Goal                 string     `yaml:"goal" json:"goal"`
-	Status               TaskStatus `yaml:"status" json:"status"`
-	CreatedAt            time.Time  `yaml:"created_at" json:"created_at"`
-	UpdatedAt            time.Time  `yaml:"updated_at" json:"updated_at"`
-	Constraints          []string   `yaml:"constraints,omitempty" json:"constraints,omitempty"`
-	TouchesFiles         []string   `yaml:"touches_files,omitempty" json:"touches_files,omitempty"`
-	BaselineCommit       string     `yaml:"baseline_commit,omitempty" json:"baseline_commit,omitempty"`
-	AcceptedCommit       string     `yaml:"accepted_commit,omitempty" json:"accepted_commit,omitempty"`
-	RequiredVerification []string   `yaml:"required_verification,omitempty" json:"required_verification,omitempty"`
+	SnapshotHash         string         `yaml:"-" json:"-"`
+	SnapshotPath         string         `yaml:"-" json:"-"`
+	ApproachHistory      []TaskApproach `yaml:"approach_history,omitempty" json:"approach_history,omitempty"`
+	WorkID               string         `yaml:"work_id,omitempty" json:"work_id,omitempty"`
+	CodeAnchors          []CodeAnchor   `yaml:"code_anchors,omitempty" json:"code_anchors,omitempty"`
+	Aliases              []string       `yaml:"aliases,omitempty" json:"aliases,omitempty"`
+	ApproachRefs         []string       `yaml:"approach_refs,omitempty" json:"approach_refs,omitempty"`
+	Approach             *TaskApproach  `yaml:"approach,omitempty" json:"approach,omitempty"`
+	ID                   string         `yaml:"id" json:"id"`
+	ParentID             string         `yaml:"parent_id,omitempty" json:"parent_id,omitempty"`
+	Title                string         `yaml:"title" json:"title"`
+	Goal                 string         `yaml:"goal" json:"goal"`
+	Status               TaskStatus     `yaml:"status" json:"status"`
+	CreatedAt            time.Time      `yaml:"created_at" json:"created_at"`
+	UpdatedAt            time.Time      `yaml:"updated_at" json:"updated_at"`
+	Constraints          []string       `yaml:"constraints,omitempty" json:"constraints,omitempty"`
+	TouchesFiles         []string       `yaml:"touches_files,omitempty" json:"touches_files,omitempty"`
+	BaselineCommit       string         `yaml:"baseline_commit,omitempty" json:"baseline_commit,omitempty"`
+	AcceptedCommit       string         `yaml:"accepted_commit,omitempty" json:"accepted_commit,omitempty"`
+	RequiredVerification []string       `yaml:"required_verification,omitempty" json:"required_verification,omitempty"`
 }
 
 // DecisionFrontmatter represents the YAML frontmatter of an ADR in .knodexa/decisions/D-*.md.
 type DecisionFrontmatter struct {
-	ID           string          `yaml:"id" json:"id"`
-	Title        string          `yaml:"title" json:"title"`
-	Status       KnowledgeStatus `yaml:"status" json:"status"`
-	TaskID       string          `yaml:"task_id,omitempty" json:"task_id,omitempty"`
-	CreatedAt    time.Time       `yaml:"created_at" json:"created_at"`
-	UpdatedAt    time.Time       `yaml:"updated_at" json:"updated_at"`
-	Confidence   float64         `yaml:"confidence" json:"confidence"`
-	Supersedes   string          `yaml:"supersedes,omitempty" json:"supersedes,omitempty"`
-	SupersededBy string          `yaml:"superseded_by,omitempty" json:"superseded_by,omitempty"`
-	EvidenceIDs  []string        `yaml:"evidence_ids,omitempty" json:"evidence_ids,omitempty"`
+	InvalidatedAt          *time.Time      `yaml:"invalidated_at,omitempty" json:"invalidated_at,omitempty"`
+	SupersessionReason     string          `yaml:"supersession_reason,omitempty" json:"supersession_reason,omitempty"`
+	Summary                string          `yaml:"summary,omitempty" json:"summary,omitempty"`
+	Constraints            []string        `yaml:"constraints,omitempty" json:"constraints,omitempty"`
+	AlternativesConsidered []string        `yaml:"alternatives_considered,omitempty" json:"alternatives_considered,omitempty"`
+	ID                     string          `yaml:"id" json:"id"`
+	Title                  string          `yaml:"title" json:"title"`
+	Status                 KnowledgeStatus `yaml:"status" json:"status"`
+	TaskID                 string          `yaml:"task_id,omitempty" json:"task_id,omitempty"`
+	CreatedAt              time.Time       `yaml:"created_at" json:"created_at"`
+	UpdatedAt              time.Time       `yaml:"updated_at" json:"updated_at"`
+	Confidence             float64         `yaml:"confidence" json:"confidence"`
+	Supersedes             string          `yaml:"supersedes,omitempty" json:"supersedes,omitempty"`
+	SupersededBy           string          `yaml:"superseded_by,omitempty" json:"superseded_by,omitempty"`
+	EvidenceIDs            []string        `yaml:"evidence_ids,omitempty" json:"evidence_ids,omitempty"`
 }
 
 // DecisionDocument pairs the parsed frontmatter with the markdown body.
@@ -102,17 +116,21 @@ type DecisionDocument struct {
 
 // LessonFrontmatter represents the YAML frontmatter of a lesson in .knodexa/lessons/L-*.md.
 type LessonFrontmatter struct {
-	ID             string          `yaml:"id" json:"id"`
-	Title          string          `yaml:"title" json:"title"`
-	Status         KnowledgeStatus `yaml:"status" json:"status"`
-	SourceTaskID   string          `yaml:"source_task_id,omitempty" json:"source_task_id,omitempty"`
-	CreatedAt      time.Time       `yaml:"created_at" json:"created_at"`
-	UpdatedAt      time.Time       `yaml:"updated_at" json:"updated_at"`
-	Confidence     float64         `yaml:"confidence" json:"confidence"`
-	Applicability  string          `yaml:"applicability" json:"applicability"`
-	Tags           []string        `yaml:"tags,omitempty" json:"tags,omitempty"`
-	RelatedFiles   []string        `yaml:"related_files,omitempty" json:"related_files,omitempty"`
-	EvidenceIDs    []string        `yaml:"evidence_ids,omitempty" json:"evidence_ids,omitempty"`
+	SupersededBy       string          `yaml:"superseded_by,omitempty" json:"superseded_by,omitempty"`
+	InvalidatedAt      *time.Time      `yaml:"invalidated_at,omitempty" json:"invalidated_at,omitempty"`
+	SupersessionReason string          `yaml:"supersession_reason,omitempty" json:"supersession_reason,omitempty"`
+	Summary            string          `yaml:"summary,omitempty" json:"summary,omitempty"`
+	ID                 string          `yaml:"id" json:"id"`
+	Title              string          `yaml:"title" json:"title"`
+	Status             KnowledgeStatus `yaml:"status" json:"status"`
+	SourceTaskID       string          `yaml:"source_task_id,omitempty" json:"source_task_id,omitempty"`
+	CreatedAt          time.Time       `yaml:"created_at" json:"created_at"`
+	UpdatedAt          time.Time       `yaml:"updated_at" json:"updated_at"`
+	Confidence         float64         `yaml:"confidence" json:"confidence"`
+	Applicability      string          `yaml:"applicability" json:"applicability"`
+	Tags               []string        `yaml:"tags,omitempty" json:"tags,omitempty"`
+	RelatedFiles       []string        `yaml:"related_files,omitempty" json:"related_files,omitempty"`
+	EvidenceIDs        []string        `yaml:"evidence_ids,omitempty" json:"evidence_ids,omitempty"`
 }
 
 // LessonDocument pairs the lesson frontmatter with the explanation body.
@@ -123,16 +141,18 @@ type LessonDocument struct {
 
 // EvidenceData represents verification proof in .knodexa/evidence/E-*.yaml.
 type EvidenceData struct {
-	ID            string       `yaml:"id" json:"id"`
-	Title         string       `yaml:"title" json:"title"`
-	NodeID        string       `yaml:"node_id" json:"node_id"`
-	EvidenceType  EvidenceType `yaml:"evidence_type" json:"evidence_type"`
-	CreatedAt     time.Time    `yaml:"created_at" json:"created_at"`
-	Command       string       `yaml:"command,omitempty" json:"command,omitempty"`
-	ExitCode      int          `yaml:"exit_code" json:"exit_code"`
-	OutputSummary string       `yaml:"output_summary,omitempty" json:"output_summary,omitempty"`
-	CommitSHA     string       `yaml:"commit_sha,omitempty" json:"commit_sha,omitempty"`
-	VerifiedBy    string       `yaml:"verified_by,omitempty" json:"verified_by,omitempty"`
+	// ExitCodeRecorded distinguishes omitted/null canonical exit codes from zero.
+	ExitCodeRecorded bool         `yaml:"-" json:"-"`
+	ID               string       `yaml:"id" json:"id"`
+	Title            string       `yaml:"title" json:"title"`
+	NodeID           string       `yaml:"node_id" json:"node_id"`
+	EvidenceType     EvidenceType `yaml:"evidence_type" json:"evidence_type"`
+	CreatedAt        time.Time    `yaml:"created_at" json:"created_at"`
+	Command          string       `yaml:"command,omitempty" json:"command,omitempty"`
+	ExitCode         int          `yaml:"exit_code" json:"exit_code"`
+	OutputSummary    string       `yaml:"output_summary,omitempty" json:"output_summary,omitempty"`
+	CommitSHA        string       `yaml:"commit_sha,omitempty" json:"commit_sha,omitempty"`
+	VerifiedBy       string       `yaml:"verified_by,omitempty" json:"verified_by,omitempty"`
 }
 
 // ObservationData represents an unverified observation in .knodexa/observations/OBS-*.yaml.
@@ -152,4 +172,41 @@ type FailureData struct {
 	CausalDetails string    `yaml:"causal_details" json:"causal_details"`
 	AttemptedAt   time.Time `yaml:"attempted_at" json:"attempted_at"`
 	EvidenceIDs   []string  `yaml:"evidence_ids,omitempty" json:"evidence_ids,omitempty"`
+}
+
+// TaskApproach captures the chosen implementation pattern, not hidden reasoning.
+type TaskApproach struct {
+	ReferenceReconciliations []ReferenceReconciliation `yaml:"reference_reconciliations,omitempty" json:"reference_reconciliations,omitempty"`
+	Version                  int                       `yaml:"version,omitempty" json:"version,omitempty"`
+	ChangeReason             string                    `yaml:"change_reason,omitempty" json:"change_reason,omitempty"`
+	Scopes                   []string                  `yaml:"scopes,omitempty" json:"scopes,omitempty"`
+	Summary                  string                    `yaml:"summary" json:"summary"`
+	Rules                    []string                  `yaml:"rules" json:"rules"`
+	References               []ApproachReference       `yaml:"references,omitempty" json:"references,omitempty"`
+	SkillFiles               []string                  `yaml:"skill_files,omitempty" json:"skill_files,omitempty"`
+	Checks                   []ApproachCheck           `yaml:"checks,omitempty" json:"checks,omitempty"`
+	RecordedAt               time.Time                 `yaml:"recorded_at" json:"recorded_at"`
+}
+
+// ReferenceReconciliation records a reviewed child-local binding to a historical
+// source agreement. Both hashes and the source version guard against stale reuse.
+type ReferenceReconciliation struct {
+	SourceTask     string `yaml:"source_task" json:"source_task"`
+	SourceVersion  int    `yaml:"source_version" json:"source_version"`
+	OriginalPath   string `yaml:"original_path" json:"original_path"`
+	OriginalSHA256 string `yaml:"original_sha256" json:"original_sha256"`
+	CurrentPath    string `yaml:"current_path" json:"current_path"`
+	CurrentSHA256  string `yaml:"current_sha256" json:"current_sha256"`
+	Reason         string `yaml:"reason" json:"reason"`
+}
+type ApproachReference struct {
+	Path   string `yaml:"path" json:"path"`
+	SHA256 string `yaml:"sha256" json:"sha256"`
+}
+type ApproachCheck struct {
+	ASTKind        string `yaml:"ast_kind,omitempty" json:"ast_kind,omitempty"`
+	Symbol         string `yaml:"symbol,omitempty" json:"symbol,omitempty"`
+	Path           string `yaml:"path" json:"path"`
+	MustContain    string `yaml:"must_contain,omitempty" json:"must_contain,omitempty"`
+	MustNotContain string `yaml:"must_not_contain,omitempty" json:"must_not_contain,omitempty"`
 }

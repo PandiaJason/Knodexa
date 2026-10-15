@@ -16,18 +16,9 @@ import (
 	"knodexa/internal/verify"
 )
 
-// ===========================================================================
-// HEAD-TO-HEAD EMPIRICAL EVALUATION:
-// Antigravity Native Stack (AGENTS.md + Rules + Skills) vs. Knodexa Memory
-//
-// Evaluates 6 core dimensions with real files, real Git repos, and exact metrics:
-//   1. Token Cost to Resume (Rehydration efficiency)
-//   2. Signal-to-Noise Ratio (Task relevance precision)
-//   3. Failure Recall (Avoiding repeated mistakes)
-//   4. Decision Recall with Rationale & Evidence
-//   5. Cross-Task Knowledge Transfer
-//   6. Git Merge Safety under Multi-Agent Concurrency
-// ===========================================================================
+// Synthetic representation comparisons, not a live agent benchmark. These tests
+// exercise fixtures and retrieval; they do not measure model usage, coding
+// outcomes, Codex memories, or comparative agent performance.
 
 func getRealisticProjectContext() (agentsMD string, rules string, skillMD string) {
 	agentsMD = `# Project: PaymentGateway
@@ -246,7 +237,7 @@ func TestEval1_TokenCostToResume(t *testing.T) {
 	t.Logf("=== EVALUATION 1: Token Cost to Resume Task ===")
 	t.Logf("BASELINE (AGENTS.md + Rules + Skill):  %d tokens", baselineTokens)
 	t.Logf("KNODEXA (Task-Scoped Rehydration):     %d tokens", knodexaTokens)
-	t.Logf("REDUCTION:                             %.1fx fewer tokens (%.1f%% savings)",
+	t.Logf("FIXTURE SIZE ONLY:                     %.1fx smaller estimated human text (%.1f%%)",
 		float64(baselineTokens)/float64(knodexaTokens),
 		(1.0-float64(knodexaTokens)/float64(baselineTokens))*100)
 
@@ -316,9 +307,15 @@ func TestEval3_FailureRecall(t *testing.T) {
 	hasResolution := strings.Contains(agentsMD, "storing only role IDs")
 
 	baselineScore := 0
-	if hasFailureText { baselineScore++ }
-	if hasRootCause { baselineScore++ }
-	if hasResolution { baselineScore++ }
+	if hasFailureText {
+		baselineScore++
+	}
+	if hasRootCause {
+		baselineScore++
+	}
+	if hasResolution {
+		baselineScore++
+	}
 
 	tmpDir := t.TempDir()
 	env := setupTestKnodexaEnv(t, tmpDir)
@@ -359,11 +356,11 @@ func TestEval3_FailureRecall(t *testing.T) {
 	}
 
 	t.Logf("=== EVALUATION 3: Structured Failure Recall ===")
-	t.Logf("BASELINE Score: %d / 7 (freeform unstructured prose, mixed with other tasks)", baselineScore)
-	t.Logf("KNODEXA Score:  %d / 7 (first-class entity, indexed, task-scoped, machine-queryable)", knodexaScore)
+	t.Logf("FIXTURE Baseline representation points: %d / 7 (not agent recall)", baselineScore)
+	t.Logf("FIXTURE Knodexa representation points: %d / 7 (not agent recall)", knodexaScore)
 
 	if knodexaScore <= baselineScore {
-		t.Errorf("Knodexa failure recall score (%d) should exceed baseline (%d)", knodexaScore, baselineScore)
+		t.Errorf("structured fixture points (%d) should exceed prose fixture points (%d)", knodexaScore, baselineScore)
 	}
 }
 
@@ -388,25 +385,27 @@ func TestEval4_DecisionRecallWithRationale(t *testing.T) {
 
 	_ = env.store.SaveDecision(&model.DecisionDocument{
 		Frontmatter: model.DecisionFrontmatter{
-			ID:          "D-001",
-			Title:       "Use RS256 for JWT signing",
-			Status:      model.StatusProposed,
-			TaskID:      "auth-system",
-			CreatedAt:   env.now,
-			UpdatedAt:   env.now,
-			Confidence:  0.8,
+			ID:         "D-001",
+			Title:      "Use RS256 for JWT signing",
+			Status:     model.StatusProposed,
+			TaskID:     "auth-system",
+			CreatedAt:  env.now,
+			UpdatedAt:  env.now,
+			Confidence: 0.8,
 		},
 		Body: "RS256 asymmetric keys allow public verification.",
 	})
 
 	// Add evidence and verify
 	_ = env.verifier.AddEvidence(&model.EvidenceData{
-		ID:           "E-001",
-		Title:        "RS256 Benchmark Suite",
-		NodeID:       "D-001",
-		EvidenceType: model.EvidenceBenchmark,
-		CreatedAt:    env.now,
-		VerifiedBy:   "eval-runner",
+		ID:            "E-001",
+		Title:         "RS256 Benchmark Suite",
+		NodeID:        "D-001",
+		EvidenceType:  model.EvidenceBenchmark,
+		Command:       "fixture benchmark",
+		OutputSummary: "Synthetic successful benchmark fixture",
+		CreatedAt:     env.now,
+		VerifiedBy:    "eval-runner",
 	}, "eval-runner")
 
 	if err := env.verifier.VerifyNode("D-001", []string{"E-001"}, "Benchmark proves acceptable latency", "eval-runner"); err != nil {
@@ -467,12 +466,14 @@ func TestEval5_CrossTaskKnowledgeTransfer(t *testing.T) {
 	})
 
 	_ = env.verifier.AddEvidence(&model.EvidenceData{
-		ID:           "E-005",
-		Title:        "Load test payload check",
-		NodeID:       "L-001",
-		EvidenceType: model.EvidenceBenchmark,
-		CreatedAt:    env.now,
-		VerifiedBy:   "agent",
+		ID:            "E-005",
+		Title:         "Load test payload check",
+		NodeID:        "L-001",
+		EvidenceType:  model.EvidenceBenchmark,
+		Command:       "fixture benchmark",
+		OutputSummary: "Synthetic successful benchmark fixture",
+		CreatedAt:     env.now,
+		VerifiedBy:    "agent",
 	}, "agent")
 	_ = env.verifier.VerifyNode("L-001", []string{"E-005"}, "Verified under load", "agent")
 
@@ -578,33 +579,6 @@ func TestEval6_GitMergeSafety(t *testing.T) {
 // ---------------------------------------------------------------------------
 // FINAL SCORECARD
 // ---------------------------------------------------------------------------
-func TestEval_FinalScorecard(t *testing.T) {
-	t.Logf(`
-================================================================================
-                    REAL-WORLD HEAD-TO-HEAD EVALUATION SCORECARD
-================================================================================
-Evaluation Metric           Antigravity Built-ins (AGENTS.md)    Knodexa Memory
---------------------------------------------------------------------------------
-1. Resume Token Cost        ~850 tokens (all tasks + conventions) 130-170 tokens (task-scoped)
-2. Signal-to-Noise Ratio    ~15%% relevant to target task         100%% relevant to target task
-3. Failure Recall           Unstructured free-form text          Structured entity with root cause
-4. Decision Lifecycle       Static list (all equal weight)       Evidence-gated (PROPOSED/VERIFIED)
-5. Cross-Task Transfer      Manual (agent must read everything)  Automatic (by file & tag overlap)
-6. Multi-Agent Concurrency  Frequent merge conflicts             Conflict-free (file-per-node)
---------------------------------------------------------------------------------
-WHERE BUILT-IN TOOLS WIN:
-  * Zero setup, zero dependencies, instant to start.
-  * Ideal for repository conventions, style guides, and coding patterns.
-  * Static directives ("always use context.Context") belong in rules.
-
-WHERE KNODEXA WINS:
-  * Multi-session engineering continuity across days/weeks.
-  * Task switching without context pollution.
-  * Remembering WHY past experiments failed and WHICH choices were verified with proof.
-================================================================================
-`)
-}
-
 // === Helpers ===
 
 func estimateTokens(s string) int {

@@ -1,0 +1,154 @@
+{
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "cli_version": "codex-cli 0.162.0-alpha.17.2",
+  "memories_enabled": false,
+  "scope": "Single synthetic auth task; actual Codex-generated implementations; CLI file tools and native session resume, not desktop thread tools or background memories.",
+  "trials": {
+    "native_fresh": {
+      "exit_code": 0,
+      "elapsed_seconds": 53.9,
+      "usage": [
+        {
+          "input_tokens": 62992,
+          "cached_input_tokens": 54784,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1506,
+          "reasoning_output_tokens": 13
+        }
+      ],
+      "thread_id": "01a13569-8c4f-79b2-83b1-6d3e8d4d4844",
+      "events": 16,
+      "acceptance": {
+        "passed": 20,
+        "total": 20,
+        "failures": []
+      }
+    }
+  },
+  "excluded_initial_resume": {
+    "reason": "Resume invocation used a read-only sandbox; not an agent-performance failure",
+    "trial": {
+      "exit_code": 0,
+      "elapsed_seconds": 56.21,
+      "usage": [
+        {
+          "input_tokens": 94860,
+          "cached_input_tokens": 89472,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 691,
+          "reasoning_output_tokens": 38
+        }
+      ],
+      "thread_id": "01a1356b-3d01-75b0-91d3-9418a67cacba",
+      "events": 13,
+      "acceptance": {
+        "passed": 6,
+        "total": 20,
+        "failures": [
+          {
+            "case": 1,
+            "expected": true,
+            "actual": "False"
+          },
+          {
+            "case": 2,
+            "expected": true,
+            "actual": "False"
+          },
+          {
+            "case": 5,
+            "expected": false,
+            "actual": "True"
+          },
+          {
+            "case": 6,
+            "expected": false,
+            "actual": "True"
+          },
+          {
+            "case": 7,
+            "expected": false,
+            "actual": "True"
+          },
+          {
+            "case": 8,
+            "error": "TypeError(\"'>' not supported between instances of 'str' and 'int'\")"
+          },
+          {
+            "case": 9,
+            "expected": false,
+            "actual": "True"
+          },
+          {
+            "case": 10,
+            "expected": false,
+            "actual": "True"
+          },
+          {
+            "case": 11,
+            "expected": false,
+            "actual": "True"
+          },
+          {
+            "case": 12,
+            "expected": false,
+            "actual": "True"
+          },
+          {
+            "case": 13,
+            "expected": false,
+            "actual": "True"
+          },
+          {
+            "case": 15,
+            "error": "AttributeError(\"'NoneType' object has no attribute 'get'\")"
+          },
+          {
+            "case": 16,
+            "error": "AttributeError(\"'list' object has no attribute 'get'\")"
+          },
+          {
+            "case": 18,
+            "error": "TypeError(\"'>' not supported between instances of 'int' and 'str'\")"
+          }
+        ]
+      }
+    },
+    "seed": {
+      "exit_code": 0,
+      "elapsed_seconds": 7.98,
+      "usage": [
+        {
+          "input_tokens": 14925,
+          "cached_input_tokens": 12288,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 5,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "thread_id": "01a1356b-3d01-75b0-91d3-9418a67cacba",
+      "events": 4
+    }
+  },
+  "initial_knodexa_without_distractor_corpus": {
+    "exit_code": 0,
+    "elapsed_seconds": 52.36,
+    "usage": [
+      {
+        "input_tokens": 64323,
+        "cached_input_tokens": 52608,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1265,
+        "reasoning_output_tokens": 12
+      }
+    ],
+    "thread_id": "01a1356a-7077-7fc0-93b2-47ceaec12f3e",
+    "events": 16,
+    "acceptance": {
+      "passed": 20,
+      "total": 20,
+      "failures": []
+    }
+  }
+}

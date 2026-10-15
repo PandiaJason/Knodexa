@@ -1,0 +1,120 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+type webhookTransformer func(any) (any, error)
+
+func (f webhookTransformer) Transform(v any) (any, error) { return f(v) }
+
+type webhookObserver struct {
+	start, finish func(any)
+}
+
+func (o webhookObserver) Started(v any)  { o.start(v) }
+func (o webhookObserver) Finished(v any) { o.finish(v) }
+
+func TestWebhookDelegation(t *testing.T) {
+	payload := &struct{ N int }{7}
+	failure := errors.New("delivery failed")
+	for _, value := range []any{" hello ", "", nil, 17, payload} {
+		for _, serviceErr := range []error{nil, failure} {
+			for _, observed := range []bool{false, true} {
+				events := []string{}
+				calls := 0
+				service := webhookTransformer(func(got any) (any, error) {
+					calls++
+					if got != value {
+						t.Fatal("input identity changed")
+					}
+					events = append(events, "transform")
+					return payload, serviceErr
+				})
+				var observer Observer
+				if observed {
+					observer = webhookObserver{
+						start: func(got any) {
+							if got != value {
+								t.Fatal("Started input changed")
+							}
+							events = append(events, "started")
+						},
+						finish: func(got any) {
+							if got != payload {
+								t.Fatal("Finished result changed")
+							}
+							events = append(events, "finished")
+						},
+					}
+				}
+				result, err := HandleWebhook(value, service, observer)
+				if result != payload || err != serviceErr || calls != 1 {
+					t.Fatal("result, error, or call count changed")
+				}
+				want := []string{"transform"}
+				if observed {
+					want = []string{"started", "transform"}
+					if serviceErr == nil {
+						want = append(want, "finished")
+					}
+				}
+				if !reflect.DeepEqual(events, want) {
+					t.Fatalf("events = %v, want %v", events, want)
+				}
+			}
+		}
+	}
+}
+
+func TestWebhookPanicBoundaries(t *testing.T) {
+	for _, boundary := range []string{"started", "transform", "finished"} {
+		t.Run(boundary, func(t *testing.T) {
+			panicValue := &struct{ boundary string }{boundary}
+			calls := 0
+			events := []string{}
+			step := func(name string) {
+				events = append(events, name)
+				if boundary == name {
+					panic(panicValue)
+				}
+			}
+			service := webhookTransformer(func(any) (any, error) {
+				calls++
+				step("transform")
+				return "result", nil
+			})
+			observer := webhookObserver{
+				start:  func(any) { step("started") },
+				finish: func(any) { step("finished") },
+			}
+			defer func() {
+				if got := recover(); got != panicValue {
+					t.Fatalf("panic identity changed: %v", got)
+				}
+				wantCalls := 1
+				want := []string{"started", "transform", "finished"}
+				if boundary == "started" {
+					wantCalls = 0
+					want = want[:1]
+				}
+				if boundary == "transform" {
+					want = want[:2]
+				}
+				if calls != wantCalls || !reflect.DeepEqual(events, want) {
+					t.Fatalf("calls = %d, events = %v", calls, events)
+				}
+			}()
+			HandleWebhook("input", service, observer)
+			t.Fatal("panic swallowed")
+		})
+	}
+}
+
+func TestHandlerContractVersion(t *testing.T) {
+	if got := HandlerContractVersion(); got != "raw-v1" {
+		t.Fatalf("contract version = %q", got)
+	}
+}

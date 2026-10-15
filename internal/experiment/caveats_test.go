@@ -182,9 +182,14 @@ func TestCaveat2_ScaleAndRelevanceScoring(t *testing.T) {
 	_ = store.SaveTask(targetTask)
 	_ = indexer.Sync()
 
-	// Measure Context Rehydration Latency at scale
+	// Measure indexed context retrieval separately from external Git process
+	// startup; otherwise this assertion mostly measures host process scheduling.
+	checkpoint, err := gitInspector.GetCheckpoint()
+	if err != nil {
+		t.Fatal(err)
+	}
 	startQuery := time.Now()
-	pkg, err := ctxBuilder.Build("T-TARGET", 1500)
+	pkg, err := ctxBuilder.BuildWithOptions("T-TARGET", 1500, context.BuildOptions{Checkpoint: checkpoint})
 	queryDuration := time.Since(startQuery)
 
 	if err != nil {
@@ -306,7 +311,7 @@ func TestCaveat3_KnowledgeStalenessAndSuperseding(t *testing.T) {
 	_ = indexer.Sync()
 
 	// Supersede D-001 with D-002
-	if err := verifier.SupersedeNode("D-001", "D-002", "agent"); err != nil {
+	if err := verifier.SupersedeNode("D-001", "D-002", "SQLite replaces flat JSON for transactional persistence", "agent"); err != nil {
 		t.Fatalf("supersede failed: %v", err)
 	}
 

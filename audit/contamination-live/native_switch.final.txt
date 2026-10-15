@@ -1,0 +1,5 @@
+Created [images/normalize.py](images/normalize.py) and [tests/test_image_normalize.py](tests/test_image_normalize.py).
+
+All tests passed, covering 16 representative strings and 8 nonstring inputs.
+
+Image conventions embed transformations directly, without service injection: nonstrings return `""`; strings have surrounding whitespace removed, internal whitespace collapsed, then are uppercased. Handlers and memory were untouched.

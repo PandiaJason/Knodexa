@@ -1,0 +1,5 @@
+Implemented `handlers/reference.go` with the requested interfaces and `Handle`, preserving raw input, result/error identity, and observer ordering.
+
+Added tests; `go test ./...` passes.
+
+Updated `memory/work-17.json` with the approach, rules, references, scopes, baseline commit, and alias “webhook handler.” No new task created.

@@ -1,0 +1,3 @@
+Added `ForwardWebhook` in `handlers/webhook.go`. It calls the supplied transformer exactly once, preserving raw input, result, and error identity.
+
+Tests cover raw values, nil values, and error propagation. Verification passed: `go test -race ./...`, `go vet ./...`, and Knodexa agreement checks.

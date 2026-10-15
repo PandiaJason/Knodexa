@@ -3,6 +3,7 @@ package mcp
 import (
 	"bytes"
 	"encoding/json"
+	"strings"
 	"testing"
 	"time"
 
@@ -75,8 +76,8 @@ func TestMCPServerEndToEnd(t *testing.T) {
 		t.Fatalf("invalid tools result: %+v", toolsResp.Result)
 	}
 	toolsList, _ := toolsMap["tools"].([]interface{})
-	if len(toolsList) != 9 {
-		t.Errorf("expected 9 tools, got %d", len(toolsList))
+	if len(toolsList) != 19 {
+		t.Errorf("expected 19 tools, got %d", len(toolsList))
 	}
 
 	// 3. knodexa_get_context
@@ -183,5 +184,54 @@ func TestMCPUnknownMethod(t *testing.T) {
 	_ = json.Unmarshal(out.Bytes(), &resp)
 	if resp.Error == nil || resp.Error.Code != CodeMethodNotFound {
 		t.Errorf("expected MethodNotFound error, got %+v", resp.Error)
+	}
+}
+
+func TestDecisionInputsAndEvidenceValidation(t *testing.T) {
+	root := t.TempDir()
+	store := storage.NewStorage(root)
+	if _, err := store.Init("MCP regression", ""); err != nil {
+		t.Fatal(err)
+	}
+	srv, err := NewServer(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer srv.handler.db.Close()
+	result, err := srv.handler.HandleTool("knodexa_propose_decision", map[string]interface{}{"task_id": "T", "title": "Snapshots", "rationale": "Consistency", "constraints": []interface{}{"Preserve API"}, "alternatives_considered": []interface{}{"Incremental stale cache"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	id := result.(map[string]interface{})["id"].(string)
+	doc, err := store.ReadDecision(id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(doc.Body, "Preserve API") || !strings.Contains(doc.Body, "Incremental stale cache") {
+		t.Fatalf("inputs discarded: %s", doc.Body)
+	}
+	for _, value := range []interface{}{nil, 0.5, "0"} {
+		_, err := srv.handler.HandleTool("knodexa_add_evidence", map[string]interface{}{"node_id": id, "title": "Run", "evidence_type": "TEST_RUN", "command": "go test ./...", "output_summary": "fixture success", "exit_code": value})
+		if err == nil {
+			t.Fatalf("accepted invalid exit code: %v", value)
+		}
+	}
+	_, err = srv.handler.HandleTool("knodexa_add_evidence", map[string]interface{}{"node_id": id, "title": "Run", "evidence_type": "TEST_RUN", "command": "go test ./...", "output_summary": "fixture success", "exit_code": float64(0)})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestKnowledgeIDsDoNotReuseClockRemainders(t *testing.T) {
+	seen := map[string]bool{}
+	for i := 0; i < 2000; i++ {
+		id, err := newKnowledgeID("D")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if seen[id] {
+			t.Fatal("duplicate ID")
+		}
+		seen[id] = true
 	}
 }

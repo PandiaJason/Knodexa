@@ -1,0 +1,3 @@
+Implemented [NormalizeLabel](images/normalize.go): strings are trimmed, whitespace collapsed, then uppercased; nonstrings return `""`.
+
+Whitespace and malformed-value tests pass with `go test ./...`, including handler tests. Recorded the image-scoped approach and reference for image-42. Handler code and its recorded memory were preserved.

@@ -1,0 +1,9 @@
+id: E-c9d7c90a87ec777659a50b0dc9f67c38
+title: Post-fix fresh-context live comparison
+node_id: L-b50c8d086a89d5cd0df97c3e68206a92
+evidence_type: TEST_RUN
+created_at: 2026-10-14T16:12:26.088559Z
+command: GOCACHE=/private/tmp/knodexa-go-cache KNODEXA_LIVE_COMPARISON=1 KNODEXA_OPTIMIZED_FLOW=1 KNODEXA_FRESH_RETURN=1 KNODEXA_COMPARISON_OUTPUT=audit/continuity-optimized-fresh-v5 go test ./internal/experiment -run '^TestLiveIdentityComparison$' -count=1 -timeout=15m -v
+exit_code: 0
+output_summary: 'Post-fix pair passed with quality tie: both preserved behavior, reference and completed source memory. The Knodexa agent actually called resume after prepare, exercising the fixed default. Native180.84s/18 actions/306471 input tokens; Knodexa173.08s/22 actions/294566 input tokens. Input includes cache; one pair does not establish superiority. Prior v3 tie and v4 native quality win remain retained.'
+verified_by: agent

@@ -1,0 +1,13 @@
+package handlers
+
+import "identitysample/contracts"
+
+// HandleWebhook forwards a webhook value through the production handler.
+func HandleWebhook(value any, service Transformer, observer Observer) (any, error) {
+	return Handle(value, service, observer)
+}
+
+// HandlerContractVersion reports the production handler's integration contract.
+func HandlerContractVersion() string {
+	return contracts.Version
+}

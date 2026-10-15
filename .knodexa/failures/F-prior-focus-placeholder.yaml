@@ -1,0 +1,5 @@
+id: F-prior-focus-placeholder
+task_id: '1'
+summary: A prior-focus documentation placeholder was copied as a literal task ID and caused avoidable recovery commands.
+causal_details: 'In audit/continuity-optimized-fresh-v3/knodexa/return.jsonl the agent passed --from-task=prior-focus, failed preparation, then discovered task IDs through several commands. Corrected instructions omit the optional flag; successful resume persists advisory focus used only after target identity is resolved. Invalid explicit previous IDs remain errors, and stale advisory focus cannot select or block a target.'
+attempted_at: 2026-10-14T15:55:47Z

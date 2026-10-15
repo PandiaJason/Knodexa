@@ -1,0 +1,7 @@
+def handle(value, service, observer=None):
+    if observer is not None:
+        observer.started(value)
+    result = service.transform(value)
+    if observer is not None:
+        observer.finished(result)
+    return result

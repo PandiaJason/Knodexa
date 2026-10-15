@@ -1,0 +1,5 @@
+Restored `validate_claims` and its six regression tests using the inherited contract: strict integer timestamps, explicit boolean rejection, nonblank string subject, and `now < exp + 7`. Applied the prior coercion failure and bool-subclasses-int lesson.
+
+All 8 tests passed with `python3 -m unittest -v`.
+
+The baseline drifted: saved `3b5fa99`, current HEAD `b6856ef`. Memory records and `normalize.py` were left untouched; the existing A.2 memory change remains.

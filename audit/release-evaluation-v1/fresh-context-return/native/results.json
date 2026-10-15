@@ -1,0 +1,14 @@
+{
+  "arm": "native",
+  "background_memories_enabled": false,
+  "establish": {
+    "exit_code": 1,
+    "seconds": 4.167521625,
+    "thread_id": "01a13bb5-7f36-7800-9b53-71f28b083fa0",
+    "tool_items": 0
+  },
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "scope": "Same-conversation identity return; modular file memory, actual producer capture, no task ID or file path on return",
+  "status": "inconclusive"
+}

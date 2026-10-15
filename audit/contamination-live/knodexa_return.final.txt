@@ -1,0 +1,5 @@
+Implemented `handlers/webhook.py` in the reference handler’s exact format: delegates once to `service.transform(value)`, returns results unchanged, and propagates exceptions unchanged.
+
+All 5 tests passed, including `hello` → `HELLO`, arbitrary result identity, exception identity, and existing image tests.
+
+Preserved `handlers/reference.py`, images, and memory.

@@ -5,3 +5,9 @@ knodexa
 # Ephemeral SQLite index and temp files
 .knodexa/cache.db*
 .knodexa/.tmp_*
+.knodexa/focus.json
+.knodexa/*.lock
+
+# Keep local agent session traces out of published source.
+audit/**/*.jsonl
+audit/**/*.stderr

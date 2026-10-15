@@ -1,20 +1,40 @@
 package mcp
 
 import (
+	"crypto/rand"
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
+	"math"
+	"strings"
 	"time"
 
+	"knodexa/internal/approach"
 	"knodexa/internal/context"
+	"knodexa/internal/continuity"
 	"knodexa/internal/git"
+	"knodexa/internal/identity"
 	"knodexa/internal/index"
 	"knodexa/internal/model"
 	"knodexa/internal/storage"
 	"knodexa/internal/verify"
 )
 
-// ListTools returns definitions for all 9 required Knodexa tools.
+// ListTools returns the continuity, knowledge, and detail tools.
 func ListTools() []ToolDefinition {
-	return []ToolDefinition{
+	definitions := []ToolDefinition{
+		{Name: "knodexa_supersede_knowledge", Description: "Retire a decision or lesson using an existing VERIFIED replacement of the same kind and explicit reason. Preserve history and invalidation provenance; retired knowledge is excluded from active context.", InputSchema: map[string]interface{}{"type": "object", "properties": map[string]interface{}{"node_id": map[string]interface{}{"type": "string"}, "replacement_id": map[string]interface{}{"type": "string"}, "reason": map[string]interface{}{"type": "string"}}, "required": []string{"node_id", "replacement_id", "reason"}}},
+		{Name: "knodexa_record_work", Description: "Execute explicit verification commands, check proposed structural agreement, then save aliases, source identity and versioned approach in one canonical task update. Failures do not install partial memory.", InputSchema: map[string]interface{}{"type": "object", "properties": map[string]interface{}{"task_id": map[string]interface{}{"type": "string"}, "agreement": map[string]interface{}{"type": "object", "properties": map[string]interface{}{"aliases": map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}}, "files": map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}}, "approach": map[string]interface{}{"type": "object", "description": "summary, rules, scopes, references [{path}], checks, and change_reason for replacement"}}, "required": []string{"approach"}}, "verify": map[string]interface{}{"type": "array", "minItems": 1, "items": map[string]interface{}{"type": "string"}}}, "required": []string{"task_id", "agreement", "verify"}}},
+		{Name: "knodexa_prepare_work", Description: "Restore work identity, agreements, Git baseline, drift checks and bounded reference excerpts in one operation. Review needs_review before coding.", InputSchema: map[string]interface{}{"type": "object", "properties": map[string]interface{}{"request": map[string]interface{}{"type": "string"}, "select_task": map[string]interface{}{"type": "string"}, "files": map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}}, "previous_task_id": map[string]interface{}{"type": "string"}, "token_budget": map[string]interface{}{"type": "integer", "minimum": 1}}, "required": []string{"request"}}},
+		{Name: "knodexa_capture_identity", Description: "Capture stable work ID, source hashes, Go symbols, and imports after successful work; preserve completion state and baseline.", InputSchema: map[string]interface{}{"type": "object", "properties": map[string]interface{}{"task_id": map[string]interface{}{"type": "string"}, "files": map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}}}, "required": []string{"task_id"}}},
+		{Name: "knodexa_resolve_request", Description: "Identify whether an incoming natural-language request continues recorded work before creating any task. Restore uniquely matched work with baseline and agreements; expose weak or overlapping matches for clarification. Does not create or reopen tasks.", InputSchema: map[string]interface{}{"type": "object", "properties": map[string]interface{}{
+			"request": map[string]interface{}{"type": "string", "minLength": 1}, "files": map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}}, "select_task": map[string]interface{}{"type": "string", "description": "Explicit existing-work selection after review"}, "intent": map[string]interface{}{"type": "string", "enum": []string{"auto", "continue", "new", "replace"}, "default": "auto"}, "previous_task_id": map[string]interface{}{"type": "string"}, "token_budget": map[string]interface{}{"type": "integer", "minimum": 1}, "detail_level": map[string]interface{}{"type": "string", "enum": []string{"compact", "full"}}}, "required": []string{"request"}}},
+		{Name: "knodexa_add_work_aliases", Description: "Record phrases that refer to established work so future requests can recover its identity without task IDs. Completion status and agreements are preserved.", InputSchema: map[string]interface{}{"type": "object", "properties": map[string]interface{}{"task_id": map[string]interface{}{"type": "string"}, "aliases": map[string]interface{}{"type": "array", "minItems": 1, "items": map[string]interface{}{"type": "string"}}}, "required": []string{"task_id", "aliases"}}},
+		{Name: "knodexa_reuse_approach", Description: "Explicitly link an existing task's established approach to other work regardless of task names or tree position.", InputSchema: map[string]interface{}{"type": "object", "properties": map[string]interface{}{"task_id": map[string]interface{}{"type": "string"}, "source_tasks": map[string]interface{}{"type": "array", "minItems": 1, "items": map[string]interface{}{"type": "string"}}}, "required": []string{"task_id", "source_tasks"}}},
+		{Name: "knodexa_set_approach", Description: "Record an explicitly agreed implementation approach on a task; descendants inherit rules, reference hashes, skills, and literal checks. This records an agreement, not automatic proof of design quality.", InputSchema: map[string]interface{}{"type": "object", "properties": map[string]interface{}{
+			"scopes": map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}}, "task_id": map[string]interface{}{"type": "string"}, "summary": map[string]interface{}{"type": "string"}, "rules": map[string]interface{}{"type": "array", "minItems": 1, "items": map[string]interface{}{"type": "string"}}, "reference_files": map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}}, "skill_files": map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}}, "checks": map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "object", "properties": map[string]interface{}{"path": map[string]interface{}{"type": "string"}, "must_contain": map[string]interface{}{"type": "string"}, "must_not_contain": map[string]interface{}{"type": "string"}}, "required": []string{"path"}}}}, "required": []string{"task_id", "summary", "rules"}}},
+		{Name: "knodexa_check_approach", Description: "Check inherited reference hashes and explicit literal rules; returns failures and marks semantic/design review as still required.", InputSchema: map[string]interface{}{"type": "object", "properties": map[string]interface{}{"task_id": map[string]interface{}{"type": "string"}}, "required": []string{"task_id"}}},
+		{Name: "knodexa_get_detail", Description: "Expand one decision or lesson with full rationale, applicability, constraints, alternatives, and evidence IDs.", InputSchema: map[string]interface{}{"type": "object", "properties": map[string]interface{}{"knowledge_id": map[string]interface{}{"type": "string"}}, "required": []string{"knowledge_id"}}},
 		{
 			Name:        "knodexa_get_context",
 			Description: "Rehydrate the minimal, high-signal engineering context required to resume or execute a task.",
@@ -22,7 +42,8 @@ func ListTools() []ToolDefinition {
 				"type": "object",
 				"properties": map[string]interface{}{
 					"task_id":      map[string]interface{}{"type": "string", "description": "The target task ID (e.g. 'A.2')"},
-					"token_budget": map[string]interface{}{"type": "integer", "description": "Maximum token budget (default: 1500)"},
+					"token_budget": map[string]interface{}{"type": "integer", "minimum": 1, "description": "Human-text token estimate budget (default: 1500)"},
+					"detail_level": map[string]interface{}{"type": "string", "enum": []string{"compact", "full"}, "default": "compact"},
 				},
 				"required": []string{"task_id"},
 			},
@@ -62,6 +83,7 @@ func ListTools() []ToolDefinition {
 					"task_id":                 map[string]interface{}{"type": "string", "description": "Task ID"},
 					"title":                   map[string]interface{}{"type": "string", "description": "Decision title"},
 					"rationale":               map[string]interface{}{"type": "string", "description": "Why this decision is made"},
+					"summary":                 map[string]interface{}{"type": "string", "description": "Concise actionable rule; detailed rationale is expanded on demand"},
 					"alternatives_considered": map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}},
 					"constraints":             map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}},
 				},
@@ -77,6 +99,7 @@ func ListTools() []ToolDefinition {
 					"task_id":       map[string]interface{}{"type": "string", "description": "Source task ID"},
 					"title":         map[string]interface{}{"type": "string", "description": "Lesson title"},
 					"description":   map[string]interface{}{"type": "string", "description": "Explanation and guidance"},
+					"summary":       map[string]interface{}{"type": "string", "description": "Concise actionable guidance"},
 					"applicability": map[string]interface{}{"type": "string", "description": "When does this lesson apply?"},
 					"tags":          map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}},
 					"related_files": map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}},
@@ -95,10 +118,12 @@ func ListTools() []ToolDefinition {
 					"evidence_type":  map[string]interface{}{"type": "string", "enum": []string{"TEST_RUN", "BENCHMARK", "BUILD_TEST", "GIT_DIFF", "MANUAL_SIGN_OFF"}},
 					"command":        map[string]interface{}{"type": "string", "description": "Command executed"},
 					"exit_code":      map[string]interface{}{"type": "integer", "description": "Process exit code"},
-					"output_summary": map[string]interface{}{"type": "string", "description": "Output snippet"},
+					"output_summary": map[string]interface{}{"type": "string", "description": "Recorded output or sign-off details; this tool does not execute commands"},
 					"commit_sha":     map[string]interface{}{"type": "string", "description": "Git commit SHA"},
+					"verified_by":    map[string]interface{}{"type": "string", "description": "Reporter identity; required for manual sign-off"},
 				},
-				"required": []string{"node_id", "title", "evidence_type"},
+				"required": []string{"node_id", "title", "evidence_type", "output_summary"},
+				"anyOf":    []interface{}{map[string]interface{}{"properties": map[string]interface{}{"evidence_type": map[string]interface{}{"const": "MANUAL_SIGN_OFF"}}, "required": []string{"verified_by"}}, map[string]interface{}{"required": []string{"command", "exit_code"}}},
 			},
 		},
 		{
@@ -116,12 +141,16 @@ func ListTools() []ToolDefinition {
 		},
 		{
 			Name:        "knodexa_resume_task",
-			Description: "Transition a task to ACTIVE, capture Git baseline, and rehydrate context.",
+			Description: "Restore task context and compare its Git baseline. Completed task records stay unchanged unless reopen or accept_baseline is explicitly requested.",
 			InputSchema: map[string]interface{}{
 				"type": "object",
 				"properties": map[string]interface{}{
-					"task_id":      map[string]interface{}{"type": "string", "description": "Task ID to resume"},
-					"token_budget": map[string]interface{}{"type": "integer", "description": "Token budget"},
+					"task_id":          map[string]interface{}{"type": "string", "description": "Task ID to resume"},
+					"token_budget":     map[string]interface{}{"type": "integer", "minimum": 1, "description": "Human-text token estimate budget"},
+					"detail_level":     map[string]interface{}{"type": "string", "enum": []string{"compact", "full"}, "default": "compact"},
+					"previous_task_id": map[string]interface{}{"type": "string", "description": "Previous focus whose unrelated conventions should be set aside"},
+					"accept_baseline":  map[string]interface{}{"type": "boolean", "default": false, "description": "Explicitly acknowledge and replace a stored baseline; otherwise drift is preserved"},
+					"reopen":           map[string]interface{}{"type": "boolean", "default": false, "description": "Explicitly reactivate completed work"},
 				},
 				"required": []string{"task_id"},
 			},
@@ -138,6 +167,34 @@ func ListTools() []ToolDefinition {
 			},
 		},
 	}
+	for i := range definitions {
+		if definitions[i].Name == "knodexa_set_approach" {
+			properties := definitions[i].InputSchema.(map[string]interface{})["properties"].(map[string]interface{})
+			properties["change_reason"] = map[string]interface{}{"type": "string"}
+			properties["reference_reconciliations"] = referenceReconciliationSchema()
+			checks := properties["checks"].(map[string]interface{})["items"].(map[string]interface{})["properties"].(map[string]interface{})
+			checks["ast_kind"] = map[string]interface{}{"type": "string", "enum": []string{"require-call", "forbid-call", "forbid-import", "require-function"}}
+			checks["symbol"] = map[string]interface{}{"type": "string"}
+		}
+	}
+	for i := range definitions {
+		if definitions[i].Name == "knodexa_record_work" {
+			properties := definitions[i].InputSchema.(map[string]interface{})["properties"].(map[string]interface{})
+			agreement := properties["agreement"].(map[string]interface{})["properties"].(map[string]interface{})
+			agreement["approach"] = map[string]interface{}{"type": "object", "description": "summary, rules, scopes, references, checks, change_reason; optional reviewed inherited reference bindings", "properties": map[string]interface{}{"reference_reconciliations": referenceReconciliationSchema()}}
+		}
+	}
+	return definitions
+}
+
+func referenceReconciliationSchema() map[string]interface{} {
+	fields := []string{"source_task", "original_path", "original_sha256", "current_path", "current_sha256", "reason"}
+	properties := map[string]interface{}{}
+	for _, field := range fields {
+		properties[field] = map[string]interface{}{"type": "string", "minLength": 1}
+	}
+	properties["source_version"] = map[string]interface{}{"type": "integer", "minimum": 1}
+	return map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "object", "properties": properties, "required": append(fields, "source_version")}}
 }
 
 // ToolHandler routes and executes MCP tools.
@@ -163,6 +220,159 @@ func NewToolHandler(store *storage.Storage, db *index.DB, idx *index.Indexer, ve
 
 func (h *ToolHandler) HandleTool(name string, args map[string]interface{}) (interface{}, error) {
 	switch name {
+	case "knodexa_record_work":
+		taskID, ok := args["task_id"].(string)
+		if !ok || taskID == "" {
+			return nil, fmt.Errorf("task_id required")
+		}
+		data, err := json.Marshal(args["agreement"])
+		if err != nil {
+			return nil, err
+		}
+		var input continuity.RecordInput
+		if err := json.Unmarshal(data, &input); err != nil {
+			return nil, err
+		}
+		data, err = json.Marshal(args["verify"])
+		if err != nil {
+			return nil, err
+		}
+		var verify []string
+		if err := json.Unmarshal(data, &verify); err != nil {
+			return nil, err
+		}
+		return continuity.NewService(h.store, h.db, h.indexer, h.context, h.git).Record(taskID, input, verify, 5*time.Minute)
+	case "knodexa_capture_identity":
+		taskID, ok := args["task_id"].(string)
+		if !ok || taskID == "" {
+			return nil, fmt.Errorf("task_id required")
+		}
+		var files []string
+		if raw, ok := args["files"]; ok {
+			data, err := json.Marshal(raw)
+			if err != nil {
+				return nil, err
+			}
+			if err := json.Unmarshal(data, &files); err != nil {
+				return nil, err
+			}
+		}
+		if err := identity.Capture(h.store, h.db, h.indexer, taskID, files); err != nil {
+			return nil, err
+		}
+		return map[string]interface{}{"task_id": taskID, "captured": true}, nil
+	case "knodexa_resolve_request", "knodexa_prepare_work":
+		data, err := json.Marshal(args)
+		if err != nil {
+			return nil, err
+		}
+		var request identity.Request
+		if err := json.Unmarshal(data, &request); err != nil {
+			return nil, err
+		}
+		budget, full, err := contextOptions(args)
+		if err != nil {
+			return nil, err
+		}
+		previous := ""
+		if raw, exists := args["previous_task_id"]; exists {
+			var ok bool
+			previous, ok = raw.(string)
+			if !ok {
+				return nil, fmt.Errorf("previous_task_id must be a string")
+			}
+		}
+		service := continuity.NewService(h.store, h.db, h.indexer, h.context, h.git)
+		if name == "knodexa_prepare_work" {
+			return service.Prepare(request, budget, continuity.ResumeOptions{Full: full, PreviousTaskID: previous})
+		}
+		return service.ResolveRequest(request, budget, continuity.ResumeOptions{Full: full, PreviousTaskID: previous})
+	case "knodexa_add_work_aliases":
+		taskID, ok := args["task_id"].(string)
+		if !ok || taskID == "" {
+			return nil, fmt.Errorf("task_id is required")
+		}
+		data, err := json.Marshal(args["aliases"])
+		if err != nil {
+			return nil, err
+		}
+		var aliases []string
+		if err := json.Unmarshal(data, &aliases); err != nil {
+			return nil, err
+		}
+		if err := identity.AddAliases(h.store, h.db, h.indexer, taskID, aliases); err != nil {
+			return nil, err
+		}
+		return map[string]interface{}{"task_id": taskID, "aliases_added": aliases}, nil
+
+	case "knodexa_reuse_approach":
+		taskID, ok := args["task_id"].(string)
+		if !ok || taskID == "" {
+			return nil, fmt.Errorf("task_id is required")
+		}
+		data, err := json.Marshal(args["source_tasks"])
+		if err != nil {
+			return nil, err
+		}
+		var sources []string
+		if err := json.Unmarshal(data, &sources); err != nil {
+			return nil, err
+		}
+		if err := approach.Reuse(h.store, h.db, h.indexer, taskID, sources); err != nil {
+			return nil, err
+		}
+		return map[string]interface{}{"task_id": taskID, "source_tasks": sources, "linked": true}, nil
+
+	case "knodexa_set_approach":
+		taskID, ok := args["task_id"].(string)
+		if !ok || taskID == "" {
+			return nil, fmt.Errorf("task_id is required")
+		}
+		data, err := json.Marshal(args)
+		if err != nil {
+			return nil, err
+		}
+		var value model.TaskApproach
+		if err := json.Unmarshal(data, &value); err != nil {
+			return nil, err
+		}
+		if raw, exists := args["reference_files"]; exists {
+			data, err := json.Marshal(raw)
+			if err != nil {
+				return nil, err
+			}
+			var paths []string
+			if err := json.Unmarshal(data, &paths); err != nil {
+				return nil, err
+			}
+			value.References = nil
+			for _, path := range paths {
+				value.References = append(value.References, model.ApproachReference{Path: path})
+			}
+		}
+		if err := approach.Set(h.store, h.db, h.indexer, taskID, value); err != nil {
+			return nil, err
+		}
+		return map[string]interface{}{"task_id": taskID, "recorded": true, "agreement_not_quality_proof": true}, nil
+	case "knodexa_check_approach":
+		taskID, ok := args["task_id"].(string)
+		if !ok || taskID == "" {
+			return nil, fmt.Errorf("task_id is required")
+		}
+		if err := h.indexer.Sync(); err != nil {
+			return nil, err
+		}
+		return approach.Check(h.store, h.db, taskID)
+
+	case "knodexa_get_detail":
+		id, ok := args["knowledge_id"].(string)
+		if !ok || id == "" {
+			return nil, fmt.Errorf("knowledge_id is required")
+		}
+		if err := h.indexer.Sync(); err != nil {
+			return nil, err
+		}
+		return h.context.GetDetail(id)
 	case "knodexa_get_context":
 		return h.handleGetContext(args)
 	case "knodexa_find_related":
@@ -177,6 +387,14 @@ func (h *ToolHandler) HandleTool(name string, args map[string]interface{}) (inte
 		return h.handleAddEvidence(args)
 	case "knodexa_verify":
 		return h.handleVerify(args)
+	case "knodexa_supersede_knowledge":
+		id, _ := args["node_id"].(string)
+		replacement, _ := args["replacement_id"].(string)
+		reason, _ := args["reason"].(string)
+		if err := h.verify.SupersedeNode(id, replacement, reason, "agent"); err != nil {
+			return nil, err
+		}
+		return map[string]interface{}{"id": id, "replacement_id": replacement, "status": "SUPERSEDED"}, nil
 	case "knodexa_resume_task":
 		return h.handleResumeTask(args)
 	case "knodexa_task_status":
@@ -191,11 +409,14 @@ func (h *ToolHandler) handleGetContext(args map[string]interface{}) (interface{}
 	if !ok || taskID == "" {
 		return nil, fmt.Errorf("task_id is required")
 	}
-	budget := 1500
-	if b, ok := args["token_budget"].(float64); ok && b > 0 {
-		budget = int(b)
+	budget, full, err := contextOptions(args)
+	if err != nil {
+		return nil, err
 	}
-	return h.context.Build(taskID, budget)
+	if err := h.indexer.Sync(); err != nil {
+		return nil, err
+	}
+	return h.context.BuildWithOptions(taskID, budget, context.BuildOptions{Compact: !full})
 }
 
 func (h *ToolHandler) handleResumeTask(args map[string]interface{}) (interface{}, error) {
@@ -203,32 +424,71 @@ func (h *ToolHandler) handleResumeTask(args map[string]interface{}) (interface{}
 	if !ok || taskID == "" {
 		return nil, fmt.Errorf("task_id is required")
 	}
-	task, err := h.store.ReadTask(taskID)
+	budget, full, err := contextOptions(args)
 	if err != nil {
 		return nil, err
 	}
-	now := time.Now().UTC()
-	task.Status = model.TaskStatusActive
-	task.UpdatedAt = now
-
-	// Checkpoint baseline commit
-	if chk, err := h.git.GetCheckpoint(); err == nil && chk != nil && chk.CommitSHA != "" {
-		task.BaselineCommit = chk.CommitSHA
+	accept := false
+	reopen := false
+	if value, exists := args["reopen"]; exists {
+		var ok bool
+		reopen, ok = value.(bool)
+		if !ok {
+			return nil, fmt.Errorf("reopen must be boolean")
+		}
 	}
-	_ = h.store.SaveTask(task)
-	_ = h.indexer.Sync()
+	if value, exists := args["accept_baseline"]; exists {
+		var ok bool
+		accept, ok = value.(bool)
+		if !ok {
+			return nil, fmt.Errorf("accept_baseline must be boolean")
+		}
+	}
+	previous := ""
+	if raw, exists := args["previous_task_id"]; exists {
+		var ok bool
+		previous, ok = raw.(string)
+		if !ok {
+			return nil, fmt.Errorf("previous_task_id must be a string")
+		}
+	}
+	return continuity.NewService(h.store, h.db, h.indexer, h.context, h.git).Resume(taskID, budget, continuity.ResumeOptions{Full: full, AcceptBaseline: accept, Reopen: reopen, PreviousTaskID: previous})
+}
 
+func contextOptions(args map[string]interface{}) (int, bool, error) {
 	budget := 1500
-	if b, ok := args["token_budget"].(float64); ok && b > 0 {
-		budget = int(b)
+	if value, exists := args["token_budget"]; exists {
+		number, ok := value.(float64)
+		if integer, isInt := value.(int); isInt {
+			number = float64(integer)
+			ok = true
+		}
+		if !ok || math.IsNaN(number) || math.IsInf(number, 0) || math.Trunc(number) != number || number <= 0 || number > 2147483647 {
+			return 0, false, fmt.Errorf("token_budget must be a positive integer")
+		}
+		budget = int(number)
 	}
-	return h.context.Build(taskID, budget)
+	level := "compact"
+	if value, exists := args["detail_level"]; exists {
+		var ok bool
+		level, ok = value.(string)
+		if !ok {
+			return 0, false, fmt.Errorf("detail_level must be compact or full")
+		}
+	}
+	if level != "compact" && level != "full" {
+		return 0, false, fmt.Errorf("detail_level must be compact or full")
+	}
+	return budget, level == "full", nil
 }
 
 func (h *ToolHandler) handleTaskStatus(args map[string]interface{}) (interface{}, error) {
 	taskID, ok := args["task_id"].(string)
 	if !ok || taskID == "" {
 		return nil, fmt.Errorf("task_id is required")
+	}
+	if err := h.indexer.Sync(); err != nil {
+		return nil, err
 	}
 	task, err := h.store.ReadTask(taskID)
 	if err != nil {
@@ -266,7 +526,10 @@ func (h *ToolHandler) handleRecordObservation(args map[string]interface{}) (inte
 		}
 	}
 
-	obsID := fmt.Sprintf("OBS-%d", time.Now().UnixNano()%1000000)
+	obsID, err := newKnowledgeID("OBS")
+	if err != nil {
+		return nil, err
+	}
 	obs := &model.ObservationData{
 		ID:        obsID,
 		TaskID:    taskID,
@@ -277,7 +540,9 @@ func (h *ToolHandler) handleRecordObservation(args map[string]interface{}) (inte
 	if err := h.store.SaveObservation(obs); err != nil {
 		return nil, err
 	}
-	_ = h.indexer.Sync()
+	if err := h.indexer.Sync(); err != nil {
+		return nil, err
+	}
 
 	return map[string]interface{}{
 		"id":       obsID,
@@ -294,7 +559,10 @@ func (h *ToolHandler) handleProposeDecision(args map[string]interface{}) (interf
 		return nil, fmt.Errorf("task_id, title, and rationale are required")
 	}
 
-	decID := fmt.Sprintf("D-%d", time.Now().UnixNano()%1000000)
+	decID, err := newKnowledgeID("D")
+	if err != nil {
+		return nil, err
+	}
 	now := time.Now().UTC()
 	doc := &model.DecisionDocument{
 		Frontmatter: model.DecisionFrontmatter{
@@ -309,10 +577,37 @@ func (h *ToolHandler) handleProposeDecision(args map[string]interface{}) (interf
 		Body: fmt.Sprintf("## Rationale\n%s\n", rationale),
 	}
 
+	if summary, ok := args["summary"].(string); ok {
+		doc.Frontmatter.Summary = summary
+	}
+	for _, field := range []struct{ key, heading string }{{"constraints", "Constraints"}, {"alternatives_considered", "Rejected alternatives"}} {
+		if raw, exists := args[field.key]; exists {
+			values, ok := raw.([]interface{})
+			if !ok {
+				return nil, fmt.Errorf("%s must be an array of strings", field.key)
+			}
+			doc.Body += "\n## " + field.heading + "\n"
+			for _, value := range values {
+				text, ok := value.(string)
+				if !ok {
+					return nil, fmt.Errorf("%s must contain strings", field.key)
+				}
+				doc.Body += "- " + text + "\n"
+				if field.key == "constraints" {
+					doc.Frontmatter.Constraints = append(doc.Frontmatter.Constraints, text)
+				} else {
+					doc.Frontmatter.AlternativesConsidered = append(doc.Frontmatter.AlternativesConsidered, text)
+				}
+			}
+		}
+	}
+
 	if err := h.store.SaveDecision(doc); err != nil {
 		return nil, err
 	}
-	_ = h.indexer.Sync()
+	if err := h.indexer.Sync(); err != nil {
+		return nil, err
+	}
 
 	return map[string]interface{}{
 		"id":     decID,
@@ -349,7 +644,10 @@ func (h *ToolHandler) handleProposeLesson(args map[string]interface{}) (interfac
 		}
 	}
 
-	lesID := fmt.Sprintf("L-%d", time.Now().UnixNano()%1000000)
+	lesID, err := newKnowledgeID("L")
+	if err != nil {
+		return nil, err
+	}
 	now := time.Now().UTC()
 	doc := &model.LessonDocument{
 		Frontmatter: model.LessonFrontmatter{
@@ -367,10 +665,16 @@ func (h *ToolHandler) handleProposeLesson(args map[string]interface{}) (interfac
 		Body: desc,
 	}
 
+	if summary, ok := args["summary"].(string); ok {
+		doc.Frontmatter.Summary = summary
+	}
+
 	if err := h.store.SaveLesson(doc); err != nil {
 		return nil, err
 	}
-	_ = h.indexer.Sync()
+	if err := h.indexer.Sync(); err != nil {
+		return nil, err
+	}
 
 	return map[string]interface{}{
 		"id":     lesID,
@@ -388,7 +692,10 @@ func (h *ToolHandler) handleAddEvidence(args map[string]interface{}) (interface{
 		return nil, fmt.Errorf("node_id, title, and evidence_type are required")
 	}
 
-	evID := fmt.Sprintf("E-%d", time.Now().UnixNano()%1000000)
+	evID, err := newKnowledgeID("E")
+	if err != nil {
+		return nil, err
+	}
 	ev := &model.EvidenceData{
 		ID:           evID,
 		Title:        title,
@@ -398,11 +705,28 @@ func (h *ToolHandler) handleAddEvidence(args map[string]interface{}) (interface{
 		VerifiedBy:   "agent",
 	}
 
+	if reporter, ok := args["verified_by"].(string); ok {
+		ev.VerifiedBy = strings.TrimSpace(reporter)
+	}
+	if ev.EvidenceType == model.EvidenceManualSignOff {
+		reporter, ok := args["verified_by"].(string)
+		if !ok || strings.TrimSpace(reporter) == "" {
+			return nil, fmt.Errorf("verified_by is required for manual sign-off")
+		}
+	}
+
 	if cmd, ok := args["command"].(string); ok {
 		ev.Command = cmd
 	}
-	if ec, ok := args["exit_code"].(float64); ok {
+	if ev.EvidenceType != model.EvidenceManualSignOff {
+		ec, ok := args["exit_code"].(float64)
+		if !ok || math.IsNaN(ec) || math.IsInf(ec, 0) || math.Trunc(ec) != ec || ec < -2147483648 || ec > 2147483647 {
+			return nil, fmt.Errorf("explicit integer exit_code is required for execution evidence")
+		}
 		ev.ExitCode = int(ec)
+		if strings.TrimSpace(ev.Command) == "" {
+			return nil, fmt.Errorf("command is required for execution evidence")
+		}
 	}
 	if summary, ok := args["output_summary"].(string); ok {
 		ev.OutputSummary = summary
@@ -411,6 +735,9 @@ func (h *ToolHandler) handleAddEvidence(args map[string]interface{}) (interface{
 		ev.CommitSHA = commit
 	}
 
+	if strings.TrimSpace(ev.OutputSummary) == "" {
+		return nil, fmt.Errorf("output_summary is required")
+	}
 	if err := h.verify.AddEvidence(ev, "agent"); err != nil {
 		return nil, err
 	}
@@ -504,4 +831,13 @@ func (h *ToolHandler) handleFindRelated(args map[string]interface{}) (interface{
 	return map[string]interface{}{
 		"matches": matches,
 	}, nil
+}
+
+// newKnowledgeID avoids collisions between independent processes and sessions.
+func newKnowledgeID(prefix string) (string, error) {
+	var bytes [16]byte
+	if _, err := rand.Read(bytes[:]); err != nil {
+		return "", fmt.Errorf("generate knowledge ID: %w", err)
+	}
+	return prefix + "-" + hex.EncodeToString(bytes[:]), nil
 }

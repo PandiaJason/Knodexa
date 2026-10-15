@@ -1,0 +1,73 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+func TestHandleWebhook(t *testing.T) {
+	inputPointer := &struct{ Event string }{"delivery"}
+	result := &struct{ Receipt string }{"original"}
+	for _, input := range []any{"  delivery Mixed Case\t ", inputPointer, 42, nil} {
+		for _, serviceErr := range []error{nil, errors.New("delivery failure")} {
+			for _, observed := range []bool{false, true} {
+				var events []string
+				calls := 0
+				service := transformFunc(func(value any) (any, error) {
+					calls++
+					events = append(events, "transform")
+					if value != input {
+						t.Fatalf("input changed: got %#v, want %#v", value, input)
+					}
+					return result, serviceErr
+				})
+				var observer Observer
+				if observed {
+					observer = observerFuncs{
+						started: func(value any) {
+							events = append(events, "started")
+							if value != input {
+								t.Fatal("Started input changed")
+							}
+						},
+						finished: func(value any) {
+							events = append(events, "finished")
+							if value != result {
+								t.Fatal("Finished result changed")
+							}
+						},
+					}
+				}
+				got, err := HandleWebhook(input, service, observer)
+				if got != result || err != serviceErr || calls != 1 {
+					t.Fatalf("result/error identity or call count changed: %v, %v, %d", got, err, calls)
+				}
+				var want []string
+				if observed {
+					want = append(want, "started")
+				}
+				want = append(want, "transform")
+				if observed && serviceErr == nil {
+					want = append(want, "finished")
+				}
+				if !reflect.DeepEqual(events, want) {
+					t.Fatalf("events = %v, want %v", events, want)
+				}
+			}
+		}
+	}
+}
+
+func TestHandleWebhookPropagatesPanic(t *testing.T) {
+	panicValue := &struct{ Message string }{"delivery panic"}
+	defer func() {
+		if got := recover(); got != panicValue {
+			t.Fatalf("panic = %v, want original panic", got)
+		}
+	}()
+	HandleWebhook(nil, transformFunc(func(any) (any, error) { panic(panicValue) }), observerFuncs{
+		started:  func(any) {},
+		finished: func(any) { t.Fatal("Finished called after panic") },
+	})
+}

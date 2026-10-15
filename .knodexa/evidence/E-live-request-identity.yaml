@@ -1,0 +1,9 @@
+id: E-live-request-identity
+node_id: L-live-request-identity
+title: Real Go-agent work identity trial
+evidence_type: TEST_RUN
+command: KNODEXA_LIVE_IDENTITY=1 GOCACHE=/private/tmp/knodexa-go-cache go test ./internal/experiment -run '^TestLiveRequestIdentity$' -v -count=1 -timeout=12m
+exit_code: 0
+output_summary: TestLiveRequestIdentity passed in 193 seconds. Original and returned code passed independent Go checks; actual request resolution recovered work-17 without request task IDs or paths; memory, reference, and saved baseline were preserved; drift was reported. See audit/identity-live/results.json.
+verified_by: Codex Go live test runner
+created_at: 2026-10-14T08:14:38Z

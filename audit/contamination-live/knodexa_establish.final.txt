@@ -1,0 +1,5 @@
+Inspected `handlers/reference.py` and selected project memory. Substitution tests passed: arbitrary results retain identity, exceptions propagate unchanged, and `transform(value)` runs exactly once.
+
+I’ll follow this injected-service delegation approach for future handler work in this conversation.
+
+The required resume command updated task metadata; I restored it. Final working tree is clean.

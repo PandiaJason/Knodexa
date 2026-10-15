@@ -1,0 +1,25 @@
+{
+  "case": "similar-tasks",
+  "arm": "native",
+  "phase": {
+    "exit_code": 0,
+    "seconds": 80.450351375,
+    "thread_id": "01a13b49-68bc-7a22-8e81-bf836c581acc",
+    "tool_items": 10,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 105728,
+        "input_tokens": 142570,
+        "output_tokens": 2654,
+        "reasoning_output_tokens": 34
+      }
+    ]
+  },
+  "behavior_passed": false,
+  "completed_memory_preserved": false,
+  "reference_preserved": true,
+  "stale_agreement_reported": false,
+  "scored": true,
+  "passed": false
+}

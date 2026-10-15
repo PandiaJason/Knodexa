@@ -1,0 +1,243 @@
+{
+  "constraints": [
+    "Use standard-library Python and preserve validate_claims(claims, now) -> bool; invalid inputs return False without raising.",
+    "Require dict claims and a string sub that is nonempty after stripping whitespace.",
+    "Require integer exp and now, explicitly excluding bool; reject strings, floats, NaN, and other types.",
+    "Require exp > 0 and now >= 0.",
+    "Allow exactly seven seconds of skew: now < exp + 7.",
+    "Never read the wall clock, add third-party dependencies, or mutate caller dictionaries."
+  ],
+  "acceptance": [
+    "Implemented A.1 in expiry.py with deterministic validation and the public bool API.",
+    "Added tests covering malformed inputs, timestamp types and ranges, dictionary preservation, and the strict skew boundary.",
+    "python3 -m unittest -v: all 7 tests passed."
+  ],
+  "decision": {
+    "summary": "Validate types and ranges before comparing now < exp + 7.",
+    "rationale": "Explicit checks reject malformed timestamps without coercion and preserve deterministic behavior."
+  },
+  "failure": {
+    "summary": "F-001: Prior int(value) coercion accepted invalid timestamps.",
+    "cause": "Coercion accepted numeric strings and truncated fractional timestamps."
+  },
+  "lesson": {
+    "title": "L-001: Explicitly exclude bool from integer timestamps",
+    "summary": "Python bool subclasses int. Check isinstance(value, int) and explicitly reject isinstance(value, bool) before arithmetic.",
+    "applicability": "Use this pattern whenever an integer-only API must reject booleans; validate types instead of coercing inputs."
+  },
+  "saved_baseline": "ac153042d06a324d23b84376467a51a2515c256d",
+  "source_task": "A.1",
+  "evidence": "Independent producer acceptance checks passed 20/20.",
+  "unrelated_tasks": [
+    {
+      "id": "image-0",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-1",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-2",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-3",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-4",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-5",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-6",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-7",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-8",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-9",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-10",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-11",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-12",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-13",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-14",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-15",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-16",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-17",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-18",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-19",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-20",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-21",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-22",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-23",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-24",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-25",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-26",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-27",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-28",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    },
+    {
+      "id": "image-29",
+      "files": [
+        "images.png"
+      ],
+      "lesson": "Use PNG palette reduction; leave expiry validation unchanged."
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+=== RUN   TestEval1_TokenCostToResume
+    eval_test.go:246: === EVALUATION 1: Token Cost to Resume Task ===
+    eval_test.go:247: BASELINE (AGENTS.md + Rules + Skill):  831 tokens
+    eval_test.go:248: KNODEXA (Task-Scoped Rehydration):     124 tokens
+    eval_test.go:249: REDUCTION:                             6.7x fewer tokens (85.1% savings)
+--- PASS: TestEval1_TokenCostToResume (0.52s)
+=== RUN   TestEval2_SignalToNoise
+    eval_test.go:298: === EVALUATION 2: Signal-to-Noise Ratio ===
+    eval_test.go:299: BASELINE: 9 / 92 lines relevant (9.8% signal)
+    eval_test.go:300: KNODEXA:  16 lines total, 100.0% relevant to auth-system
+    eval_test.go:301: IMPROVEMENT: 10.2x denser signal
+--- PASS: TestEval2_SignalToNoise (0.47s)
+=== RUN   TestEval3_FailureRecall
+    eval_test.go:361: === EVALUATION 3: Structured Failure Recall ===
+    eval_test.go:362: BASELINE Score: 3 / 7 (freeform unstructured prose, mixed with other tasks)
+    eval_test.go:363: KNODEXA Score:  7 / 7 (first-class entity, indexed, task-scoped, machine-queryable)
+--- PASS: TestEval3_FailureRecall (0.28s)
+=== RUN   TestEval4_DecisionRecallWithRationale
+    eval_test.go:425: === EVALUATION 4: Decision Recall with Verification Lifecycle ===
+    eval_test.go:426: BASELINE: Stored in AGENTS.md = true | Has Lifecycle State = false | Evidence Linked = false
+    eval_test.go:427: KNODEXA:  Verified Decisions Count = 1 | Status = VERIFIED | Evidence Gated = true
+--- PASS: TestEval4_DecisionRecallWithRationale (0.31s)
+=== RUN   TestEval5_CrossTaskKnowledgeTransfer
+    eval_test.go:501: === EVALUATION 5: Cross-Task Knowledge Transfer ===
+    eval_test.go:502: Task 'notification-service' resumes without prior auth context.
+    eval_test.go:503: Does it receive L-001 from 'auth-system' via file/tag overlap?
+    eval_test.go:504: Result: true
+--- PASS: TestEval5_CrossTaskKnowledgeTransfer (0.49s)
+=== RUN   TestEval6_GitMergeSafety
+    eval_test.go:566: === EVALUATION 6: Git Merge Safety ===
+    eval_test.go:567: Monolithic AGENTS.md Merge: FATAL CONFLICT ❌
+    eval_test.go:568: Knodexa Modular Merge:     CLEAN MERGE ✓
+--- PASS: TestEval6_GitMergeSafety (1.66s)
+=== RUN   TestEval_FinalScorecard
+    eval_test.go:582: 
+        ================================================================================
+                            REAL-WORLD HEAD-TO-HEAD EVALUATION SCORECARD
+        ================================================================================
+        Evaluation Metric           Antigravity Built-ins (AGENTS.md)    Knodexa Memory
+        --------------------------------------------------------------------------------
+        1. Resume Token Cost        ~850 tokens (all tasks + conventions) 130-170 tokens (task-scoped)
+        2. Signal-to-Noise Ratio    ~15% relevant to target task         100% relevant to target task
+        3. Failure Recall           Unstructured free-form text          Structured entity with root cause
+        4. Decision Lifecycle       Static list (all equal weight)       Evidence-gated (PROPOSED/VERIFIED)
+        5. Cross-Task Transfer      Manual (agent must read everything)  Automatic (by file & tag overlap)
+        6. Multi-Agent Concurrency  Frequent merge conflicts             Conflict-free (file-per-node)
+        --------------------------------------------------------------------------------
+        WHERE BUILT-IN TOOLS WIN:
+          * Zero setup, zero dependencies, instant to start.
+          * Ideal for repository conventions, style guides, and coding patterns.
+          * Static directives ("always use context.Context") belong in rules.
+        
+        WHERE KNODEXA WINS:
+          * Multi-session engineering continuity across days/weeks.
+          * Task switching without context pollution.
+          * Remembering WHY past experiments failed and WHICH choices were verified with proof.
+        ================================================================================
+--- PASS: TestEval_FinalScorecard (0.00s)
+PASS
+ok  	knodexa/internal/experiment	4.889s

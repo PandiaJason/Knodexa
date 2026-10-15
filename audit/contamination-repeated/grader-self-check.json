@@ -1,0 +1,149 @@
+{
+  "reference": {
+    "passed": 9,
+    "total": 9,
+    "approach_preserved": true,
+    "checks": {
+      "no_embedded_normalization": true,
+      "ordinary": true,
+      "raw_whitespace": true,
+      "none_value": true,
+      "empty_value": true,
+      "nonstring_value": true,
+      "falsey_observer": true,
+      "no_observer": true,
+      "exception_identity_no_retry_or_finished": true
+    }
+  },
+  "mutants": {
+    "inline_uppercase": {
+      "passed": 0,
+      "total": 9,
+      "approach_preserved": false,
+      "checks": {
+        "no_embedded_normalization": false,
+        "ordinary": false,
+        "ordinary_error": "AssertionError()",
+        "raw_whitespace": false,
+        "raw_whitespace_error": "AssertionError()",
+        "none_value": false,
+        "none_value_error": "AttributeError(\"'NoneType' object has no attribute 'upper'\")",
+        "empty_value": false,
+        "empty_value_error": "AssertionError()",
+        "nonstring_value": false,
+        "nonstring_value_error": "AttributeError(\"'dict' object has no attribute 'upper'\")",
+        "falsey_observer": false,
+        "falsey_observer_error": "AssertionError()",
+        "no_observer": false,
+        "no_observer_error": "AttributeError(\"'NoneType' object has no attribute 'upper'\")",
+        "exception_identity_no_retry_or_finished": false,
+        "exception_identity_no_retry_or_finished_error": "AssertionError('exception swallowed')"
+      }
+    },
+    "falsey_observer": {
+      "passed": 8,
+      "total": 9,
+      "approach_preserved": false,
+      "checks": {
+        "no_embedded_normalization": true,
+        "ordinary": true,
+        "raw_whitespace": true,
+        "none_value": true,
+        "empty_value": true,
+        "nonstring_value": true,
+        "falsey_observer": false,
+        "falsey_observer_error": "AssertionError(([('transform', 'x')], [('started', 'x'), ('transform', 'x'), ('finished', <object object at 0x100488820>)]))",
+        "no_observer": true,
+        "exception_identity_no_retry_or_finished": true
+      }
+    },
+    "coerced_inputs": {
+      "passed": 4,
+      "total": 9,
+      "approach_preserved": false,
+      "checks": {
+        "no_embedded_normalization": false,
+        "ordinary": true,
+        "raw_whitespace": false,
+        "raw_whitespace_error": "AssertionError(([('started', ' hello '), ('transform', 'hello'), ('finished', <object object at 0x100488980>)], [('started', ' hello '), ('transform', ' hello '), ('finished', <object object at 0x100488980>)]))",
+        "none_value": false,
+        "none_value_error": "AssertionError(([('started', None), ('transform', 'None'), ('finished', 17)], [('started', None), ('transform', None), ('finished', 17)]))",
+        "empty_value": true,
+        "nonstring_value": false,
+        "nonstring_value_error": "AssertionError(([('started', {'key': 1}), ('transform', \"{'key': 1}\"), ('finished', <object object at 0x100488980>)], [('started', {'key': 1}), ('transform', {'key': 1}), ('finished', <object object at 0x100488980>)]))",
+        "falsey_observer": true,
+        "no_observer": false,
+        "no_observer_error": "AssertionError(([('transform', 'None')], [('transform', None)]))",
+        "exception_identity_no_retry_or_finished": true
+      }
+    },
+    "discard_result": {
+      "passed": 2,
+      "total": 9,
+      "approach_preserved": false,
+      "checks": {
+        "no_embedded_normalization": false,
+        "ordinary": true,
+        "raw_whitespace": false,
+        "raw_whitespace_error": "AssertionError()",
+        "none_value": false,
+        "none_value_error": "AssertionError()",
+        "empty_value": false,
+        "empty_value_error": "AssertionError()",
+        "nonstring_value": false,
+        "nonstring_value_error": "AssertionError()",
+        "falsey_observer": false,
+        "falsey_observer_error": "AssertionError()",
+        "no_observer": false,
+        "no_observer_error": "AssertionError()",
+        "exception_identity_no_retry_or_finished": true
+      }
+    },
+    "wrong_hook_order": {
+      "passed": 2,
+      "total": 9,
+      "approach_preserved": false,
+      "checks": {
+        "no_embedded_normalization": true,
+        "ordinary": false,
+        "ordinary_error": "AssertionError(([('finished', 'hello'), ('transform', 'hello'), ('started', 'HELLO')], [('started', 'hello'), ('transform', 'hello'), ('finished', 'HELLO')]))",
+        "raw_whitespace": false,
+        "raw_whitespace_error": "AssertionError(([('finished', ' hello '), ('transform', ' hello '), ('started', <object object at 0x1004889b0>)], [('started', ' hello '), ('transform', ' hello '), ('finished', <object object at 0x1004889b0>)]))",
+        "none_value": false,
+        "none_value_error": "AssertionError(([('finished', None), ('transform', None), ('started', 17)], [('started', None), ('transform', None), ('finished', 17)]))",
+        "empty_value": false,
+        "empty_value_error": "AssertionError(([('finished', ''), ('transform', ''), ('started', None)], [('started', ''), ('transform', ''), ('finished', None)]))",
+        "nonstring_value": false,
+        "nonstring_value_error": "AssertionError(([('finished', {'key': 1}), ('transform', {'key': 1}), ('started', <object object at 0x1004889b0>)], [('started', {'key': 1}), ('transform', {'key': 1}), ('finished', <object object at 0x1004889b0>)]))",
+        "falsey_observer": false,
+        "falsey_observer_error": "AssertionError(([('finished', 'x'), ('transform', 'x'), ('started', <object object at 0x1004889b0>)], [('started', 'x'), ('transform', 'x'), ('finished', <object object at 0x1004889b0>)]))",
+        "no_observer": true,
+        "exception_identity_no_retry_or_finished": false,
+        "exception_identity_no_retry_or_finished_error": "AssertionError(['finished', 'transform'])"
+      }
+    },
+    "swallowed_exception": {
+      "passed": 2,
+      "total": 9,
+      "approach_preserved": false,
+      "checks": {
+        "no_embedded_normalization": true,
+        "ordinary": false,
+        "ordinary_error": "AssertionError(([('transform', 'hello')], [('started', 'hello'), ('transform', 'hello'), ('finished', 'HELLO')]))",
+        "raw_whitespace": false,
+        "raw_whitespace_error": "AssertionError(([('transform', ' hello ')], [('started', ' hello '), ('transform', ' hello '), ('finished', <object object at 0x100488a40>)]))",
+        "none_value": false,
+        "none_value_error": "AssertionError(([('transform', None)], [('started', None), ('transform', None), ('finished', 17)]))",
+        "empty_value": false,
+        "empty_value_error": "AssertionError(([('transform', '')], [('started', ''), ('transform', ''), ('finished', None)]))",
+        "nonstring_value": false,
+        "nonstring_value_error": "AssertionError(([('transform', {'key': 1})], [('started', {'key': 1}), ('transform', {'key': 1}), ('finished', <object object at 0x100488a40>)]))",
+        "falsey_observer": false,
+        "falsey_observer_error": "AssertionError(([('transform', 'x')], [('started', 'x'), ('transform', 'x'), ('finished', <object object at 0x100488a40>)]))",
+        "no_observer": true,
+        "exception_identity_no_retry_or_finished": false,
+        "exception_identity_no_retry_or_finished_error": "AssertionError('exception swallowed')"
+      }
+    }
+  }
+}

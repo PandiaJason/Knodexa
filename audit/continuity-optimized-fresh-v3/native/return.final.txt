@@ -1,0 +1,3 @@
+Added `handlers.HandleWebhook(value any, service Transformer, observer Observer) (any, error)`, delegating to `Handle` to preserve established behavior.
+
+Added tests for raw forwarding, result/error identity, observer ordering, and panic propagation. `go test ./...` passes.

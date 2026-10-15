@@ -1,0 +1,83 @@
+{
+  "arms": {
+    "knodexa": {
+      "background_memories_enabled": false,
+      "establish": {
+        "exit_code": 0,
+        "seconds": 57.901448958,
+        "thread_id": "01a13bb4-0fed-7ba3-8973-7e329edc92d8",
+        "tool_items": 7,
+        "usage": [
+          {
+            "cache_write_input_tokens": 0,
+            "cached_input_tokens": 58496,
+            "input_tokens": 64454,
+            "output_tokens": 1708,
+            "reasoning_output_tokens": 0
+          }
+        ]
+      },
+      "establish_independent_checks_passed": true,
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "low",
+      "scope": "One real agent, shared conversation, recorded memory from producer, unrelated work, then a natural-language return without task ID or file path",
+      "status": "inconclusive",
+      "switch": {
+        "exit_code": 1,
+        "seconds": 34.280531,
+        "thread_id": "01a13bb4-0fed-7ba3-8973-7e329edc92d8",
+        "tool_items": 6
+      }
+    },
+    "native": {
+      "arm": "native",
+      "background_memories_enabled": false,
+      "establish": {
+        "exit_code": 1,
+        "seconds": 4.167521625,
+        "thread_id": "01a13bb5-7f36-7800-9b53-71f28b083fa0",
+        "tool_items": 0
+      },
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "low",
+      "scope": "Same-conversation identity return; modular file memory, actual producer capture, no task ID or file path on return",
+      "status": "inconclusive"
+    }
+  },
+  "metrics": {
+    "knodexa": {
+      "cached_input_tokens": 58496,
+      "common_quality_passed": false,
+      "input_tokens": 64454,
+      "quality_scored": false,
+      "response_completed": null,
+      "tool_items": 13,
+      "workflow_seconds": 92.181979958
+    },
+    "native": {
+      "cached_input_tokens": 0,
+      "common_quality_passed": false,
+      "input_tokens": 0,
+      "quality_scored": false,
+      "response_completed": null,
+      "tool_items": 0,
+      "workflow_seconds": 4.167521625
+    }
+  },
+  "paired_quality_outcome": "inconclusive",
+  "plan": {
+    "arms": [
+      "native",
+      "knodexa"
+    ],
+    "background_memories_enabled": false,
+    "fresh_return_context": true,
+    "model": "gpt-6.1-sol",
+    "optimized_record_and_text": true,
+    "order": "knodexa first",
+    "pairs": 1,
+    "primary": "independent return behavior passes and source reference/memory preserved",
+    "reasoning_effort": "low",
+    "return_supplies_task_id_or_path": false
+  }
+}

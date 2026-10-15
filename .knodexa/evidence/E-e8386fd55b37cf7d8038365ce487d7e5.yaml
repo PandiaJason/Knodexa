@@ -1,0 +1,9 @@
+id: E-e8386fd55b37cf7d8038365ce487d7e5
+title: Guard rejects compiling drift despite weakened saved checks
+node_id: D-309a544c4a77635c31b3c2be2f1cd407
+evidence_type: TEST_RUN
+created_at: 2026-10-14T17:29:25.80672Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: Go vet, full race tests and standalone CLI smoke passed. Runner regression passes ordinary Go verification but rejects newly scoped drift using the restored contract. Replacement regression rejects blank reasons. See audit/consistency-guard/REPORT.md.
+verified_by: agent

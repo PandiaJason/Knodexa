@@ -1,0 +1,59 @@
+{
+  "arm": "native",
+  "background_memories_enabled": false,
+  "baseline_drift_expected": true,
+  "completed_memory_preserved": true,
+  "establish": {
+    "exit_code": 0,
+    "seconds": 54.377182583,
+    "thread_id": "01a139e7-5455-7551-9b18-5ff9a1578bf1",
+    "tool_items": 5,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 55424,
+        "input_tokens": 63642,
+        "output_tokens": 1794,
+        "reasoning_output_tokens": 23
+      }
+    ]
+  },
+  "establish_independent_checks_passed": true,
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "reference_preserved": true,
+  "response_completed": true,
+  "return": {
+    "exit_code": 0,
+    "seconds": 42.186275916,
+    "thread_id": "01a139e7-5455-7551-9b18-5ff9a1578bf1",
+    "tool_items": 3,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 162816,
+        "input_tokens": 184741,
+        "output_tokens": 4062,
+        "reasoning_output_tokens": 54
+      }
+    ]
+  },
+  "return_independent_checks_passed": true,
+  "scope": "Same-conversation identity return; modular file memory, actual producer capture, no task ID or file path on return",
+  "status": "passed",
+  "switch": {
+    "exit_code": 0,
+    "seconds": 34.03202225,
+    "thread_id": "01a139e7-5455-7551-9b18-5ff9a1578bf1",
+    "tool_items": 3,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 109440,
+        "input_tokens": 120273,
+        "output_tokens": 2780,
+        "reasoning_output_tokens": 23
+      }
+    ]
+  }
+}

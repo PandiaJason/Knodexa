@@ -1,0 +1,28 @@
+{
+  "constraints": [
+    "Use standard-library Python and preserve validate_claims(claims, now) -> bool; invalid inputs return False without raising.",
+    "Require dict claims and a string sub that is nonempty after stripping whitespace.",
+    "Require integer exp and now, explicitly excluding bool; reject strings, floats, NaN, and other types.",
+    "Require exp > 0 and now >= 0.",
+    "Allow exactly seven seconds of skew: now < exp + 7.",
+    "Never read the wall clock, add third-party dependencies, or mutate caller dictionaries."
+  ],
+  "acceptance": [
+    "Implemented A.1 in expiry.py with deterministic validation and the public bool API.",
+    "Added tests covering malformed inputs, timestamp types and ranges, dictionary preservation, and the strict skew boundary.",
+    "python3 -m unittest -v: all 7 tests passed."
+  ],
+  "decision": {
+    "summary": "Validate types and ranges before comparing now < exp + 7.",
+    "rationale": "Explicit checks reject malformed timestamps without coercion and preserve deterministic behavior."
+  },
+  "failure": {
+    "summary": "F-001: Prior int(value) coercion accepted invalid timestamps.",
+    "cause": "Coercion accepted numeric strings and truncated fractional timestamps."
+  },
+  "lesson": {
+    "title": "L-001: Explicitly exclude bool from integer timestamps",
+    "summary": "Python bool subclasses int. Check isinstance(value, int) and explicitly reject isinstance(value, bool) before arithmetic.",
+    "applicability": "Use this pattern whenever an integer-only API must reject booleans; validate types instead of coercing inputs."
+  }
+}

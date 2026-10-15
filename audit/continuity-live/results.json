@@ -1,0 +1,153 @@
+{
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "scope": "Real producer agent, intervening coding task, then a different fresh agent. Synthetic controlled repository. Native durable file memory versus Knodexa compact resume. Generated background memories disabled.",
+  "arms": {
+    "native": {
+      "producer": {
+        "exit_code": 0,
+        "elapsed_seconds": 60.74,
+        "usage": [
+          {
+            "input_tokens": 62770,
+            "cached_input_tokens": 30208,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1678,
+            "reasoning_output_tokens": 22
+          }
+        ],
+        "thread_id": "01a13587-0328-7c00-9fe1-5b2630d4b0e3",
+        "events": 13,
+        "acceptance": {
+          "passed": 20,
+          "total": 20,
+          "failures": []
+        },
+        "completed_tool_items": 4
+      },
+      "switch": {
+        "exit_code": 0,
+        "elapsed_seconds": 33.6,
+        "usage": [
+          {
+            "input_tokens": 117646,
+            "cached_input_tokens": 78080,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 2383,
+            "reasoning_output_tokens": 22
+          }
+        ],
+        "thread_id": "01a13587-0328-7c00-9fe1-5b2630d4b0e3",
+        "events": 11,
+        "acceptance": {
+          "passed": 3,
+          "total": 3
+        },
+        "completed_tool_items": 3
+      },
+      "consumer": {
+        "exit_code": 0,
+        "elapsed_seconds": 44.44,
+        "usage": [
+          {
+            "input_tokens": 89938,
+            "cached_input_tokens": 75776,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 973,
+            "reasoning_output_tokens": 65
+          }
+        ],
+        "thread_id": "01a13588-73ce-7880-a48b-fd7bc0c253e3",
+        "events": 20,
+        "acceptance": {
+          "passed": 20,
+          "total": 20,
+          "failures": []
+        },
+        "memory_preserved": true,
+        "completed_tool_items": 7
+      },
+      "total_usage": {
+        "input_tokens": 270354,
+        "cached_input_tokens": 184064,
+        "output_tokens": 5034
+      },
+      "total_seconds": 138.78
+    },
+    "knodexa": {
+      "producer": {
+        "exit_code": 0,
+        "elapsed_seconds": 79.12,
+        "usage": [
+          {
+            "input_tokens": 80609,
+            "cached_input_tokens": 46848,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 2596,
+            "reasoning_output_tokens": 12
+          }
+        ],
+        "thread_id": "01a13589-2202-7122-87e3-321c41fe7dcc",
+        "events": 13,
+        "acceptance": {
+          "passed": 20,
+          "total": 20,
+          "failures": []
+        },
+        "completed_tool_items": 4
+      },
+      "switch": {
+        "exit_code": 0,
+        "elapsed_seconds": 35.38,
+        "usage": [
+          {
+            "input_tokens": 138541,
+            "cached_input_tokens": 96768,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 3346,
+            "reasoning_output_tokens": 12
+          }
+        ],
+        "thread_id": "01a13589-2202-7122-87e3-321c41fe7dcc",
+        "events": 11,
+        "acceptance": {
+          "passed": 3,
+          "total": 3
+        },
+        "completed_tool_items": 3
+      },
+      "consumer": {
+        "exit_code": 0,
+        "elapsed_seconds": 31.16,
+        "usage": [
+          {
+            "input_tokens": 67539,
+            "cached_input_tokens": 52352,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 544,
+            "reasoning_output_tokens": 16
+          }
+        ],
+        "thread_id": "01a1358a-e626-7552-937b-899af50c88d1",
+        "events": 14,
+        "acceptance": {
+          "passed": 20,
+          "total": 20,
+          "failures": []
+        },
+        "memory_preserved": true,
+        "baseline_drift_reported": true,
+        "stored_baseline_preserved": true,
+        "source_lesson_transferred": true,
+        "prior_failure_recalled": true,
+        "completed_tool_items": 4
+      },
+      "total_usage": {
+        "input_tokens": 286689,
+        "cached_input_tokens": 195968,
+        "output_tokens": 6486
+      },
+      "total_seconds": 145.66
+    }
+  }
+}

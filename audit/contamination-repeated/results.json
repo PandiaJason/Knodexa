@@ -1,0 +1,334 @@
+{
+  "plan": {
+    "pairs": 2,
+    "switches_per_arm": 2,
+    "design_checks": 9,
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "memories_enabled": false,
+    "order_seed": 20261014,
+    "primary": "All independent approach checks pass",
+    "scope": "Same-conversation repeated switches, modular native file memory versus scope-routed Knodexa. No saturated-context or forced-compaction claim."
+  },
+  "reference_grade": {
+    "passed": 9,
+    "total": 9,
+    "approach_preserved": true,
+    "checks": {
+      "no_embedded_normalization": true,
+      "ordinary": true,
+      "raw_whitespace": true,
+      "none_value": true,
+      "empty_value": true,
+      "nonstring_value": true,
+      "falsey_observer": true,
+      "no_observer": true,
+      "exception_identity_no_retry_or_finished": true
+    }
+  },
+  "trials": [
+    {
+      "pair": 1,
+      "arm": "knodexa",
+      "establish": {
+        "exit_code": 0,
+        "elapsed_seconds": 52.93,
+        "usage": [
+          {
+            "input_tokens": 96659,
+            "cached_input_tokens": 86272,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1078,
+            "reasoning_output_tokens": 17
+          }
+        ],
+        "thread_id": "01a13912-828a-7122-8c33-7bfa47e7911b",
+        "events": 27,
+        "tool_items": 11
+      },
+      "switches": [
+        {
+          "exit_code": 0,
+          "elapsed_seconds": 39.51,
+          "usage": [
+            {
+              "input_tokens": 173969,
+              "cached_input_tokens": 157568,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 2098,
+              "reasoning_output_tokens": 17
+            }
+          ],
+          "thread_id": "01a13912-828a-7122-8c33-7bfa47e7911b",
+          "events": 17,
+          "tool_items": 6
+        },
+        {
+          "exit_code": 0,
+          "elapsed_seconds": 51.8,
+          "usage": [
+            {
+              "input_tokens": 261146,
+              "cached_input_tokens": 223616,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 3687,
+              "reasoning_output_tokens": 17
+            }
+          ],
+          "thread_id": "01a13912-828a-7122-8c33-7bfa47e7911b",
+          "events": 15,
+          "tool_items": 5
+        }
+      ],
+      "consumer": {
+        "exit_code": 0,
+        "elapsed_seconds": 40.51,
+        "usage": [
+          {
+            "input_tokens": 362051,
+            "cached_input_tokens": 316544,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 4743,
+            "reasoning_output_tokens": 17
+          }
+        ],
+        "thread_id": "01a13912-828a-7122-8c33-7bfa47e7911b",
+        "events": 15,
+        "tool_items": 5,
+        "grade": {
+          "passed": 9,
+          "total": 9,
+          "approach_preserved": true,
+          "checks": {
+            "no_embedded_normalization": true,
+            "ordinary": true,
+            "raw_whitespace": true,
+            "none_value": true,
+            "empty_value": true,
+            "nonstring_value": true,
+            "falsey_observer": true,
+            "no_observer": true,
+            "exception_identity_no_retry_or_finished": true
+          }
+        },
+        "protected_memory_preserved": true,
+        "scope_route_correct": true,
+        "boundary_excludes_batch": true,
+        "agreement_rules_preserved": true
+      },
+      "workflow_seconds": 184.75,
+      "workflow_usage": {
+        "input_tokens": 893825,
+        "cached_input_tokens": 784000,
+        "output_tokens": 11606
+      }
+    },
+    {
+      "pair": 1,
+      "arm": "native",
+      "establish": {
+        "exit_code": 0,
+        "elapsed_seconds": 38.58,
+        "usage": [
+          {
+            "input_tokens": 61897,
+            "cached_input_tokens": 54400,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1287,
+            "reasoning_output_tokens": 33
+          }
+        ],
+        "thread_id": "01a13915-55cb-7022-82a7-4b0930ab8057",
+        "events": 14,
+        "tool_items": 4
+      },
+      "switches": [
+        {
+          "exit_code": 0,
+          "elapsed_seconds": 34.63,
+          "usage": [
+            {
+              "input_tokens": 134146,
+              "cached_input_tokens": 120576,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 2332,
+              "reasoning_output_tokens": 42
+            }
+          ],
+          "thread_id": "01a13915-55cb-7022-82a7-4b0930ab8057",
+          "events": 13,
+          "tool_items": 4
+        },
+        {
+          "exit_code": 0,
+          "elapsed_seconds": 47.7,
+          "usage": [
+            {
+              "input_tokens": 195214,
+              "cached_input_tokens": 176768,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 4036,
+              "reasoning_output_tokens": 66
+            }
+          ],
+          "thread_id": "01a13915-55cb-7022-82a7-4b0930ab8057",
+          "events": 11,
+          "tool_items": 3
+        }
+      ],
+      "consumer": {
+        "exit_code": 0,
+        "elapsed_seconds": 35.93,
+        "usage": [
+          {
+            "input_tokens": 265605,
+            "cached_input_tokens": 243968,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 5216,
+            "reasoning_output_tokens": 81
+          }
+        ],
+        "thread_id": "01a13915-55cb-7022-82a7-4b0930ab8057",
+        "events": 11,
+        "tool_items": 3,
+        "grade": {
+          "passed": 9,
+          "total": 9,
+          "approach_preserved": true,
+          "checks": {
+            "no_embedded_normalization": true,
+            "ordinary": true,
+            "raw_whitespace": true,
+            "none_value": true,
+            "empty_value": true,
+            "nonstring_value": true,
+            "falsey_observer": true,
+            "no_observer": true,
+            "exception_identity_no_retry_or_finished": true
+          }
+        },
+        "protected_memory_preserved": true
+      },
+      "workflow_seconds": 156.84,
+      "workflow_usage": {
+        "input_tokens": 656862,
+        "cached_input_tokens": 595712,
+        "output_tokens": 12871
+      }
+    },
+    {
+      "pair": 2,
+      "arm": "native",
+      "establish": {
+        "usage": [
+          {
+            "input_tokens": 61579,
+            "cached_input_tokens": 54272,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1111,
+            "reasoning_output_tokens": 30
+          }
+        ],
+        "thread_id": "01a13917-bb04-7142-a4d6-bc51dfb5910a",
+        "exit_code": 0,
+        "elapsed_seconds": null,
+        "tool_items": 6
+      },
+      "switches": [
+        {
+          "usage": [
+            {
+              "input_tokens": 115532,
+              "cached_input_tokens": 104832,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 2323,
+              "reasoning_output_tokens": 81
+            }
+          ],
+          "thread_id": "01a13917-bb04-7142-a4d6-bc51dfb5910a",
+          "exit_code": 0,
+          "elapsed_seconds": null,
+          "tool_items": 4
+        },
+        {
+          "usage": [
+            {
+              "input_tokens": 176538,
+              "cached_input_tokens": 153856,
+              "cache_write_input_tokens": 0,
+              "output_tokens": 3981,
+              "reasoning_output_tokens": 103
+            }
+          ],
+          "thread_id": "01a13917-bb04-7142-a4d6-bc51dfb5910a",
+          "exit_code": 0,
+          "elapsed_seconds": null,
+          "tool_items": 3
+        }
+      ],
+      "consumer": {
+        "usage": [],
+        "thread_id": "01a13917-bb04-7142-a4d6-bc51dfb5910a",
+        "exit_code": 124,
+        "elapsed_seconds": 240,
+        "tool_items": 1
+      },
+      "invalid": "Return timed out after 240 seconds; no completed implementation or quality score. Exact earlier phase timings lost on harness interruption; raw usage retained."
+    },
+    {
+      "pair": 2,
+      "arm": "knodexa",
+      "establish": {
+        "exit_code": 124,
+        "elapsed_seconds": 240,
+        "usage": [],
+        "thread_id": "01a13939-5b26-7f62-bc3b-bd65d1270a62",
+        "invalid": "Codex subprocess timed out; no quality score",
+        "tool_items": 6
+      },
+      "switches": [],
+      "invalid": "Establish stage timed out after 240 seconds; no return implementation or quality score."
+    }
+  ],
+  "summary": {
+    "native": {
+      "planned": 2,
+      "recorded": 2,
+      "valid": 1,
+      "all_checks_passed": 1,
+      "passed_checks": 9,
+      "total_checks": 9,
+      "median_return_seconds": 35.93,
+      "return_tool_items": 3,
+      "invalid": 1,
+      "workflow_seconds": 156.84,
+      "workflow_input_tokens": 656862,
+      "workflow_cached_input_tokens": 595712
+    },
+    "knodexa": {
+      "planned": 2,
+      "recorded": 2,
+      "valid": 1,
+      "all_checks_passed": 1,
+      "passed_checks": 9,
+      "total_checks": 9,
+      "median_return_seconds": 40.51,
+      "return_tool_items": 5,
+      "invalid": 1,
+      "workflow_seconds": 184.75,
+      "workflow_input_tokens": 893825,
+      "workflow_cached_input_tokens": 784000
+    },
+    "paired_outcomes": [
+      {
+        "pair": 1,
+        "outcome": "tie"
+      },
+      {
+        "pair": 2,
+        "outcome": "invalid"
+      }
+    ],
+    "quality_superiority_demonstrated": false
+  }
+}

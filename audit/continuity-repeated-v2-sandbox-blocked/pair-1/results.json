@@ -1,0 +1,65 @@
+{
+  "arms": {
+    "knodexa": {
+      "background_memories_enabled": false,
+      "establish": {
+        "exit_code": 1,
+        "seconds": 0.165614416,
+        "thread_id": "",
+        "tool_items": 0
+      },
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "low",
+      "scope": "One real agent, shared conversation, recorded memory from producer, unrelated work, then a natural-language return without task ID or file path",
+      "status": "inconclusive"
+    },
+    "native": {
+      "arm": "native",
+      "background_memories_enabled": false,
+      "establish": {
+        "exit_code": 1,
+        "seconds": 0.202763875,
+        "thread_id": "",
+        "tool_items": 0
+      },
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "low",
+      "scope": "Same-conversation identity return; modular file memory, actual producer capture, no task ID or file path on return",
+      "status": "inconclusive"
+    }
+  },
+  "metrics": {
+    "knodexa": {
+      "cached_input_tokens": 0,
+      "common_quality_passed": false,
+      "input_tokens": 0,
+      "quality_scored": false,
+      "response_completed": null,
+      "tool_items": 0,
+      "workflow_seconds": 0.165614416
+    },
+    "native": {
+      "cached_input_tokens": 0,
+      "common_quality_passed": false,
+      "input_tokens": 0,
+      "quality_scored": false,
+      "response_completed": null,
+      "tool_items": 0,
+      "workflow_seconds": 0.202763875
+    }
+  },
+  "paired_quality_outcome": "inconclusive",
+  "plan": {
+    "arms": [
+      "native",
+      "knodexa"
+    ],
+    "background_memories_enabled": false,
+    "model": "gpt-6.1-sol",
+    "order": "native first",
+    "pairs": 1,
+    "primary": "independent return behavior passes and source reference/memory preserved",
+    "reasoning_effort": "low",
+    "return_supplies_task_id_or_path": false
+  }
+}

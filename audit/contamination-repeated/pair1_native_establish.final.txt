@@ -1,0 +1,5 @@
+Verified the reference against the handler agreement. Added four passing tests covering raw delegation exactly once, observation ordering, falsey observers, result identity, and exception propagation.
+
+Source, reference, and memory files remain unchanged. The tests preserve these guarantees for future handler work.
+
+Validation: `python3 -m unittest discover -s tests -v`

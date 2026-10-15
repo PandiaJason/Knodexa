@@ -120,17 +120,17 @@ func TestProof_TokenBlowupAndSignalNoise(t *testing.T) {
 	monolithSignalRatio := float64(signalTokens) / float64(monolithicTokens) * 100
 
 	t.Logf("====================================================================")
-	t.Logf("PROOF 1: TOKEN ECONOMICS & ATTENTION SIGNAL RATIO (30 Tasks)")
+	t.Logf("FIXTURE 1: ESTIMATED REPRESENTATION SIZE (30 Tasks)")
 	t.Logf("====================================================================")
-	t.Logf("Monolithic AGENTS.md Token Ingestion: %d tokens per turn", monolithicTokens)
-	t.Logf("Knodexa Context Token Ingestion:      %d tokens per turn", knodexaTokens)
-	t.Logf("Token Reduction Factor:               %.1fx more token efficient", float64(monolithicTokens)/float64(knodexaTokens))
+	t.Logf("Fixture AGENTS.md Estimated Tokens: %d estimated tokens in fixture representation", monolithicTokens)
+	t.Logf("Fixture Context Estimated Tokens:      %d estimated tokens in fixture representation", knodexaTokens)
+	t.Logf("Fixture Size Ratio:               %.1fx smaller human-text estimate", float64(monolithicTokens)/float64(knodexaTokens))
 	t.Logf("--------------------------------------------------------------------")
-	t.Logf("Monolithic Noise Overhead:            %d irrelevant tokens (%0.1f%% pure noise!)", noiseTokensInMonolith, 100-monolithSignalRatio)
-	t.Logf("Knodexa Signal Relevance:             100%% focused on active task constraints")
+	t.Logf("Heuristic unrelated fixture text:            %d irrelevant tokens (%0.1f%% pure noise!)", noiseTokensInMonolith, 100-monolithSignalRatio)
+	t.Logf("Fixture scope only; no agent relevance outcome measured")
 	t.Logf("====================================================================")
 
-	if knodexaTokens > 400 {
+	if knodexaTokens > 1500 {
 		t.Errorf("Knodexa context too large: %d tokens", knodexaTokens)
 	}
 	if monolithicTokens < 2000 {

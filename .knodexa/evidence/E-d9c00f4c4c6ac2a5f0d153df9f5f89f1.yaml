@@ -1,0 +1,9 @@
+id: E-d9c00f4c4c6ac2a5f0d153df9f5f89f1
+title: Four harder real-agent case artifacts independently regraded
+node_id: L-e2d50d86fa7951d2c778057ddf61ea09
+evidence_type: TEST_RUN
+created_at: 2026-10-14T16:52:31.117341Z
+command: GOCACHE=/private/tmp/knodexa-go-cache KNODEXA_HARD_REGRADE=1 go test ./internal/experiment -run '^TestRegradeHardContinuity$' -count=1 -v
+exit_code: 0
+output_summary: All eight retained real-agent returns passed independent behavior, transferred SDK convention, source facts and source preservation; refactor returns also reported stale references. No model timeouts. Quality tied in all four pairs. Knodexa return phases:58.60,68.11,69.71,93.88s and41 actions; native88.96,80.45,66.25,71.71s and35 actions. Refactor extension memory capture remained blocked for Knodexa; reported separately rather than hidden by functional passes. Corrected report and original scoring artifacts retained.
+verified_by: agent

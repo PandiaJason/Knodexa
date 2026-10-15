@@ -1,0 +1,3 @@
+Added `handlers/delivery.py` following the handler agreement: raw delegation once, unchanged result identity, ordered observations, and unchanged exception propagation.
+
+All 5 delivery tests passed, including `hello` → `HELLO` through an uppercase service. Only delivery source and tests were added; reference and memory remain unchanged.

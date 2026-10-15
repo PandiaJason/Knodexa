@@ -1,0 +1,210 @@
+[
+  {
+    "case": "fresh-handoff",
+    "arm": "knodexa",
+    "phase": {
+      "exit_code": 0,
+      "seconds": 58.603215875,
+      "thread_id": "01a13b47-7590-77a1-8a34-0cbac2fd927a",
+      "tool_items": 5,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 52992,
+          "input_tokens": 68693,
+          "output_tokens": 1810,
+          "reasoning_output_tokens": 8
+        }
+      ],
+      "agent_resolved_task": "work-prod",
+      "agent_resolver_request": "Add another production webhook delivery handler in package handlers. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep the established layout and behavior and applicable cross-task conventions. Add and run tests. Preserve completed source memory."
+    },
+    "behavior_passed": true,
+    "completed_memory_preserved": true,
+    "reference_preserved": true,
+    "stale_agreement_reported": false,
+    "scored": true,
+    "passed": true
+  },
+  {
+    "case": "fresh-handoff",
+    "arm": "native",
+    "phase": {
+      "exit_code": 0,
+      "seconds": 88.956294625,
+      "thread_id": "01a13b46-18fc-75c1-b98a-7c0a640d7b8e",
+      "tool_items": 8,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 95744,
+          "input_tokens": 114302,
+          "output_tokens": 2860,
+          "reasoning_output_tokens": 63
+        }
+      ]
+    },
+    "behavior_passed": true,
+    "completed_memory_preserved": true,
+    "reference_preserved": true,
+    "stale_agreement_reported": false,
+    "scored": true,
+    "passed": true
+  },
+  {
+    "case": "recorded-failure",
+    "arm": "knodexa",
+    "phase": {
+      "exit_code": 0,
+      "seconds": 69.709818125,
+      "thread_id": "01a13b4b-a9bf-7a73-8ea0-892081a763b6",
+      "tool_items": 9,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 86144,
+          "input_tokens": 109191,
+          "output_tokens": 2084,
+          "reasoning_output_tokens": 47
+        }
+      ],
+      "agent_resolved_task": "work-prod",
+      "agent_resolver_request": "Add another production webhook delivery handler in package handlers. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep the established layout and behavior and applicable cross-task conventions. Add and run tests. Preserve completed source memory. Add resilience while respecting the recorded observer failure contract; do not repeat past failed approaches."
+    },
+    "behavior_passed": true,
+    "completed_memory_preserved": true,
+    "reference_preserved": true,
+    "stale_agreement_reported": false,
+    "scored": true,
+    "passed": true
+  },
+  {
+    "case": "recorded-failure",
+    "arm": "native",
+    "phase": {
+      "exit_code": 0,
+      "seconds": 66.247411041,
+      "thread_id": "01a13b4a-a40f-7712-92ab-43765330ee9f",
+      "tool_items": 9,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 91392,
+          "input_tokens": 114573,
+          "output_tokens": 2614,
+          "reasoning_output_tokens": 40
+        }
+      ]
+    },
+    "behavior_passed": true,
+    "completed_memory_preserved": true,
+    "reference_preserved": true,
+    "stale_agreement_reported": false,
+    "scored": true,
+    "passed": true
+  },
+  {
+    "case": "refactor",
+    "arm": "knodexa",
+    "phase": {
+      "exit_code": 0,
+      "seconds": 93.881051125,
+      "thread_id": "01a13b4c-c491-77e3-8c7a-cf59b5e6ff8f",
+      "tool_items": 12,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 163456,
+          "input_tokens": 194971,
+          "output_tokens": 2494,
+          "reasoning_output_tokens": 72
+        }
+      ],
+      "agent_resolved_task": "webhook-extension",
+      "agent_resolver_request": "additional production webhook handler"
+    },
+    "behavior_passed": true,
+    "completed_memory_preserved": true,
+    "reference_preserved": true,
+    "stale_agreement_reported": true,
+    "scored": true,
+    "passed": true
+  },
+  {
+    "case": "refactor",
+    "arm": "native",
+    "phase": {
+      "exit_code": 0,
+      "seconds": 71.709458458,
+      "thread_id": "01a13b4e-3d50-7433-a836-c272fafe7c58",
+      "tool_items": 8,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 91904,
+          "input_tokens": 108431,
+          "output_tokens": 2933,
+          "reasoning_output_tokens": 27
+        }
+      ]
+    },
+    "behavior_passed": true,
+    "completed_memory_preserved": true,
+    "reference_preserved": true,
+    "stale_agreement_reported": true,
+    "scored": true,
+    "passed": true
+  },
+  {
+    "case": "similar-tasks",
+    "arm": "knodexa",
+    "phase": {
+      "exit_code": 0,
+      "seconds": 68.110576375,
+      "thread_id": "01a13b48-5d0a-7180-bd68-be46341ae3bd",
+      "tool_items": 15,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 149376,
+          "input_tokens": 168129,
+          "output_tokens": 1519,
+          "reasoning_output_tokens": 59
+        }
+      ],
+      "agent_resolved_task": "work-prod",
+      "agent_resolver_request": "production webhook delivery"
+    },
+    "behavior_passed": true,
+    "completed_memory_preserved": true,
+    "reference_preserved": true,
+    "stale_agreement_reported": true,
+    "scored": true,
+    "passed": true
+  },
+  {
+    "case": "similar-tasks",
+    "arm": "native",
+    "phase": {
+      "exit_code": 0,
+      "seconds": 80.450351375,
+      "thread_id": "01a13b49-68bc-7a22-8e81-bf836c581acc",
+      "tool_items": 10,
+      "usage": [
+        {
+          "cache_write_input_tokens": 0,
+          "cached_input_tokens": 105728,
+          "input_tokens": 142570,
+          "output_tokens": 2654,
+          "reasoning_output_tokens": 34
+        }
+      ]
+    },
+    "behavior_passed": true,
+    "completed_memory_preserved": true,
+    "reference_preserved": true,
+    "stale_agreement_reported": false,
+    "scored": true,
+    "passed": true
+  }
+]

@@ -1,0 +1,9 @@
+id: E-0039f4f82bdf2a1d0747a2e8455cbf83
+title: Reference reconciliation tests and retained artifact replay pass
+node_id: D-fe72e13311665f52859ae1cba3be0f7b
+evidence_type: TEST_RUN
+created_at: 2026-10-14T17:12:21.57546Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: Go vet, race tests and standalone CLI smoke passed. TestReplayRefactoredExtensionCapture indexed the retained real refactor extension while preserving completed parent bytes. See audit/reference-reconciliation/REPORT.md; no new model comparison was run.
+verified_by: agent

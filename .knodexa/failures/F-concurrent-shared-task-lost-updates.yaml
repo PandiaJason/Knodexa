@@ -1,0 +1,19 @@
+id: F-concurrent-shared-task-lost-updates
+task_id: "1"
+summary: Independent agent processes lose shared-task updates and can fail opening the SQLite index
+causal_details: >-
+  Eight synchronized read-modify-write processes read the same canonical task
+  before writing different aliases. All exited successfully but only one update
+  survived. Atomic rename prevents torn files; it does not protect stale snapshots
+  or serialize mutations across Storage instances/processes. Eight public alias
+  commands produced four successful exits but retained only three updates; the
+  four failed processes reported SQLITE_BUSY during schema initialization. Distinct
+  task snapshots retained all eight writes. Required resolution is cross-process
+  mutation serialization or compare-and-swap with conflict retries, plus bounded
+  SQLite busy handling. No fix is asserted by this audit. Raw logs and snapshots:
+  audit/host-and-concurrency-v1/concurrency/results.json.
+  Resolution: OS-backed task and index locks, task snapshot conflict detection
+  and atomic alias updates were verified in host-and-concurrency-v2. Public
+  aliases now retain eight of eight updates without SQLite failures. Stale
+  full-task snapshots are explicitly rejected; original unsafe evidence remains.
+attempted_at: 2026-10-14T18:05:42Z

@@ -1,0 +1,12 @@
+goos: darwin
+goarch: amd64
+pkg: knodexa/internal/index
+cpu: VirtualApple @ 2.50GHz
+BenchmarkSyncUnchanged-10         	       5	  36822400 ns/op	         0 rows-written/op	 3004489 B/op	   24220 allocs/op
+BenchmarkSyncUnchanged-10         	       5	  37345267 ns/op	         0 rows-written/op	 3004092 B/op	   24220 allocs/op
+BenchmarkSyncUnchanged-10         	       5	  35779058 ns/op	         0 rows-written/op	 3004185 B/op	   24219 allocs/op
+BenchmarkSyncOneChangedTask-10    	       5	  47065400 ns/op	 3066758 B/op	   24565 allocs/op
+BenchmarkSyncOneChangedTask-10    	       5	  46529150 ns/op	 3066275 B/op	   24564 allocs/op
+BenchmarkSyncOneChangedTask-10    	       5	  43862250 ns/op	 3066532 B/op	   24564 allocs/op
+PASS
+ok  	knodexa/internal/index	68.895s

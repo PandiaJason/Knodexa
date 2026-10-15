@@ -1,0 +1,5 @@
+Added `HandleWebhook(value any, service Transformer, observer Observer) (any, error)` in `handlers/webhook.go`, reusing `Handle` to preserve established behavior.
+
+Tests cover identity preservation, exactly-once forwarding, observer ordering, nil observers, raw values, and panic propagation. `go test ./...` passed.
+
+Recorded the extension separately, preserving completed work memory.

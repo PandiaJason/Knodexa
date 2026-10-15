@@ -1,0 +1,6 @@
+package handlers
+
+// HandleWebhook forwards a delivery event through the service and observer.
+func HandleWebhook(value any, service Transformer, observer Observer) (any, error) {
+	return Handle(value, service, observer)
+}

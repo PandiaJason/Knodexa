@@ -1,0 +1,121 @@
+{
+  "scope": "One paired SAME-CONVERSATION task-switch pilot. Native explicit file memory versus scope-routed Knodexa. Background memories disabled. Neither arm is assumed to win.",
+  "arms": {
+    "native": {
+      "establish": {
+        "exit_code": 0,
+        "elapsed_seconds": 37.72,
+        "usage": [
+          {
+            "input_tokens": 60576,
+            "cached_input_tokens": 53888,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 585,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "thread_id": "01a13906-5c3b-7043-9f0c-da54ffa02e8a",
+        "events": 11
+      },
+      "switch": {
+        "exit_code": 0,
+        "elapsed_seconds": 34.61,
+        "usage": [
+          {
+            "input_tokens": 111124,
+            "cached_input_tokens": 96640,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1507,
+            "reasoning_output_tokens": 31
+          }
+        ],
+        "thread_id": "01a13906-5c3b-7043-9f0c-da54ffa02e8a",
+        "events": 12
+      },
+      "consumer": {
+        "exit_code": 0,
+        "elapsed_seconds": 30.68,
+        "usage": [
+          {
+            "input_tokens": 165551,
+            "cached_input_tokens": 146944,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 2297,
+            "reasoning_output_tokens": 31
+          }
+        ],
+        "thread_id": "01a13906-5c3b-7043-9f0c-da54ffa02e8a",
+        "events": 11,
+        "grade": {
+          "service_behavior_passed": true,
+          "behavior_error": "",
+          "ast_delegation": true,
+          "no_embedded_transform": true,
+          "approach_preserved": true
+        },
+        "tool_items": 3,
+        "memory_read_observed": true
+      }
+    },
+    "knodexa": {
+      "establish": {
+        "exit_code": 0,
+        "elapsed_seconds": 51.11,
+        "usage": [
+          {
+            "input_tokens": 95002,
+            "cached_input_tokens": 89344,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 847,
+            "reasoning_output_tokens": 42
+          }
+        ],
+        "thread_id": "01a13907-f3a9-7291-bb3f-1e614a9f6333",
+        "events": 17
+      },
+      "switch": {
+        "exit_code": 0,
+        "elapsed_seconds": 49.5,
+        "usage": [
+          {
+            "input_tokens": 169404,
+            "cached_input_tokens": 160384,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1825,
+            "reasoning_output_tokens": 42
+          }
+        ],
+        "thread_id": "01a13907-f3a9-7291-bb3f-1e614a9f6333",
+        "events": 13
+      },
+      "consumer": {
+        "exit_code": 0,
+        "elapsed_seconds": 41.5,
+        "usage": [
+          {
+            "input_tokens": 252509,
+            "cached_input_tokens": 240640,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 2642,
+            "reasoning_output_tokens": 42
+          }
+        ],
+        "thread_id": "01a13907-f3a9-7291-bb3f-1e614a9f6333",
+        "events": 13,
+        "grade": {
+          "service_behavior_passed": true,
+          "behavior_error": "",
+          "ast_delegation": true,
+          "no_embedded_transform": true,
+          "approach_preserved": true
+        },
+        "scope_selected": "file_scope",
+        "discard_sources": [
+          "image-design"
+        ],
+        "tool_items": 4,
+        "memory_read_observed": true
+      }
+    }
+  }
+}

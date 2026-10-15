@@ -1,0 +1,7 @@
+Created [webhook.py](webhook.py) exposing `handle(value, service)`.
+
+Applied the recovered agreement: delegate to `service.transform` exactly once, preserve input and result identity, and propagate exceptions unchanged. Verified `hello` → `HELLO` with an uppercase service.
+
+All five existing tests and three inherited contract tests against the new handler passed. The approach check passed structural checks; semantic review remains flagged.
+
+Reference, engineering memory, and labels utility were preserved.

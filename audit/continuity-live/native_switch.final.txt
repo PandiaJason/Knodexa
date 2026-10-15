@@ -1,0 +1,5 @@
+Implemented `normalize_label`: strings are trimmed and whitespace runs collapse to one ASCII space; nonstrings return `""`.
+
+Added tests for Unicode whitespace, nonstrings, and idempotence. `python3 -m unittest -v`: all 10 tests passed.
+
+Changed only `normalize.py` and added `test_normalize.py`. Prior expiry engineering memory remains intact.

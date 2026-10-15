@@ -1,0 +1,24 @@
+?   	knodexa/cmd/knodexa	[no test files]
+ok  	knodexa/internal/approach	(cached)
+ok  	knodexa/internal/cli	(cached)
+ok  	knodexa/internal/context	(cached)
+ok  	knodexa/internal/continuity	(cached)
+ok  	knodexa/internal/experiment	16.540s
+ok  	knodexa/internal/git	(cached)
+ok  	knodexa/internal/identity	(cached)
+ok  	knodexa/internal/index	(cached)
+ok  	knodexa/internal/mcp	(cached)
+ok  	knodexa/internal/model	(cached)
+ok  	knodexa/internal/storage	(cached)
+ok  	knodexa/internal/verify	(cached)
+ok  	knodexa/real_test/buffer	(cached)
+ok  	knodexa/real_test/queue	(cached)
+Initialized Knodexa project "Standalone smoke test" in /var/folders/41/y911rkzj5jg_jh03b4xct8q40000gn/T/tmp.leGkvo5BY9/.knodexa
+Task smoke created successfully.
+KNODEXA DIAGNOSTICS:
+  [PASS] Storage initialized at: /var/folders/41/y911rkzj5jg_jh03b4xct8q40000gn/T/tmp.leGkvo5BY9/.knodexa
+  [PASS] Project manifest: Standalone smoke test (ID: proj_root)
+  [WARN] Not inside a Git repository.
+  [INFO] Canonical count: 1 tasks, 0 decisions, 0 lessons, 0 evidence
+  [PASS] SQLite index connected.
+Standalone checks passed.

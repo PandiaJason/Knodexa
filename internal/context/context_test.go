@@ -159,3 +159,123 @@ func TestEstimateTokens(t *testing.T) {
 		t.Errorf("unexpected token estimate: %d for %q", tokens, text)
 	}
 }
+
+func TestCanonicalTaskAndActionableContext(t *testing.T) {
+	root := t.TempDir()
+	store := storage.NewStorage(root)
+	if _, err := store.Init("Context", "Regression"); err != nil {
+		t.Fatal(err)
+	}
+	db, err := index.Open(filepath.Join(store.KnodexaDir(), "cache.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	idx := index.NewIndexer(db, store)
+	for _, task := range []*model.TaskData{{ID: "root"}, {ID: "child", ParentID: "root"}, {ID: "leaf", ParentID: "child", TouchesFiles: []string{"auth.go"}, RequiredVerification: []string{"custom benchmark"}, BaselineCommit: "abc1234"}} {
+		if err := store.SaveTask(task); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := store.SaveDecision(&model.DecisionDocument{Frontmatter: model.DecisionFrontmatter{ID: "D-root", TaskID: "root", Status: model.StatusVerified}, Body: "Use immutable snapshots"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := store.SaveFailure(&model.FailureData{ID: "F-root", TaskID: "root", Summary: "Avoid global cache"}); err != nil {
+		t.Fatal(err)
+	}
+	for _, lesson := range []*model.LessonDocument{
+		{Frontmatter: model.LessonFrontmatter{ID: "L-good", SourceTaskID: "root", Status: model.StatusVerified, RelatedFiles: []string{"auth.go"}, Applicability: "When authenticating"}, Body: "Validate token expiry"},
+		{Frontmatter: model.LessonFrontmatter{ID: "L-noise", SourceTaskID: "root", Status: model.StatusVerified, RelatedFiles: []string{"image.png"}, Confidence: 1}, Body: "Compress PNG files"},
+	} {
+		if err := store.SaveLesson(lesson); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := idx.Sync(); err != nil {
+		t.Fatal(err)
+	}
+	builder := NewBuilder(db, store, git.NewInspector(root))
+	pkg, err := builder.Build("leaf", 1500)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(pkg.RequiredVerification) != 1 || pkg.RequiredVerification[0] != "custom benchmark" {
+		t.Fatalf("criteria lost: %+v", pkg.RequiredVerification)
+	}
+	if pkg.Baseline.StoredCommit != "abc1234" || pkg.Baseline.Commit != "abc1234" {
+		t.Fatalf("baseline lost: %+v", pkg.Baseline)
+	}
+	if len(pkg.PreviousDecisions) != 1 || strings.TrimSpace(pkg.PreviousDecisions[0].Rationale) != "Use immutable snapshots" {
+		t.Fatalf("ancestor rationale lost: %+v", pkg.PreviousDecisions)
+	}
+	if len(pkg.PreviousFailures) != 1 || pkg.PreviousFailures[0].ID != "F-root" {
+		t.Fatalf("ancestor failure lost: %+v", pkg.PreviousFailures)
+	}
+	if len(pkg.RelevantLessons) != 1 || pkg.RelevantLessons[0].ID != "L-good" || pkg.RelevantLessons[0].Relevance != "high" {
+		t.Fatalf("bad relevance: %+v", pkg.RelevantLessons)
+	}
+	if !strings.Contains(pkg.FormatHuman(), "Validate token expiry") || !strings.Contains(pkg.FormatHuman(), "When authenticating") {
+		t.Fatal("lesson is not actionable")
+	}
+	tiny, err := builder.Build("leaf", 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !tiny.BudgetExceeded || !tiny.ContextPruned || tiny.TokenBudget != 1 || tiny.EstimatedTokens <= 1 || len(tiny.RequiredVerification) != 1 {
+		t.Fatalf("overflow not explicit: %+v", tiny)
+	}
+}
+
+func TestCompactContextRetainsRulesAndExpandsOnDemand(t *testing.T) {
+	store := storage.NewStorage(t.TempDir())
+	if _, err := store.Init("Compact", ""); err != nil {
+		t.Fatal(err)
+	}
+	db, err := index.Open(filepath.Join(store.KnodexaDir(), "cache.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	if err := store.SaveTask(&model.TaskData{ID: "T", Constraints: []string{"Preserve bool API"}, RequiredVerification: []string{"Run boundary tests"}, TouchesFiles: []string{"auth.go"}}); err != nil {
+		t.Fatal(err)
+	}
+	body := "## Rationale\nUse strict integer validation.\n\n" + strings.Repeat("Historical rationale and rejected experiments.\n\n", 80) + "## Constraints\n- Preserve seven-second skew\n"
+	if err := store.SaveDecision(&model.DecisionDocument{Frontmatter: model.DecisionFrontmatter{ID: "D-compact", TaskID: "T", Title: "Validate timestamps", Summary: "Reject bool, string, and float timestamps", Status: model.StatusVerified, Constraints: []string{"Never mutate claims"}, EvidenceIDs: []string{"E-1"}}, Body: body}); err != nil {
+		t.Fatal(err)
+	}
+	if err := store.SaveLesson(&model.LessonDocument{Frontmatter: model.LessonFrontmatter{ID: "L-compact", SourceTaskID: "other", Title: "Bool is int", Status: model.StatusVerified, Summary: "Reject bool explicitly", RelatedFiles: []string{"auth.go"}, Applicability: "When validating timestamps"}, Body: "Reject bool explicitly.\n\n" + strings.Repeat("Long historical explanation.\n\n", 40)}); err != nil {
+		t.Fatal(err)
+	}
+	if err := index.NewIndexer(db, store).Sync(); err != nil {
+		t.Fatal(err)
+	}
+	builder := NewBuilder(db, store, git.NewInspector(store.RootDir()))
+	compact, err := builder.BuildCompact("T", 100000)
+	if err != nil {
+		t.Fatal(err)
+	}
+	full, err := builder.Build("T", 100000)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if compact.PreviousDecisions[0].Rationale != "" || compact.PreviousDecisions[0].Summary != "Reject bool, string, and float timestamps" {
+		t.Fatal("compact rule lost or rationale repeated")
+	}
+	for _, rule := range []string{"Preserve bool API", "Never mutate claims", "Preserve seven-second skew", "Run boundary tests", "Reject bool explicitly"} {
+		if !strings.Contains(compact.FormatHuman(), rule) {
+			t.Fatalf("compact context lost %s", rule)
+		}
+	}
+	if len(compact.FormatHuman())*2 >= len(full.FormatHuman()) {
+		t.Fatal("verbose fixture did not become materially smaller")
+	}
+	detail, err := builder.GetDetail("D-compact")
+	if err != nil {
+		t.Fatal(err)
+	}
+	doc := detail.(*model.DecisionDocument)
+	if strings.TrimSpace(doc.Body) != strings.TrimSpace(body) || len(doc.Frontmatter.EvidenceIDs) != 1 {
+		t.Fatal("on-demand expansion lost full rationale or evidence IDs")
+	}
+	t.Logf("Compact/full human-text estimates: %d/%d", compact.EstimatedTokens, full.EstimatedTokens)
+}

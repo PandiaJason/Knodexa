@@ -1,0 +1,9 @@
+id: E-c7a9a45dc0b9f0c60e448a0d8004f2a7
+title: Shared task updates retain every successful write after concurrency fix
+node_id: D-03757fc1010904fc979a5dc048c0ec60
+evidence_type: TEST_RUN
+created_at: 2026-10-14T18:26:54.552167Z
+command: GOCACHE=/private/tmp/knodexa-go-cache KNODEXA_SHARED_MEMORY_AUDIT=1 KNODEXA_SHARED_MEMORY_AUDIT_OUT=audit/host-and-concurrency-v2/concurrency go test ./internal/experiment -run '^TestSharedMemoryAudit$' -count=1 -v
+exit_code: 0
+output_summary: Eight public alias commands succeeded and retained eight updates without SQLite errors. Eight atomic task updates succeeded and retained eight. Synchronized full-task snapshots saved one and explicitly rejected seven stale writers; no successful update lost. Distinct tasks retained eight. Original v1 failures unchanged. Full Go checks and storage race/crash-recovery tests passed. Windows storage package cross-compiles, runtime only tested on macOS. See audit/host-and-concurrency-v2/REPORT.md; other knowledge mutations remain outside task CAS coverage.
+verified_by: agent

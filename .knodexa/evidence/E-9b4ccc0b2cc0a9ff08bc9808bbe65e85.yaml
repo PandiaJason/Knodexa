@@ -1,0 +1,9 @@
+id: E-9b4ccc0b2cc0a9ff08bc9808bbe65e85
+title: Memory retrieval and retirement validation
+node_id: L-1176930f57377ac4a96a192d886a0199
+evidence_type: TEST_RUN
+created_at: 2026-10-14T17:55:52.529162Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: Full Go checks passed. Relevance under limit and rebuild, selected-source recall, essential context retention, deferred detail expansion, validated retirement and CLI/MCP paths are tested. See audit/memory-patterns/RESEARCH.md. No model superiority claim.
+verified_by: agent

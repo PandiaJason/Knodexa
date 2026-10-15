@@ -1,0 +1,3 @@
+Implemented `handlers/webhook.py` in the reference’s exact format: it calls `service.transform(value)` once, returns its result unchanged, and propagates exceptions unchanged.
+
+All 6 tests passed, including `hello` → `HELLO` with an uppercase service and the existing image tests. Preserved `handlers/reference.py`, images, and memory.

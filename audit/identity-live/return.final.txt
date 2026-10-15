@@ -1,0 +1,3 @@
+Added `HandleWebhook` in [handlers/webhook.go](/private/var/folders/41/y911rkzj5jg_jh03b4xct8q40000gn/T/TestLiveRequestIdentity2204953370/001/handlers/webhook.go), reusing the established forwarding behavior.
+
+Tests cover identity preservation, observer ordering, exactly one transform call, and panic propagation. `go test ./...` passes. Existing reference code and recorded memory remain unchanged.

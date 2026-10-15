@@ -1,0 +1,5 @@
+Implemented [handlers/reference.go](handlers/reference.go) with the requested interfaces and exact forwarding behavior.
+
+Added tests; `go test ./...` passes.
+
+Recorded the approach, rules, scope, and reference in Knodexa for work-17, plus the alias “webhook handler.” No new task created.

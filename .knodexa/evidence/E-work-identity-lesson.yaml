@@ -1,0 +1,9 @@
+id: E-work-identity-lesson
+node_id: L-work-identity-before-creation
+title: Identity regression and retrieval benchmark
+evidence_type: TEST_RUN
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh; go test ./internal/identity -run '^$' -bench BenchmarkRequestResolution -benchtime=5x -count=3
+exit_code: 0
+output_summary: Go validation passed. Three 503-task lookup samples were 3.1033 ms, 3.133625 ms, and 3.276633 ms. See audit/identity-checks.log and audit/identity-benchmark.txt.
+verified_by: Codex Go validation runner
+created_at: 2026-10-14T07:57:24Z

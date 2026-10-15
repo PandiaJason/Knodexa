@@ -1,0 +1,9 @@
+id: E-9ab5c15e56ca03e2cc25798f82433f76
+title: Live Codex pilot and standalone correctness checks
+node_id: L-33e4d0aef7647df1c53aff78b8ad99c0
+evidence_type: TEST_RUN
+created_at: 2026-10-13T13:27:25.91648Z
+command: python3 audit/live_eval.py; python3 audit/live_eval.py knodexa_fresh native_resumed
+exit_code: 0
+output_summary: 'Corrected trial results in audit/live/results.json: all three arms passed 20/20 independent cases. Excluded read-only resume and incomplete-corpus initial trials are documented. Standalone regression and race suite passed separately.'
+verified_by: agent

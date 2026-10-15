@@ -286,3 +286,95 @@ Discovers cross-task decisions, lessons, failures, and skills related to a query
   - `-32001`: Node not found.
   - `-32002`: Invalid state transition (e.g. verifying without evidence).
   - `-32003`: Path security violation.
+
+## Compact continuity and expansion
+
+`knodexa_get_context` and `knodexa_resume_task` accept `detail_level` (`compact`
+by default, or `full`) and a positive integer `token_budget`. Compact packages
+retain inherited task/project/decision constraints, acceptance criteria, failure
+causes, and actionable rules. Authors can supply `summary` on decision/lesson
+proposals; the deterministic fallback uses a complete first paragraph.
+
+`knodexa_get_detail` accepts `knowledge_id` (a D- or L- ID) and returns the full
+canonical document, including rationale or guidance and evidence references.
+This is an additional tool alongside the original nine.
+
+Resume activates the task and returns context with stored/current Git baseline
+comparison. It preserves the previous checkpoint unless `accept_baseline: true`
+is explicitly supplied. A missing baseline is initialized from a valid HEAD.
+Repeated resume of an unchanged active task does not rewrite its record.
+
+## Established approach tools
+
+- `knodexa_set_approach`: task_id, summary, rules, optional reference_files,
+  skill_files, and checks (path, must_contain, must_not_contain). Records an
+  explicit agreement and captures reference hashes; it is not a quality claim.
+- `knodexa_reuse_approach`: task_id and source_tasks. Links established approaches
+  independently of hierarchy or task names, rejecting missing sources/cycles.
+- `knodexa_check_approach`: task_id. Checks reference drift, skill availability,
+  and declared literal checks. `semantic_review_required` remains explicit.
+
+Reusable checks may use `@touched` to bind to the target task's touched files.
+Resume includes established approach provenance and structural status; mandatory
+approach rules are not pruned to fit the context budget. There are now 13 tools.
+
+### Scoped task-switch context
+
+Call `knodexa_resolve_request` first when the request supplies no task ID. Required:
+`request`. Optional: `files`, `select_task`, `intent` (`auto`, `continue`, `new`,
+`replace`), `previous_task_id`, `token_budget`, and `detail_level`. It returns
+matching evidence and restores selected existing work in one read-only operation.
+Weak, overlapping, and unmatched results contain no invented task context.
+Capture phrases with `knodexa_add_work_aliases` (`task_id`, `aliases`). Neither
+operation reopens completed work. The server now exposes 15 tools.
+
+`knodexa_set_approach` accepts `scopes`: file globs or directory prefixes ending
+in `/`. `knodexa_resume_task` accepts `previous_task_id` and returns
+`approach_selection` plus `context_boundary`. Selection uses explicit
+inheritance/reuse, then a unique scope covering every touched file. Ambiguous
+matches are exposed without merging rules. Selected source constraints and
+acceptance criteria survive compaction. The context boundary is an instruction
+to set aside unrelated conventions, not a mechanism that erases model history.
+
+# Source continuity tools
+
+`knodexa_supersede_knowledge` takes `node_id`, `replacement_id` and a nonblank
+`reason`. Both nodes must be decisions or both lessons; the replacement must
+already be VERIFIED and differ from the original. Retirement preserves historic
+content and records replacement, reason and invalidation time in canonical
+frontmatter. Superseded items are excluded from active context. The server now
+exposes 19 tools.
+
+Context summaries include source/evidence provenance and lesson `match_reason`.
+Recall prioritizes selected task/agreement sources, explicit relevance links,
+file overlap, tags, then confidence. Budget pruning reports `deferred_count` and
+up to eight `deferred_memory` pointers for retrieved but omitted detail; constraints,
+agreements, acceptance criteria and failures remain retained.
+
+`knodexa_prepare_work` combines request resolution, checkpoint comparison,
+agreements, drift checks and bounded reference excerpts. Inspect `needs_review`
+before editing. `knodexa_capture_identity` records stable work IDs and Go source
+anchors after successful verification. `knodexa_set_approach` supports
+`change_reason` and checks with `ast_kind` / `symbol`; supported kinds are
+`require-call`, `forbid-call`, `forbid-import` and `require-function`.
+
+Agreement replacement requires a nonblank `change_reason` and retains previous versions. AST evidence is syntactic;
+free-form design rules still require review. These tools do not intercept client
+commands automatically.
+
+`knodexa_record_work` accepts `task_id`, an `agreement` object containing aliases,
+files and approach, and a nonempty `verify` array of explicit shell commands.
+It executes verification and proposed/inherited structural checks before saving
+one canonical task update. A replacement requires `approach.change_reason`.
+It preserves completed state and baseline and retains the prior agreement version.
+
+`knodexa_resume_task` now preserves completed task records by default.
+Set `reopen: true` only to intentionally reactivate completed work; baseline
+replacement remains separately explicit through `accept_baseline`.
+
+For reviewed refactors, `approach.reference_reconciliations` can bind an inherited
+reference to its current location and hash for the child only. Each entry requires
+`source_task`, `source_version`, `original_path`, `original_sha256`, `current_path`,
+`current_sha256`, and `reason`. Completed parent records stay unchanged; source
+version/hash mismatches and subsequent file drift still fail. See
+[validation and replay](audit/reference-reconciliation/REPORT.md).

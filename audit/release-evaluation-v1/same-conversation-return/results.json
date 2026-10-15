@@ -1,0 +1,164 @@
+{
+  "arms": {
+    "knodexa": {
+      "actual_resolver_observed": true,
+      "background_memories_enabled": false,
+      "baseline_drift_reported": true,
+      "completed_memory_preserved": true,
+      "establish": {
+        "exit_code": 0,
+        "seconds": 57.10432125,
+        "thread_id": "01a13bb1-a029-7750-ad59-2274003e302a",
+        "tool_items": 6,
+        "usage": [
+          {
+            "cache_write_input_tokens": 0,
+            "cached_input_tokens": 55040,
+            "input_tokens": 64186,
+            "output_tokens": 1518,
+            "reasoning_output_tokens": 0
+          }
+        ]
+      },
+      "establish_independent_checks_passed": true,
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "low",
+      "reference_preserved": true,
+      "resolver_request_had_no_file_path": true,
+      "resolver_request_had_no_task_id": true,
+      "response_completed": true,
+      "return": {
+        "agent_resolved_task": "work-17",
+        "agent_resolver_request": "Add another webhook handler for delivery events. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep our established layout and behavior. Add and run relevant tests.",
+        "exit_code": 0,
+        "seconds": 46.925627208,
+        "thread_id": "01a13bb1-a029-7750-ad59-2274003e302a",
+        "tool_items": 6,
+        "usage": [
+          {
+            "cache_write_input_tokens": 0,
+            "cached_input_tokens": 202240,
+            "input_tokens": 230670,
+            "output_tokens": 3283,
+            "reasoning_output_tokens": 27
+          }
+        ]
+      },
+      "return_independent_checks_passed": true,
+      "saved_baseline_preserved": true,
+      "scope": "One real agent, shared conversation, recorded memory from producer, unrelated work, then a natural-language return without task ID or file path",
+      "status": "passed",
+      "switch": {
+        "exit_code": 0,
+        "seconds": 49.436274334,
+        "thread_id": "01a13bb1-a029-7750-ad59-2274003e302a",
+        "tool_items": 6,
+        "usage": [
+          {
+            "cache_write_input_tokens": 0,
+            "cached_input_tokens": 127360,
+            "input_tokens": 141973,
+            "output_tokens": 2564,
+            "reasoning_output_tokens": 0
+          }
+        ]
+      },
+      "unrelated_new_tasks": []
+    },
+    "native": {
+      "arm": "native",
+      "background_memories_enabled": false,
+      "baseline_drift_expected": true,
+      "completed_memory_preserved": true,
+      "establish": {
+        "exit_code": 0,
+        "seconds": 48.631148083,
+        "thread_id": "01a13baf-b784-7142-84a5-2d4bf068d830",
+        "tool_items": 4,
+        "usage": [
+          {
+            "cache_write_input_tokens": 0,
+            "cached_input_tokens": 57856,
+            "input_tokens": 63134,
+            "output_tokens": 1525,
+            "reasoning_output_tokens": 9
+          }
+        ]
+      },
+      "establish_independent_checks_passed": true,
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "low",
+      "reference_preserved": true,
+      "response_completed": true,
+      "return": {
+        "exit_code": 0,
+        "seconds": 31.479134833,
+        "thread_id": "01a13baf-b784-7142-84a5-2d4bf068d830",
+        "tool_items": 3,
+        "usage": [
+          {
+            "cache_write_input_tokens": 0,
+            "cached_input_tokens": 171392,
+            "input_tokens": 182944,
+            "output_tokens": 3296,
+            "reasoning_output_tokens": 77
+          }
+        ]
+      },
+      "return_independent_checks_passed": true,
+      "scope": "Same-conversation identity return; modular file memory, actual producer capture, no task ID or file path on return",
+      "status": "passed",
+      "switch": {
+        "exit_code": 0,
+        "seconds": 38.63579625,
+        "thread_id": "01a13baf-b784-7142-84a5-2d4bf068d830",
+        "tool_items": 4,
+        "usage": [
+          {
+            "cache_write_input_tokens": 0,
+            "cached_input_tokens": 110720,
+            "input_tokens": 119296,
+            "output_tokens": 2619,
+            "reasoning_output_tokens": 9
+          }
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "knodexa": {
+      "cached_input_tokens": 384640,
+      "common_quality_passed": true,
+      "input_tokens": 436829,
+      "quality_scored": true,
+      "response_completed": true,
+      "tool_items": 18,
+      "workflow_seconds": 153.466222792
+    },
+    "native": {
+      "cached_input_tokens": 339968,
+      "common_quality_passed": true,
+      "input_tokens": 365374,
+      "quality_scored": true,
+      "response_completed": true,
+      "tool_items": 11,
+      "workflow_seconds": 118.746079166
+    }
+  },
+  "paired_quality_outcome": "tie",
+  "plan": {
+    "arms": [
+      "native",
+      "knodexa"
+    ],
+    "background_memories_enabled": false,
+    "fresh_return_context": false,
+    "model": "gpt-6.1-sol",
+    "optimized_record_and_text": true,
+    "order": "native first",
+    "pairs": 1,
+    "primary": "independent return behavior passes and source reference/memory preserved",
+    "reasoning_effort": "low",
+    "return_supplies_task_id_or_path": false
+  }
+}

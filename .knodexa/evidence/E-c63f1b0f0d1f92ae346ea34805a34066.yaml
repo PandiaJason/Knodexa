@@ -1,0 +1,8 @@
+id: E-c63f1b0f0d1f92ae346ea34805a34066
+title: Reviewed completed and interrupted release comparison
+node_id: L-b8262466707b3790ed1e458973c9dbb4
+evidence_type: MANUAL_SIGN_OFF
+created_at: 2026-10-15T03:54:29.469541Z
+exit_code: 0
+output_summary: Completed pair results and independent grader logs confirm equal quality; 118.746 vs153.466 agent seconds and11vs18actions. Fresh pair account-limit interruption is unscored for both arms. Public summary.json/metrics.csv/charts retain this distinction; no statistical conclusion.
+verified_by: Codex artifact review

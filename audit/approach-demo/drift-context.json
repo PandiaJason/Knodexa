@@ -1,0 +1,83 @@
+{
+  "approach_status": {
+    "task_id": "webhook-handler",
+    "structural_checks_passed": false,
+    "semantic_review_required": true,
+    "results": [
+      {
+        "source_task": "service-contract",
+        "path": "reference.py",
+        "kind": "reference",
+        "passed": true,
+        "detail": "reference unchanged"
+      },
+      {
+        "source_task": "service-contract",
+        "path": "candidate.py",
+        "kind": "literal-check",
+        "passed": false,
+        "detail": "required=\"service.transform(value)\" forbidden=\"\""
+      },
+      {
+        "source_task": "service-contract",
+        "path": "candidate.py",
+        "kind": "literal-check",
+        "passed": false,
+        "detail": "required=\"\" forbidden=\".upper()\""
+      }
+    ]
+  },
+  "established_approach": [
+    {
+      "source_task": "service-contract",
+      "approach": {
+        "summary": "Handlers delegate to injected services",
+        "rules": [
+          "Preserve service injection instead of embedding transformations in handlers"
+        ],
+        "references": [
+          {
+            "path": "reference.py",
+            "sha256": "46464a9cab084389a92f20ed5675c61a3d3e24f5a966820735d1c79c938d091e"
+          }
+        ],
+        "checks": [
+          {
+            "path": "@touched",
+            "must_contain": "service.transform(value)"
+          },
+          {
+            "path": "@touched",
+            "must_not_contain": ".upper()"
+          }
+        ],
+        "recorded_at": "2026-10-14T05:12:18.928304Z"
+      }
+    }
+  ],
+  "detail_level": "compact",
+  "detail_hint": "Full rationale and evidence IDs: knodexa show <id> or knodexa_get_detail",
+  "context_pruned": false,
+  "token_budget": 1500,
+  "budget_exceeded": false,
+  "task": {
+    "id": "webhook-handler",
+    "title": "webhook-handler",
+    "goal": "",
+    "status": "ACTIVE"
+  },
+  "accepted_constraints": [
+    "Deterministic behavior: zero LLM calls in core engine",
+    "Evidence-driven verification for decisions and lessons",
+    "Preserve existing repository constraints and public APIs"
+  ],
+  "baseline": {
+    "commit": "unknown",
+    "dirty": false
+  },
+  "required_verification": [
+    "Correctness test suite must pass",
+    "No regressions in existing functionality"
+  ],
+  "estimated_tokens": 284
+}

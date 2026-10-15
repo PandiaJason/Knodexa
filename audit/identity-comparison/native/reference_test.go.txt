@@ -1,0 +1,106 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+type transformerFunc func(any) (any, error)
+
+func (f transformerFunc) Transform(value any) (any, error) { return f(value) }
+
+type recordingObserver struct {
+	events *[]string
+	input  any
+	result any
+}
+
+func (o *recordingObserver) Started(value any) {
+	*o.events = append(*o.events, "started")
+	o.input = value
+}
+
+func (o *recordingObserver) Finished(result any) {
+	*o.events = append(*o.events, "finished")
+	o.result = result
+}
+
+func TestHandlePreservesValuesAndOrdering(t *testing.T) {
+	input := &struct{ Text string }{"  Mixed Case  "}
+	result := &struct{ Count int }{7}
+	wantErr := errors.New("service failure")
+	for _, serviceErr := range []error{nil, wantErr} {
+		for _, observed := range []bool{false, true} {
+			events := []string{}
+			calls := 0
+			service := transformerFunc(func(value any) (any, error) {
+				calls++
+				events = append(events, "transform")
+				if value != input {
+					t.Fatal("service did not receive original input")
+				}
+				return result, serviceErr
+			})
+			recorder := &recordingObserver{events: &events}
+			var observer Observer
+			if observed {
+				observer = recorder
+			}
+			got, err := Handle(input, service, observer)
+			if got != result || err != serviceErr || calls != 1 {
+				t.Fatalf("result=%v error=%v calls=%d", got, err, calls)
+			}
+			wantEvents := []string{"transform"}
+			if observed {
+				wantEvents = []string{"started", "transform"}
+				if recorder.input != input {
+					t.Fatal("observer did not receive original input")
+				}
+				if serviceErr == nil {
+					wantEvents = append(wantEvents, "finished")
+					if recorder.result != result {
+						t.Fatal("observer did not receive original result")
+					}
+				}
+			}
+			if !reflect.DeepEqual(events, wantEvents) {
+				t.Fatalf("events=%v want=%v", events, wantEvents)
+			}
+		}
+	}
+}
+
+func TestHandleRawValues(t *testing.T) {
+	for _, input := range []any{nil, "  Mixed Case  ", 42, []byte(" raw ")} {
+		calls := 0
+		got, err := Handle(input, transformerFunc(func(value any) (any, error) {
+			calls++
+			if !reflect.DeepEqual(value, input) {
+				t.Fatalf("input changed: %v", value)
+			}
+			return value, nil
+		}), nil)
+		if err != nil || calls != 1 || !reflect.DeepEqual(got, input) {
+			t.Fatalf("result=%v error=%v calls=%d", got, err, calls)
+		}
+	}
+}
+
+func TestHandlePropagatesServicePanic(t *testing.T) {
+	marker := &struct{}{}
+	events := []string{}
+	observer := &recordingObserver{events: &events}
+	defer func() {
+		if recovered := recover(); recovered != marker {
+			t.Fatalf("panic=%v want=%v", recovered, marker)
+		}
+		if !reflect.DeepEqual(events, []string{"started", "transform"}) {
+			t.Fatalf("unexpected events: %v", events)
+		}
+	}()
+	Handle(nil, transformerFunc(func(any) (any, error) {
+		events = append(events, "transform")
+		panic(marker)
+	}), observer)
+}

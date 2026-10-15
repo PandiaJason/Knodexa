@@ -1,0 +1,8 @@
+Verified `handlers/reference.py` against `memory/handlers.md`:
+
+- Raw inputs reach the service exactly once.
+- Observations occur in order; falsey observers remain active.
+- Results retain object identity.
+- Service exceptions propagate unchanged, with no retry or `finished` call.
+
+Added focused regression tests in `tests/test_handlers.py`; all 3 pass. Source and memory files remain unchanged. These tests preserve the agreed approach for future handler work.

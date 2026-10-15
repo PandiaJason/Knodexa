@@ -1,0 +1,5 @@
+Added `ForwardWebhook` in [handlers/webhook.go](handlers/webhook.go), delegating exactly once and preserving raw input, result, and error identity.
+
+Added tests for raw values, pointer identity, nil values, and errors.
+
+Passed: `go test ./...`, `go test -race ./...`, `go vet ./...`, and Knodexa agreement checks. Verification recorded on a child task; no unresolved drift.

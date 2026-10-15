@@ -1,6 +1,27 @@
 package index
 
 const schemaDDL = `
+CREATE TABLE IF NOT EXISTS code_cache(path TEXT PRIMARY KEY, hash TEXT NOT NULL, data BLOB NOT NULL);
+CREATE TABLE IF NOT EXISTS work_identities (node_id TEXT PRIMARY KEY, data BLOB NOT NULL);
+CREATE TABLE IF NOT EXISTS approach_tasks (node_id TEXT PRIMARY KEY);
+CREATE TABLE IF NOT EXISTS index_features (name TEXT PRIMARY KEY);
+CREATE TABLE IF NOT EXISTS indexed_records (
+ path TEXT PRIMARY KEY,
+ kind TEXT NOT NULL,
+ content_hash TEXT NOT NULL,
+ node_id TEXT UNIQUE,
+ data BLOB NOT NULL
+);
+CREATE TABLE IF NOT EXISTS record_edges (
+ source_path TEXT NOT NULL,
+ from_id TEXT NOT NULL,
+ to_id TEXT NOT NULL,
+ type TEXT NOT NULL,
+ created_at TEXT NOT NULL,
+ PRIMARY KEY(source_path, from_id, to_id, type)
+);
+CREATE INDEX IF NOT EXISTS idx_record_edges_identity ON record_edges(from_id,to_id,type);
+
 CREATE TABLE IF NOT EXISTS nodes (
     id TEXT PRIMARY KEY,
     type TEXT NOT NULL,
@@ -71,6 +92,8 @@ CREATE INDEX IF NOT EXISTS idx_node_failures_task ON node_failures(task_id);
 `
 
 const dropDDL = `
+DROP TABLE IF EXISTS indexed_records;
+DROP TABLE IF EXISTS record_edges;
 DROP TABLE IF EXISTS node_failures;
 DROP TABLE IF EXISTS node_evidence;
 DROP TABLE IF EXISTS node_constraints;

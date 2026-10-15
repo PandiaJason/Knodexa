@@ -1,0 +1,9 @@
+id: E-2fe698b13b594f072200f3df7e214fe5
+title: Verified recording and safe continuity API checks
+node_id: D-b7348fd73e9e052620b3ffbbcd68eeeb
+evidence_type: TEST_RUN
+created_at: 2026-10-14T16:12:26.074253Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: Go vet, full race tests and fresh CLI smoke passed. Record verifies before saving complete aliases/approach/anchors; failed tests and structural checks do not install partial memory. Git-backed completed-resume regression preserves canonical bytes and missing baseline by default; explicit reopening works. Focus cannot select identity and stale focus does not block it. Current handoff fixture:1730 text bytes vs2882 JSON bytes.
+verified_by: agent

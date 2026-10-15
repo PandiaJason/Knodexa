@@ -1,0 +1,91 @@
+{
+  "approach_selection": {
+    "mode": "file_scope",
+    "sources": [
+      "handler-design"
+    ],
+    "candidates": [
+      "handler-design"
+    ],
+    "excluded_sources": [
+      "batch-work",
+      "image-work"
+    ],
+    "review_required": false
+  },
+  "context_boundary": {
+    "previous_task": "batch-work",
+    "target_task": "delivery-1",
+    "discard_sources": [
+      "batch-work"
+    ],
+    "instruction": "Use the target task constraints, acceptance criteria, and selected agreements. Set aside conventions from unrelated work still present in conversation history. Relevant lessons are advisory; they do not override these agreements. Read selected references before editing. If selection is missing or ambiguous, resolve the scope before claiming consistency."
+  },
+  "approach_status": {
+    "task_id": "delivery-1",
+    "structural_checks_passed": true,
+    "semantic_review_required": true,
+    "results": [
+      {
+        "source_task": "handler-design",
+        "path": "handlers/reference.py",
+        "kind": "reference",
+        "passed": true,
+        "detail": "reference unchanged"
+      }
+    ]
+  },
+  "established_approach": [
+    {
+      "source_task": "handler-design",
+      "approach": {
+        "scopes": [
+          "handlers/"
+        ],
+        "summary": "handlers/ implementation agreement",
+        "rules": [
+          "Handlers delegate raw values to the injected service.transform(value), exactly once; never trim, normalize, coerce, or uppercase values.",
+          "Return the exact service result object unchanged, including None or arbitrary objects.",
+          "Propagate the original service exception object unchanged; no fallback values or retries.",
+          "Call observer.started(value) before service.transform(value), then observer.finished(result) only on success; do not call finished after an exception.",
+          "observer=None disables observations; any non-None observer is active even if falsey.",
+          "Handle empty, None, and nonstring values by delegation, without early returns."
+        ],
+        "references": [
+          {
+            "path": "handlers/reference.py",
+            "sha256": "60dc79da7cc4427194328a4c8d50e1282ce53dd0d91a0313c1eddf471d09cdfe"
+          }
+        ],
+        "recorded_at": "2026-10-14T06:21:16.519047Z"
+      }
+    }
+  ],
+  "detail_level": "compact",
+  "detail_hint": "Full rationale and evidence IDs: knodexa show <id> or knodexa_get_detail",
+  "context_pruned": false,
+  "token_budget": 1500,
+  "budget_exceeded": false,
+  "task": {
+    "id": "delivery-1",
+    "title": "delivery-1",
+    "goal": "",
+    "status": "ACTIVE"
+  },
+  "accepted_constraints": [
+    "Deterministic behavior: zero LLM calls in core engine",
+    "Evidence-driven verification for decisions and lessons",
+    "Preserve existing repository constraints and public APIs"
+  ],
+  "baseline": {
+    "stored_commit": "312efd9598042b012f04d06c796d10f9d9c57b56",
+    "commit": "312efd9",
+    "branch": "main",
+    "dirty": true
+  },
+  "required_verification": [
+    "Correctness test suite must pass",
+    "No regressions in existing functionality"
+  ],
+  "estimated_tokens": 538
+}

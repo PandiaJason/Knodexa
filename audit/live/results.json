@@ -1,0 +1,84 @@
+{
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "cli_version": "codex-cli 0.162.0-alpha.17.2",
+  "memories_enabled": false,
+  "scope": "Single synthetic auth task; actual Codex-generated implementations; CLI file tools and native session resume, not desktop thread tools or background memories.",
+  "trials": {
+    "native_fresh": {
+      "exit_code": 0,
+      "elapsed_seconds": 53.9,
+      "usage": [
+        {
+          "input_tokens": 62992,
+          "cached_input_tokens": 54784,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1506,
+          "reasoning_output_tokens": 13
+        }
+      ],
+      "thread_id": "01a13569-8c4f-79b2-83b1-6d3e8d4d4844",
+      "events": 16,
+      "acceptance": {
+        "passed": 20,
+        "total": 20,
+        "failures": []
+      }
+    },
+    "knodexa_fresh": {
+      "exit_code": 0,
+      "elapsed_seconds": 77.87,
+      "usage": [
+        {
+          "input_tokens": 80884,
+          "cached_input_tokens": 74880,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1361,
+          "reasoning_output_tokens": 21
+        }
+      ],
+      "thread_id": "01a1356d-c357-7f51-9572-1a6cdbfb1f9a",
+      "events": 20,
+      "acceptance": {
+        "passed": 20,
+        "total": 20,
+        "failures": []
+      }
+    },
+    "native_resumed_seed": {
+      "exit_code": 0,
+      "elapsed_seconds": 7.99,
+      "usage": [
+        {
+          "input_tokens": 14916,
+          "cached_input_tokens": 12288,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 5,
+          "reasoning_output_tokens": 0
+        }
+      ],
+      "thread_id": "01a1356e-f388-7cc1-989e-4862bdd4e9e4",
+      "events": 4
+    },
+    "native_resumed": {
+      "exit_code": 0,
+      "elapsed_seconds": 62.39,
+      "usage": [
+        {
+          "input_tokens": 96530,
+          "cached_input_tokens": 90368,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1413,
+          "reasoning_output_tokens": 20
+        }
+      ],
+      "thread_id": "01a1356e-f388-7cc1-989e-4862bdd4e9e4",
+      "events": 16,
+      "acceptance": {
+        "passed": 20,
+        "total": 20,
+        "failures": []
+      }
+    }
+  }
+}

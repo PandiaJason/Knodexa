@@ -1,0 +1,3 @@
+For `service-design`, inspected project memory and `handlers/reference.py`. Both service-substitution tests passed: arbitrary results retain identity, exceptions propagate unchanged, and `transform` is called exactly once with the original input.
+
+I’ll follow this approach for future handler work: delegate transformations to the injected service. No files changed.

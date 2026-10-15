@@ -1,29 +1,43 @@
 # Knodexa: Product Specification
 
-> **Engineering memory for AI coding agents across task boundaries.**
+> **Work identity and continuity across new requests and context changes.**
+
+The primary agent integration is a portable project protocol: `AGENTS.md`, a
+`knodexa-continuity/SKILL.md` bundle, or generic rules, generated from one source
+through `agents install`. Hosts must load the selected format. This makes
+restoration and agreement checking an explicit repository workflow; it does not
+claim universal adoption or automatic interception of all coding tools.
 
 ---
 
-## 1. The Core Problem: Agent Amnesia Across Task Switches
+## 1. The Core Problem: Losing Work Identity
 
-AI coding agents are remarkably capable at focused, short-horizon tasks. However, when working on real-world software projects, workflows are rarely linear. Developers and agents constantly switch contexts:
+An agent establishes correct work, handles unrelated requests, then treats a later request of the original kind as a completely new problem. The original work's identity, state, and implementation approach are lost. Context contamination is a consequence; identifying the work comes first. Task labels are incidental.
 
-```
-Task A (e.g., Refactor Auth) → A.1 → A.2
-       ↓ Context Switch
-Task B (e.g., Performance Benchmarks) → B.1 → B.2 → B.3
-       ↓ Context Switch
-Return to Task A (A.3)
-```
+The primary product loop is:
 
-When an agent returns to Task A:
-1. **Context Loss:** The original prompt context window is gone or truncated.
-2. **Reconstruction Drift:** The agent re-interprets the task from scratch, often proposing architectural approaches that were previously evaluated and discarded.
-3. **Constraint Violation:** Hard architectural constraints (e.g., "Must remain backwards-compatible with API v1", "Zero allocations in hot loop") are forgotten.
-4. **Repeated Failures:** Failed approaches (e.g., "Using sync.Mutex here caused deadlock in integration tests") are retried because the failure evidence was not retained.
-5. **Missed Cross-Pollination:** Discoveries made during Task B (e.g., "Always run pre-validation before retry loops to prevent duplicate DB writes") are invisible to Task A, even when directly applicable.
+0. Resolve the incoming request against recorded work before creating a task. Return the existing identity and evidence when uniquely matched; surface ambiguity and unknown intent. Restore completed work without automatically reopening it. Explicit independent work and intentional replacement remain separate actions.
 
-Humans maintain a continuous, evolving mental model of a project. Knodexa provides an **external, persistent, structured engineering memory** that replicates this continuity for AI coding agents.
+1. Capture explicit implementation agreements, file scopes, references, acceptance criteria, and checks after correct work.
+2. On each switch or return, select the target work's agreement by explicit relationships or unambiguous file coverage.
+3. Return a context boundary: target rules are authoritative; prior unrelated conventions should be set aside; cross-domain lessons remain advisory.
+4. Preserve source constraints and acceptance criteria under budget pressure. Surface ambiguity rather than mixing conflicting agreements.
+5. Compare resulting code against references and behavioral checks. Record intentional changes with rationale and evidence.
+
+Current routing is deterministic file-scope routing, not natural-language intent classification. It requires declared touched files. The boundary instructs an agent; it does not delete attention history or enforce semantic obedience. Human exports show recorded agreements and provenance, not hidden model thoughts.
+
+Request identity retrieval now accepts natural-language text without a task ID,
+using recorded aliases, titles, goal terms, and optional file hints. It searches
+compact indexed metadata and does not call a model. Exact recorded phrases or
+complete file coverage can select a unique match; weaker or conflicting matches
+remain unresolved. This is conservative lexical retrieval, not general semantic
+understanding. The CLI guards strong duplicate-work descriptions and duplicate
+IDs; external agents still need to call the entry point before coding.
+
+The implementation and required validation use Go only. Historical model
+evaluation scripts have been retired; their evidence remains in audit reports.
+
+The primary evaluation must keep agents in shared conversations, introduce conflicting conventions in unrelated work, and return to the original kind of work. Measure approach violations, lost acceptance criteria, unrelated-rule carryover, tool overhead, and repeated-trial outcomes. Fresh-session retrieval demos are secondary evidence. Existing pilots do not establish superiority over competent native file memory.
 
 ---
 
@@ -109,3 +123,22 @@ Knodexa's success is measured not by feature count, but by measurable improvemen
 - **Mistake De-duplication:** Zero retries of explicitly rejected approaches.
 - **Context Efficiency:** Under 1,500 tokens for full task rehydration.
 - **Deterministic Replay:** Rebuilding SQLite index from files reproduces identical graph state.
+
+## Established approach continuity
+
+The unit of continuity is an implementation agreement, independent of task
+labels: rules, reference implementations, reusable skills, and concrete checks.
+A task inherits its ancestors' agreements or explicitly links another approach.
+Unrelated work does not become mandatory guidance through matching names.
+
+On return, restore the approach before coding, inspect referenced artifacts,
+compare against its recorded baseline, and check both functionality and declared
+structural consistency. Record the rationale and evidence for a deliberate
+change. The visible memory graph exposes recorded understanding and provenance,
+not hidden reasoning. Generated task modules are inspectable snapshots.
+
+The first implementation supports these explicit contracts and structural checks.
+It does not infer semantic task families automatically, generate a trustworthy
+agreement from arbitrary code without agent involvement, or guarantee future
+models obey the agreement. Those require separate harness integration and
+behavioral evaluation against the agreed approach, beyond functional test success.

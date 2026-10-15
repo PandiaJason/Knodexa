@@ -1,0 +1,21 @@
+{
+  "completed_pair_quality": "tie",
+  "planned_pairs": 2,
+  "completed_pairs": 1,
+  "unscored_pairs": 1,
+  "interruption": "Codex account usage limit",
+  "workflow_seconds": {
+    "organized_files": 118.746079166,
+    "knodexa": 153.466222792
+  },
+  "tool_actions": {
+    "organized_files": 11,
+    "knodexa": 18
+  },
+  "reported_input_tokens": {
+    "organized_files": 365374,
+    "knodexa": 436829
+  },
+  "knodexa_workflow_time_change_percent": 29.238981084557135,
+  "knodexa_tool_action_change_percent": 63.63636363636365
+}

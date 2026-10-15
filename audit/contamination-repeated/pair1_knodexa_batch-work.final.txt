@@ -1,0 +1,5 @@
+Created `batch/transform.py` with string coercion and stripping, one retry for `RuntimeError`, and `None` for failed transformations. It returns a fresh list and invokes no observer hooks.
+
+Added 11 focused tests covering failures, retry counts, and list identity. All 28 tests passed.
+
+Only batch source and tests were edited manually; required resume updated task metadata.

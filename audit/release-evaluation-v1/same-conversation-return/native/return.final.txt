@@ -1,0 +1,5 @@
+Added `handlers.HandleWebhook` in `handlers/webhook.go`, reusing the established raw forwarding and observer behavior.
+
+Tests cover exactly-once delegation, value/error identity, observer ordering, nil observers, and panic propagation. `go test ./...` passes.
+
+Completed work memory and image utilities remain unchanged.

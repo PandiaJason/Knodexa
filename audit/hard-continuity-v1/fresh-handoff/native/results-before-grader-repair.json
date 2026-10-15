@@ -1,0 +1,25 @@
+{
+  "case": "fresh-handoff",
+  "arm": "native",
+  "phase": {
+    "exit_code": 0,
+    "seconds": 88.956294625,
+    "thread_id": "01a13b46-18fc-75c1-b98a-7c0a640d7b8e",
+    "tool_items": 8,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 95744,
+        "input_tokens": 114302,
+        "output_tokens": 2860,
+        "reasoning_output_tokens": 63
+      }
+    ]
+  },
+  "behavior_passed": false,
+  "completed_memory_preserved": false,
+  "reference_preserved": true,
+  "stale_agreement_reported": false,
+  "scored": true,
+  "passed": false
+}

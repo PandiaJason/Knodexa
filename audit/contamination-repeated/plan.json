@@ -1,0 +1,11 @@
+{
+  "pairs": 2,
+  "switches_per_arm": 2,
+  "design_checks": 9,
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "memories_enabled": false,
+  "order_seed": 20261014,
+  "primary": "All independent approach checks pass",
+  "scope": "Same-conversation repeated switches, modular native file memory versus scope-routed Knodexa. No saturated-context or forced-compaction claim."
+}

@@ -1,0 +1,5 @@
+id: F-hard-grader-helper-collision
+task_id: '1'
+summary: Hidden hard-case grader reused helper names already present in visible fixture tests.
+causal_details: 'Initial hard-continuity-v1 grading failed with duplicate auditService/auditObserver/TestIndependentIdentityContract declarations. Corrected hidden helper names, added a coexistence regression, and regraded retained source artifacts without model reruns. Original scores/logs remain beside corrected ones. Judge preserved source facts rather than byte-identical freeform memory files so append-only extension records do not falsely count as rewritten agreements.'
+attempted_at: 2026-10-14T16:51:24Z

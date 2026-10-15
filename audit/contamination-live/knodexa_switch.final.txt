@@ -1,0 +1,5 @@
+Created `images/normalize.py` and `tests/test_normalize.py`.
+
+Image utilities embed normalization directly, without service injection. Nonstrings return `""`; strings have surrounding whitespace removed, internal whitespace collapsed to single spaces, then Unicode uppercase applied.
+
+Tests passed for 16 representative strings and 8 nonstring inputs. Handlers and memory remain unchanged.

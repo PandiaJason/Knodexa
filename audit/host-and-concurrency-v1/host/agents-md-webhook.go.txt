@@ -1,0 +1,6 @@
+package handlers
+
+// ForwardWebhook delegates the raw webhook value to the supplied transformer.
+func ForwardWebhook(value any, service Transformer) (any, error) {
+	return service.Transform(value)
+}

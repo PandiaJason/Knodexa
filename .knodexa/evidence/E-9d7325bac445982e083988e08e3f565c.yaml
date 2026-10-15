@@ -1,0 +1,9 @@
+id: E-9d7325bac445982e083988e08e3f565c
+title: Portable instruction installation passes standalone and Go tests
+node_id: D-5c43cdb342d4ef05be32fcf054bfd833
+evidence_type: TEST_RUN
+created_at: 2026-10-14T17:36:34.478455Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: Go vet, full race tests and standalone CLI smoke pass. Integration tests cover preserving user text and file modes, idempotent managed updates, invalid blocks, traversal and symlink rejection, skill collisions and YAML metadata. Installed project AGENTS.md and skills/knodexa-continuity/SKILL.md. External quick_validate.py could not run because PyYAML is unavailable; Go tests validate skill metadata. Host discovery and real agent adoption not established.
+verified_by: agent

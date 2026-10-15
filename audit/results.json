@@ -1,0 +1,47 @@
+{
+  "failed_test_verifies_decision": true,
+  "unrelated_evidence_verifies_lesson": true,
+  "decision_arguments_discarded": true,
+  "custom_acceptance_criteria_lost": true,
+  "grandparent_decision_missing": true,
+  "unrelated_lesson_transferred": true,
+  "lesson_guidance_missing": true,
+  "token_budget_exceeded": true,
+  "removed_constraint_still_in_context": true,
+  "deleted_task_still_retrievable": true,
+  "observed_context": {
+    "task": {
+      "id": "leaf",
+      "parent_id": "child",
+      "title": "leaf",
+      "goal": "Audit task",
+      "status": "ACTIVE"
+    },
+    "accepted_constraints": [
+      "OLD constraint",
+      "Deterministic behavior: zero LLM calls in core engine",
+      "Evidence-driven verification for decisions and lessons",
+      "Preserve existing repository constraints and public APIs"
+    ],
+    "relevant_lessons": [
+      {
+        "id": "L-810000",
+        "title": "Unrelated lesson",
+        "source_task": "ROOT",
+        "confidence": 0.8,
+        "relevance": "medium",
+        "verification_status": "VERIFIED"
+      }
+    ],
+    "baseline": {
+      "commit": "none",
+      "branch": "none",
+      "dirty": false
+    },
+    "required_verification": [
+      "Correctness test suite must pass",
+      "No regressions in existing functionality"
+    ],
+    "estimated_tokens": 122
+  }
+}

@@ -1,15 +1,21 @@
 package cli
 
 import (
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
+	"knodexa/internal/approach"
 	"knodexa/internal/context"
+	"knodexa/internal/continuity"
 	"knodexa/internal/git"
+	"knodexa/internal/identity"
 	"knodexa/internal/index"
 	"knodexa/internal/model"
 	"knodexa/internal/storage"
@@ -45,13 +51,13 @@ func NewApp(rootDir string) (*App, error) {
 	if store.IsInitialized() {
 		dbPath := filepath.Join(store.KnodexaDir(), "cache.db")
 		d, err := index.Open(dbPath)
-		if err == nil {
-			db = d
-			indexer = index.NewIndexer(db, store)
-			_ = indexer.Sync()
-			verifier = verify.NewEngine(store, indexer, db)
-			ctxBuilder = context.NewBuilder(db, store, gitInspector)
+		if err != nil {
+			return nil, fmt.Errorf("open knowledge index: %w", err)
 		}
+		db = d
+		indexer = index.NewIndexer(db, store)
+		verifier = verify.NewEngine(store, indexer, db)
+		ctxBuilder = context.NewBuilder(db, store, gitInspector)
 	}
 
 	return &App{
@@ -74,11 +80,35 @@ func (a *App) Run(args []string) error {
 
 	cmd := args[0]
 	rest := args[1:]
+	// Resume refreshes within the shared service; other operations refresh once.
+	if a.indexer != nil && cmd != "agents" && cmd != "record" && cmd != "resume" && cmd != "resolve" && cmd != "prepare" && cmd != "run" && cmd != "help" && cmd != "--help" && cmd != "-h" {
+		if err := a.indexer.Sync(); err != nil {
+			return fmt.Errorf("sync knowledge index: %w", err)
+		}
+	}
 
 	switch cmd {
+	case "agents":
+		return a.runAgents(rest)
+	case "supersede":
+		return a.runSupersede(rest)
+	case "record":
+		return a.runRecord(rest)
+	case "prepare":
+		return a.runPrepare(rest)
+	case "run":
+		return a.runContinuityCommand(rest)
 	case "help", "-h", "--help":
 		a.printHelp()
 		return nil
+	case "resolve":
+		return a.runResolve(rest)
+	case "identity":
+		return a.runIdentity(rest)
+	case "approach":
+		return a.runApproach(rest)
+	case "memory":
+		return a.runMemory(rest)
 	case "init":
 		return a.runInit(rest)
 	case "tree":
@@ -87,6 +117,10 @@ func (a *App) Run(args []string) error {
 		return a.runTask(rest)
 	case "context":
 		return a.runContext(rest)
+	case "resume":
+		return a.runRehydrate(rest, true)
+	case "show":
+		return a.runShow(rest)
 	case "related":
 		return a.runRelated(rest)
 	case "decisions":
@@ -107,23 +141,36 @@ func (a *App) Run(args []string) error {
 }
 
 func (a *App) printHelp() {
-	fmt.Println(`Knodexa - Engineering Memory System for AI Coding Agents
+	fmt.Println(`Knodexa - Continuity and Consistency Guard for Coding Agents
 
 Usage:
   knodexa <command> [arguments]
 
 Commands:
+  agents install/print  Integrate the continuity protocol as AGENTS.md, SKILL.md or rules
   init                  Initialize a new .knodexa directory in the project
   tree                  Show the tree-oriented view of project knowledge
   task create           Create a new task or subtask
   task show <id>        Display full details for a task
   task list             List all tasks
-  context <id>          Rehydrate the smallest high-signal engineering context
+  context <id>          Rehydrate compact context (--full expands rationale)
+  resolve <request>     Identify existing work before creating a task
+  identity alias <id>   Record phrases that refer to established work
+  identity capture <id> Capture stable identity, Go symbols and source hashes
+  prepare <request>     Restore identity, baseline, checks and reference excerpts
+  record <id>           Verify then capture aliases, rules and source identity
+  run <request>         Restore, execute with context, verify, then capture identity
+  resume <id>           Resume, compare Git baseline, and retrieve context
+  approach set/check    Record and check inherited implementation approaches
+  approach history <id> Inspect current and previous agreement versions
+  memory export         Render the memory tree and modular AGENTS.md/SKILL.md
+  show <D-id|L-id>       Expand a decision or lesson on demand
   related <id>          Find related decisions, lessons, and failures
   decisions             List all architectural decisions
   lessons               List all reusable engineering lessons
   verify <id>           Promote proposed knowledge to VERIFIED state
   reject <id>           Reject proposed knowledge
+  supersede <id>        Retire knowledge with a verified replacement and reason
   history <id>          View event audit history for a task or knowledge node
   doctor                Run diagnostics and optionally rebuild index (--rebuild)
   mcp                   Launch Model Context Protocol (MCP) server over stdio
@@ -177,18 +224,40 @@ func (a *App) runTask(args []string) error {
 	switch sub {
 	case "create":
 		fs := flag.NewFlagSet("task create", flag.ContinueOnError)
-		id := fs.String("id", "", "Task ID (e.g. A, A.1)")
+		id := fs.String("id", "", "Stable task ID (any valid name; numbering has no inheritance meaning)")
 		parent := fs.String("parent", "", "Parent task ID (optional)")
+		refs := fs.String("approach", "", "Comma-separated source task IDs for explicitly reused approaches")
+		newWork := fs.Bool("new", false, "Explicitly create independent work despite matching existing work")
 		title := fs.String("title", "", "Task title")
 		goal := fs.String("goal", "", "Task goal")
 		constraints := fs.String("constraints", "", "Comma-separated list of constraints")
 		files := fs.String("files", "", "Comma-separated list of affected files")
+		var aliases repeatedStrings
+		fs.Var(&aliases, "alias", "Phrase referring to this work (repeatable)")
 
 		if err := fs.Parse(rest); err != nil {
 			return err
 		}
 		if *id == "" || *title == "" {
 			return fmt.Errorf("both --id and --title are required")
+		}
+		if a.db != nil {
+			if _, err := a.db.GetTaskData(*id); err == nil {
+				return fmt.Errorf("task %s already exists; resolve or resume it instead of overwriting it", *id)
+			} else if !errors.Is(err, sql.ErrNoRows) {
+				return err
+			}
+			if !*newWork && *parent == "" && *refs == "" {
+				match, err := identity.Resolve(a.db, identity.Request{Text: *title + " " + *goal})
+				if err != nil {
+					return err
+				}
+				for _, candidate := range match.Candidates {
+					if candidate.Strong {
+						return fmt.Errorf("description matches existing work %s (%s); run knodexa resolve first, then continue with --parent or --approach, or explicitly request independent work with --new", candidate.TaskID, candidate.Title)
+					}
+				}
+			}
 		}
 
 		var cList []string
@@ -209,8 +278,12 @@ func (a *App) runTask(args []string) error {
 			}
 		}
 
+		if err := identity.ValidateAliases(aliases); err != nil {
+			return err
+		}
 		now := time.Now().UTC()
 		task := &model.TaskData{
+			Aliases:      aliases,
 			ID:           *id,
 			ParentID:     *parent,
 			Title:        *title,
@@ -220,6 +293,20 @@ func (a *App) runTask(args []string) error {
 			UpdatedAt:    now,
 			Constraints:  cList,
 			TouchesFiles: fList,
+		}
+
+		if *refs != "" {
+			for _, source := range strings.Split(*refs, ",") {
+				source = strings.TrimSpace(source)
+				if source != "" {
+					task.ApproachRefs = append(task.ApproachRefs, source)
+				}
+			}
+		}
+		if a.db != nil {
+			if err := approach.ValidateTask(a.db, task); err != nil {
+				return err
+			}
 		}
 
 		if err := a.store.SaveTask(task); err != nil {
@@ -239,7 +326,9 @@ func (a *App) runTask(args []string) error {
 		})
 
 		if a.indexer != nil {
-			_ = a.indexer.Sync()
+			if err := a.indexer.Sync(); err != nil {
+				return err
+			}
 		}
 
 		fmt.Printf("Task %s created successfully.\n", *id)
@@ -303,12 +392,26 @@ func (a *App) runTask(args []string) error {
 	}
 }
 
-func (a *App) runContext(args []string) error {
-	fs := flag.NewFlagSet("context", flag.ContinueOnError)
+func (a *App) runContext(args []string) error { return a.runRehydrate(args, false) }
+func (a *App) runRehydrate(args []string, resume bool) error {
+	command := "context"
+	if resume {
+		command = "resume"
+	}
+	fs := flag.NewFlagSet(command, flag.ContinueOnError)
+	full := fs.Bool("full", false, "Include full rationale and lesson descriptions")
+	var accept *bool
+	var reopen *bool
+	previous := ""
+	if resume {
+		fs.StringVar(&previous, "from-task", "", "Previous focus; report its conventions to set aside")
+		accept = fs.Bool("accept-baseline", false, "Explicitly replace the stored baseline with current HEAD")
+		reopen = fs.Bool("reopen", false, "Explicitly reactivate completed work; otherwise restore it without modifying its task")
+	}
 	jsonOutput := fs.Bool("json", false, "Output structured JSON instead of formatted text")
 	budget := fs.Int("budget", 1500, "Maximum token budget")
 
-	if err := fs.Parse(args); err != nil {
+	if err := parseInterspersed(fs, args); err != nil {
 		return err
 	}
 
@@ -316,19 +419,31 @@ func (a *App) runContext(args []string) error {
 	if len(remaining) == 0 {
 		return fmt.Errorf("task ID is required: knodexa context <task_id>")
 	}
+	if len(remaining) != 1 {
+		return fmt.Errorf("%s requires exactly one task ID", command)
+	}
+	if *budget <= 0 {
+		return fmt.Errorf("token budget must be positive")
+	}
 	taskID := remaining[0]
 
 	if a.context == nil {
 		return fmt.Errorf("knodexa is not initialized in this directory; run 'knodexa init' first")
 	}
 
-	pkg, err := a.context.Build(taskID, *budget)
+	var pkg *context.Package
+	var err error
+	if resume {
+		pkg, err = continuity.NewService(a.store, a.db, a.indexer, a.context, a.git).Resume(taskID, *budget, continuity.ResumeOptions{Full: *full, AcceptBaseline: *accept, Reopen: *reopen, PreviousTaskID: previous})
+	} else {
+		pkg, err = a.context.BuildWithOptions(taskID, *budget, context.BuildOptions{Compact: !*full})
+	}
 	if err != nil {
 		return fmt.Errorf("failed to rehydrate context: %w", err)
 	}
 
 	if *jsonOutput {
-		out, err := json.MarshalIndent(pkg, "", "  ")
+		out, err := json.Marshal(pkg)
 		if err != nil {
 			return err
 		}
@@ -336,8 +451,47 @@ func (a *App) runContext(args []string) error {
 		return nil
 	}
 
+	if pkg.BudgetExceeded {
+		fmt.Fprintf(os.Stderr, "Warning: essential context exceeds token budget (%d estimated human-text tokens, budget %d)\n", pkg.EstimatedTokens, pkg.TokenBudget)
+	}
 	fmt.Println(pkg.FormatHuman())
 	return nil
+}
+
+// parseInterspersed accepts flags on either side of positional arguments.
+// FlagSet.Parse otherwise silently stops at the first positional argument.
+func parseInterspersed(fs *flag.FlagSet, args []string) error {
+	var options, positional []string
+	for i := 0; i < len(args); i++ {
+		arg := args[i]
+		if arg == "--" {
+			positional = append(positional, args[i+1:]...)
+			break
+		}
+		if !strings.HasPrefix(arg, "-") || arg == "-" {
+			positional = append(positional, arg)
+			continue
+		}
+		options = append(options, arg)
+		name := strings.TrimLeft(arg, "-")
+		if strings.Contains(name, "=") {
+			continue
+		}
+		f := fs.Lookup(name)
+		if f == nil {
+			return fmt.Errorf("unknown flag: %s", arg)
+		}
+		if b, ok := f.Value.(interface{ IsBoolFlag() bool }); ok && b.IsBoolFlag() {
+			continue
+		}
+		if i+1 >= len(args) {
+			return fmt.Errorf("flag needs an argument: %s", arg)
+		}
+		i++
+		options = append(options, args[i])
+	}
+	options = append(options, "--")
+	return fs.Parse(append(options, positional...))
 }
 
 func (a *App) runTree(args []string) error {
@@ -648,5 +802,40 @@ func (a *App) runDoctor(args []string) error {
 		fmt.Println("  [FAIL] SQLite index not connected.")
 	}
 
+	return nil
+}
+
+func (a *App) runShow(args []string) error {
+	fs := flag.NewFlagSet("show", flag.ContinueOnError)
+	jsonOutput := fs.Bool("json", false, "Output full structured document")
+	if err := parseInterspersed(fs, args); err != nil {
+		return err
+	}
+	if fs.NArg() != 1 {
+		return fmt.Errorf("show requires exactly one decision or lesson ID")
+	}
+	if a.context == nil {
+		return fmt.Errorf("knodexa is not initialized; run 'knodexa init' first")
+	}
+	detail, err := a.context.GetDetail(fs.Arg(0))
+	if err != nil {
+		return err
+	}
+	if *jsonOutput {
+		data, err := json.Marshal(detail)
+		if err != nil {
+			return err
+		}
+		fmt.Println(string(data))
+		return nil
+	}
+	switch doc := detail.(type) {
+	case *model.DecisionDocument:
+		fmt.Printf("# %s (%s)\n%s\n", doc.Frontmatter.Title, doc.Frontmatter.Status, doc.Body)
+		fmt.Printf("evidence: %s\n", strings.Join(doc.Frontmatter.EvidenceIDs, ", "))
+	case *model.LessonDocument:
+		fmt.Printf("# %s (%s)\nWhen: %s\n%s\n", doc.Frontmatter.Title, doc.Frontmatter.Status, doc.Frontmatter.Applicability, doc.Body)
+		fmt.Printf("evidence: %s\n", strings.Join(doc.Frontmatter.EvidenceIDs, ", "))
+	}
 	return nil
 }

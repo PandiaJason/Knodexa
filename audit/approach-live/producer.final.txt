@@ -1,0 +1,5 @@
+Implemented `handle(value, service)` to call `service.transform(value)` exactly once and return its result unchanged.
+
+Added tests for unchanged inputs, string and nonstring results, and exception identity. All 3 tests passed.
+
+Only `reference.py` and `test_reference.py` were added.

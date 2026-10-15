@@ -1,0 +1,5 @@
+Implemented [handlers/reference.go](handlers/reference.go) with exact-once delegation, unchanged result/error, and the specified observer ordering.
+
+Added tests for identity, ordering, nil observers, and panic propagation. `go test ./...` passes.
+
+Updated work-17 memory with the approach, rules, references, baseline commit, and alias “webhook handler.” No new task was created.

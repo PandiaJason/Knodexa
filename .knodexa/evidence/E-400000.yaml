@@ -1,0 +1,10 @@
+id: E-400000
+title: Standalone race suite and fresh CLI smoke test
+node_id: L-233000
+evidence_type: TEST_RUN
+created_at: 2026-10-13T12:59:42.602401Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: go vet and all race-enabled package tests passed; fresh binary returned valid JSON with trailing flags, rejected an unknown flag, and passed temporary-project diagnostics.
+commit_sha: 133bf2310370a679e592291a82e5087ed87d7747
+verified_by: agent

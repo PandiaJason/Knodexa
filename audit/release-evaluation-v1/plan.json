@@ -1,0 +1,19 @@
+{
+  "baseline": "Codex with scoped native memory files and project instructions",
+  "cases": [
+    "same-conversation-return",
+    "fresh-context-return"
+  ],
+  "knodexa": "current Go binary with verified recording and compact restoration",
+  "limits": "one pair per scenario, no forced compaction, not an all-tool comparison",
+  "model": "gpt-6.1-sol",
+  "orders": [
+    "native first",
+    "knodexa first"
+  ],
+  "pairs": 2,
+  "phases": "establish correct handler, unrelated image normalization, return to handler work",
+  "primary": "independent return behavior, reference preservation and completed source memory preservation",
+  "reasoning_effort": "low",
+  "stop_rule": "all declared cases, no selective reruns; incomplete responses reported separately; absent artifacts unscored"
+}

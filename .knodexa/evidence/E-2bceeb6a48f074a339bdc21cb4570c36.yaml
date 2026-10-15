@@ -1,0 +1,9 @@
+id: E-2bceeb6a48f074a339bdc21cb4570c36
+title: Hard-case harness and retained-artifact validation
+node_id: D-fd2e42318b9de93514215e8f37a67a23
+evidence_type: TEST_RUN
+created_at: 2026-10-14T16:52:31.101713Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: Go vet, race tests, CLI smoke passed. Independent hard graders coexist with visible tests, accept correct delegation and cross-task compatibility, reject broken delegation and missing convention. Source-fact preservation accepts append-only extensions but rejects status/contract changes. Four-case live collection completed; original helper collisions repaired without model reruns.
+verified_by: agent

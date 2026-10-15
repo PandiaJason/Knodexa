@@ -1,0 +1,5 @@
+Repaired `validate_claims` using A.1’s contract: strict types and ranges, nonblank subject, and `now < exp + 7`. Applied F-001’s rejection of timestamp coercion and L-001’s explicit boolean exclusion.
+
+Baseline drifted: saved `ac15304…`, current HEAD `f65158e…`.
+
+Restored regression coverage; all 11 tests passed with `python3 -m unittest -v`. Memory records and `normalize.py` remained unchanged.

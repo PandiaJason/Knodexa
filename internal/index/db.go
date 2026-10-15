@@ -3,6 +3,7 @@ package index
 import (
 	"database/sql"
 	"fmt"
+	"knodexa/internal/storage"
 	"os"
 	"path/filepath"
 	"sync"
@@ -28,7 +29,7 @@ func Open(dbPath string) (*DB, error) {
 
 	dsn := dbPath
 	if dbPath != ":memory:" {
-		dsn = fmt.Sprintf("%s?_pragma=journal_mode(WAL)&_pragma=busy_timeout(5000)&_pragma=foreign_keys(1)", dbPath)
+		dsn = fmt.Sprintf("%s?_pragma=busy_timeout(5000)&_pragma=journal_mode(WAL)&_pragma=foreign_keys(1)", dbPath)
 	}
 
 	sqlDB, err := sql.Open("sqlite", dsn)
@@ -44,12 +45,22 @@ func Open(dbPath string) (*DB, error) {
 		sqlDB:  sqlDB,
 	}
 
-	if err := db.initSchema(); err != nil {
+	if err := db.withWriteLock(db.initSchema); err != nil {
 		sqlDB.Close()
 		return nil, fmt.Errorf("failed to initialize schema: %w", err)
 	}
 
 	return db, nil
+}
+
+// Serialize cache writes across processes before inventory or schema work.
+// This also prevents overlapping deferred transactions from upgrading stale
+// read snapshots into conflicting SQLite writers.
+func (d *DB) withWriteLock(operation func() error) error {
+	if d.dbPath == ":memory:" {
+		return operation()
+	}
+	return storage.WithProcessLock(d.dbPath+".lock", operation)
 }
 
 // Close closes the underlying SQLite database.

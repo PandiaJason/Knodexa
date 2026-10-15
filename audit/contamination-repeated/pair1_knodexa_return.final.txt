@@ -1,0 +1,5 @@
+Added `handlers/delivery.py` following the handler agreement: raw delegation exactly once, unchanged results and exceptions, and ordered observer calls, including falsey observers.
+
+Tests verify `hello` → `HELLO` through the uppercase service and all contract behaviors. All 31 tests passed.
+
+Reference and established memory remain unchanged; required resume updated delivery task metadata.

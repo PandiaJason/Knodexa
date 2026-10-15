@@ -1,0 +1,9 @@
+id: E-811390f5d8b8efe32e80044a52ff15f1
+title: Three fresh live continuity comparison pairs
+node_id: L-843debf77167bdcf383d5a1b5458fb15
+evidence_type: TEST_RUN
+created_at: 2026-10-14T10:19:25.517475Z
+command: GOCACHE=/private/tmp/knodexa-go-cache KNODEXA_LIVE_REPEATED=1 go test ./internal/experiment -run '^TestLiveRepeatedContinuityComparison$' -count=1 -timeout=40m -v
+exit_code: 0
+output_summary: 'Live suite passed in 860.65 seconds. All three quality comparisons tied; all 18 model phases completed. Mean workflow: native 143.26s, Knodexa 133.91s. Command/file actions: native32, Knodexa71. Input tokens including cache: native1296812, Knodexa1985355. Raw traces and independent checks in audit/continuity-repeated-v2. Timing difference is not reliable evidence of general advantage.'
+verified_by: agent

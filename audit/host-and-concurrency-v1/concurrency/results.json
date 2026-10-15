@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "baseline_and_agreement_preserved": true,
+      "case": "same-task-snapshot",
+      "errors": [],
+      "retained_updates": 1,
+      "safe": false,
+      "successful_workers": 8,
+      "workers": 8
+    },
+    {
+      "baseline_and_agreement_preserved": true,
+      "case": "different-task-snapshots",
+      "errors": [],
+      "retained_updates": 8,
+      "safe": true,
+      "successful_workers": 8,
+      "workers": 8
+    },
+    {
+      "baseline_and_agreement_preserved": true,
+      "case": "public-alias-commands",
+      "errors": [
+        "worker 3: exit status 1",
+        "worker 5: exit status 1",
+        "worker 6: exit status 1",
+        "worker 7: exit status 1"
+      ],
+      "retained_updates": 3,
+      "safe": false,
+      "successful_workers": 4,
+      "workers": 8
+    }
+  ],
+  "scope": "Eight independent OS processes; same-task synchronized snapshots, disjoint writes and public CLI alias updates"
+}

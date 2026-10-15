@@ -1,0 +1,12 @@
+{
+  "cases": [
+    "agents-md",
+    "skill-discovery-path",
+    "skill-distribution-path"
+  ],
+  "model": "gpt-6.1-sol",
+  "prompt": "Add ForwardWebhook(value any, service Transformer) (any, error) in handlers/webhook.go for production webhook delivery. Add relevant tests and verify the implementation.",
+  "reasoning_effort": "low",
+  "scope": "Fresh ephemeral Codex CLI, AGENTS.md versus implicit skill discovery versus distribution-path negative control. No direct Knodexa or skill invocation in prompt; not a quality comparison or all-host test.",
+  "timeout_seconds": 180
+}

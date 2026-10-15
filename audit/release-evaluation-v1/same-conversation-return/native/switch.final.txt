@@ -1,0 +1,5 @@
+Implemented `images.NormalizeLabel`: trims and collapses whitespace, then uppercases strings; nonstrings return `""`.
+
+Added whitespace and malformed-value tests. `go test ./...` passes.
+
+Recorded image-42’s approach and references. Checksums confirm the handler files and work-17 memory remain unchanged.

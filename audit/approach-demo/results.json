@@ -1,0 +1,8 @@
+{
+  "functional_test_passed_with_drift": true,
+  "drift_detected": true,
+  "approach_restored_without_task_name_inference": true,
+  "unrelated_approach_excluded": true,
+  "structural_checks_pass_after_repair": true,
+  "semantic_review_still_required": true
+}

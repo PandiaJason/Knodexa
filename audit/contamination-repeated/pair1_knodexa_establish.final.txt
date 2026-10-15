@@ -1,0 +1,9 @@
+Verified `handlers/reference.py` satisfies the engineering agreement:
+
+- Delegates raw values exactly once.
+- Calls `started` before transformation and `finished` only on success.
+- Returns the exact result object.
+- Propagates the original exception without retries.
+- Treats falsey observers as active; `None` disables observation.
+
+Added focused standard-library tests; all passed. Handler source is unchanged, and the existing agreement remains preserved for future handler work. Required resume updated only task metadata.

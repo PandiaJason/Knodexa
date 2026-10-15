@@ -1,0 +1,3 @@
+Implemented `handlers/reference.go` with the requested interfaces and handler. It preserves raw input, result and error identity, delegates once, and follows observer ordering.
+
+Added tests; `go test ./...` passes. Updated work-17 memory with the approach, rules, references, scopes, baseline commit, and alias “webhook handler.”

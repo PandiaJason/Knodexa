@@ -152,14 +152,15 @@ func TestContinuityExperiment(t *testing.T) {
 
 	// Add evidence E-010 and verify L-017
 	evE10 := &model.EvidenceData{
-		ID:           "E-010",
-		Title:        "Buffer Race Test Suite Pass",
-		NodeID:       "L-017",
-		EvidenceType: model.EvidenceTestRun,
-		CreatedAt:    now,
-		Command:      "go test -race ./internal/buffer/...",
-		ExitCode:     0,
-		VerifiedBy:   "agent",
+		ID:            "E-010",
+		Title:         "Buffer Race Test Suite Pass",
+		NodeID:        "L-017",
+		EvidenceType:  model.EvidenceTestRun,
+		CreatedAt:     now,
+		Command:       "go test -race ./internal/buffer/...",
+		ExitCode:      0,
+		OutputSummary: "Synthetic race-test success fixture",
+		VerifiedBy:    "agent",
 	}
 	if err := verifier.AddEvidence(evE10, "agent"); err != nil {
 		t.Fatalf("failed to add evidence: %v", err)

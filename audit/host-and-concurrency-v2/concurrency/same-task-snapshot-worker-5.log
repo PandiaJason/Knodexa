@@ -1,0 +1,4 @@
+--- FAIL: TestSharedMemoryProcessHelper (0.05s)
+    shared_memory_audit_test.go:196: STALE_WRITE_REJECTED
+    shared_memory_audit_test.go:198: task changed since it was read; reload and retry: shared
+FAIL

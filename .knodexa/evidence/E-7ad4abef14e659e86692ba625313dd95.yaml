@@ -1,0 +1,9 @@
+id: E-7ad4abef14e659e86692ba625313dd95
+title: Eight-process audit demonstrates lost updates and SQLite contention
+node_id: L-b287ee04989db81f8983752a567e146e
+evidence_type: TEST_RUN
+created_at: 2026-10-14T18:12:16.770627Z
+command: GOCACHE=/private/tmp/knodexa-go-cache KNODEXA_SHARED_MEMORY_AUDIT=1 go test ./internal/experiment -run '^TestSharedMemoryAudit$' -count=1 -v
+exit_code: 0
+output_summary: 'Audit collected unsafe results: same-task synchronized writes completed 8/8 but retained 1/8; distinct-task snapshots retained 8/8; public aliases completed 4/8 and retained 3/8 with four SQLITE_BUSY initialization failures. Harness success is not a safety pass. Host traces separately show three successful adoption trials, with manual skill discovery in the distribution-folder control. Report: audit/host-and-concurrency-v1/REPORT.md.'
+verified_by: agent

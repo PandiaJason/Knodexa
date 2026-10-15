@@ -41,7 +41,10 @@ func NewServer(rootDir string) (*Server, error) {
 	}
 
 	idx := index.NewIndexer(db, store)
-	_ = idx.Sync()
+	if err := idx.Sync(); err != nil {
+		db.Close()
+		return nil, fmt.Errorf("failed to sync index: %w", err)
+	}
 
 	gitInspector := git.NewInspector(absRoot)
 	verifier := verify.NewEngine(store, idx, db)

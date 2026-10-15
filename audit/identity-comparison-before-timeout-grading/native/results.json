@@ -1,0 +1,45 @@
+{
+  "arm": "native",
+  "background_memories_enabled": false,
+  "establish": {
+    "exit_code": 0,
+    "seconds": 63.588718208,
+    "thread_id": "01a13989-bb92-7080-aac9-fb9b600faecc",
+    "tool_items": 5,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 54400,
+        "input_tokens": 63514,
+        "output_tokens": 1909,
+        "reasoning_output_tokens": 13
+      }
+    ]
+  },
+  "establish_independent_checks_passed": true,
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "return": {
+    "exit_code": 124,
+    "seconds": 180.021195083,
+    "thread_id": "01a13989-bb92-7080-aac9-fb9b600faecc",
+    "tool_items": 3
+  },
+  "scope": "Same-conversation identity return; modular file memory, actual producer capture, no task ID or file path on return",
+  "status": "inconclusive",
+  "switch": {
+    "exit_code": 0,
+    "seconds": 44.552163916,
+    "thread_id": "01a13989-bb92-7080-aac9-fb9b600faecc",
+    "tool_items": 4,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 105472,
+        "input_tokens": 121394,
+        "output_tokens": 3113,
+        "reasoning_output_tokens": 13
+      }
+    ]
+  }
+}

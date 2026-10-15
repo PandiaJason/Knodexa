@@ -1,0 +1,9 @@
+id: E-89b235004c9703caa517d0f3d79026d2
+title: Task concurrency audit and lock recovery validation
+node_id: L-3ae336c6c8dba46a230f49d1eef6b077
+evidence_type: TEST_RUN
+created_at: 2026-10-14T18:27:38.683041Z
+command: GOCACHE=/private/tmp/knodexa-go-cache KNODEXA_SHARED_MEMORY_AUDIT=1 KNODEXA_SHARED_MEMORY_AUDIT_OUT=audit/host-and-concurrency-v2/concurrency go test ./internal/experiment -run '^TestSharedMemoryAudit$' -count=1 -v
+exit_code: 0
+output_summary: Aliases and atomic updates retain 8/8; old full snapshots produce one successful save and seven explicit conflicts; distinct tasks retain 8/8. Completed state/baseline/agreement preserved. Full checks and crash recovery test passed. Prior audit is preserved. Report audit/host-and-concurrency-v2/REPORT.md.
+verified_by: agent

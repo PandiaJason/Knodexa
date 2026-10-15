@@ -1,0 +1,13 @@
+{
+  "arms": [
+    "native",
+    "knodexa"
+  ],
+  "background_memories_enabled": false,
+  "model": "gpt-6.1-sol",
+  "order": "knodexa first",
+  "pairs": 1,
+  "primary": "independent return behavior passes and source reference/memory preserved",
+  "reasoning_effort": "low",
+  "return_supplies_task_id_or_path": false
+}

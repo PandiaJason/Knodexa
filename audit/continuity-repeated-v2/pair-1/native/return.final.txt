@@ -1,0 +1,5 @@
+Added `handlers.HandleWebhook` in `handlers/webhook.go`, reusing the established forwarding behavior.
+
+Tests cover raw input, one service call, result/error identity, observer ordering, and panic propagation. `go test ./...` passes.
+
+Completed handler references and both work memories remain unchanged.

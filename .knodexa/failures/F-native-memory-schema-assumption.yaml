@@ -1,0 +1,5 @@
+id: F-native-memory-schema-assumption
+task_id: "1"
+summary: A comparison harness rejected valid native file memory as though it needed Knodexa's typed schema.
+causal_details: The native producer passed independent Go behavior checks but encoded its approach as prose. Decoding it into model.TaskData failed before the switch/return. Corrected the native harness to preserve free-form JSON notes, retained the interrupted attempt under audit/identity-comparison/native-setup-error, and completed only the native arm. This was not a model-quality failure and cannot support a superiority claim.
+attempted_at: 2026-10-14T08:32:46Z

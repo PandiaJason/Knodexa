@@ -1,0 +1,119 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+type transformerFunc func(any) (any, error)
+
+func (f transformerFunc) Transform(value any) (any, error) { return f(value) }
+
+type observerFuncs struct {
+	started  func(any)
+	finished func(any)
+}
+
+func (o observerFuncs) Started(value any)   { o.started(value) }
+func (o observerFuncs) Finished(result any) { o.finished(result) }
+
+func TestHandle(t *testing.T) {
+	for _, failure := range []bool{false, true} {
+		for _, observed := range []bool{false, true} {
+			t.Run(fmtCase(failure, observed), func(t *testing.T) {
+				input := &struct{ Value string }{" raw Input "}
+				result := &struct{ Value string }{" original Result "}
+				var originalErr error
+				if failure {
+					originalErr = errors.New("original error")
+				}
+				var calls []string
+				service := transformerFunc(func(value any) (any, error) {
+					calls = append(calls, "transform")
+					if value != input {
+						t.Fatal("input identity changed")
+					}
+					return result, originalErr
+				})
+				var observer Observer
+				if observed {
+					observer = observerFuncs{
+						started: func(value any) {
+							calls = append(calls, "started")
+							if value != input {
+								t.Fatal("started input identity changed")
+							}
+						},
+						finished: func(value any) {
+							calls = append(calls, "finished")
+							if value != result {
+								t.Fatal("finished result identity changed")
+							}
+						},
+					}
+				}
+				got, err := Handle(input, service, observer)
+				if got != result || err != originalErr {
+					t.Fatal("result or error identity changed")
+				}
+				want := []string{"transform"}
+				if observed {
+					want = append([]string{"started"}, want...)
+				}
+				if observed && !failure {
+					want = append(want, "finished")
+				}
+				if !reflect.DeepEqual(calls, want) {
+					t.Fatalf("calls = %v, want %v", calls, want)
+				}
+			})
+		}
+	}
+}
+
+func fmtCase(failure, observed bool) string {
+	if failure && observed {
+		return "error_with_observer"
+	}
+	if failure {
+		return "error_without_observer"
+	}
+	if observed {
+		return "success_with_observer"
+	}
+	return "success_without_observer"
+}
+
+func TestHandleRawValues(t *testing.T) {
+	for _, value := range []any{nil, " mixed Case ", 42, []byte(" raw ")} {
+		calls := 0
+		got, err := Handle(value, transformerFunc(func(input any) (any, error) {
+			calls++
+			if !reflect.DeepEqual(input, value) {
+				t.Fatal("raw input changed")
+			}
+			return input, nil
+		}), nil)
+		if calls != 1 || err != nil || !reflect.DeepEqual(got, value) {
+			t.Fatalf("unexpected forwarding: %v, %v, calls %d", got, err, calls)
+		}
+	}
+}
+
+func TestHandlePropagatesPanic(t *testing.T) {
+	marker := &struct{}{}
+	calls := 0
+	defer func() {
+		if got := recover(); got != marker {
+			t.Fatalf("panic = %v, want original marker", got)
+		}
+		if calls != 1 {
+			t.Fatalf("transform called %d times", calls)
+		}
+	}()
+	Handle(nil, transformerFunc(func(any) (any, error) {
+		calls++
+		panic(marker)
+	}), observerFuncs{started: func(any) {}, finished: func(any) { t.Fatal("finished after panic") }})
+}

@@ -1,0 +1,9 @@
+id: E-4e0b9a74e162f397dd3c360f9783c60c
+title: Incremental benchmarks and correctness checks
+node_id: D-d10286106a58bf0a9a02b17ab06df706
+evidence_type: BENCHMARK
+created_at: 2026-10-13T14:02:12.174953Z
+command: go test ./internal/index -run ^$ -bench ^BenchmarkSync -benchtime=5x -count=3; ./scripts/check.sh
+exit_code: 0
+output_summary: Three-run median unchanged sync 130.38ms -> 36.82ms; one-task edit 134.35ms -> 46.53ms. Static analysis, race suite, and all original audit probes pass. Evidence in audit/performance.
+verified_by: agent

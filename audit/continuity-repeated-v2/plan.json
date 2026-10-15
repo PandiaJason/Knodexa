@@ -1,0 +1,13 @@
+{
+  "baseline": "Codex CLI with scoped native file memory",
+  "knodexa": "current Go binary, prepare and source capture",
+  "orders": [
+    "native first",
+    "knodexa first",
+    "native first"
+  ],
+  "pairs": 3,
+  "primary": "independent behavior, source and completed-memory preservation",
+  "scope": "same-conversation unrelated work then return; no forced compaction",
+  "timeouts": "grade returned artifacts; report completion separately"
+}

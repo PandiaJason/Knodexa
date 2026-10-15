@@ -1,6 +1,11 @@
 package cli
 
 import (
+	"encoding/json"
+	"io"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -74,5 +79,93 @@ func TestCLIWorkflows(t *testing.T) {
 	// 11. doctor --rebuild
 	if err := app.Run([]string{"doctor", "--rebuild"}); err != nil {
 		t.Fatalf("doctor --rebuild failed: %v", err)
+	}
+}
+
+func TestContextFlagOutput(t *testing.T) {
+	app, err := NewApp(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := app.Run([]string{"init", "--name=Flags"}); err != nil {
+		t.Fatal(err)
+	}
+	app, err = NewApp(app.rootDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer app.db.Close()
+	if err := app.Run([]string{"task", "create", "--id=T1", "--title=Flags", "--goal=Check output"}); err != nil {
+		t.Fatal(err)
+	}
+	for _, args := range [][]string{
+		{"context", "T1", "--json"},
+		{"context", "--json", "T1"},
+		{"context", "T1", "--budget", "500", "--json=true"},
+		{"context", "--budget=500", "T1", "--json"},
+	} {
+		t.Run(strings.Join(args, " "), func(t *testing.T) {
+			old := os.Stdout
+			r, w, err := os.Pipe()
+			if err != nil {
+				t.Fatal(err)
+			}
+			os.Stdout = w
+			runErr := app.Run(args)
+			os.Stdout = old
+			w.Close()
+			output, readErr := io.ReadAll(r)
+			r.Close()
+			if runErr != nil {
+				t.Fatal(runErr)
+			}
+			if readErr != nil {
+				t.Fatal(readErr)
+			}
+			var result struct {
+				Task struct {
+					ID string `json:"id"`
+				} `json:"task"`
+			}
+			if err := json.Unmarshal(output, &result); err != nil {
+				t.Fatalf("invalid JSON: %v; output: %s", err, output)
+			}
+			if result.Task.ID != "T1" {
+				t.Fatalf("wrong task: %s", result.Task.ID)
+			}
+		})
+	}
+	for _, args := range [][]string{
+		{"context", "T1", "--unknown"},
+		{"context", "T1", "extra"},
+		{"context", "T1", "--budget"},
+		{"context", "T1", "--budget=0"},
+		{"context", "T1", "--budget=-1"},
+		{"context", "T1", "--json=invalid"},
+	} {
+		if err := app.Run(args); err == nil {
+			t.Errorf("expected rejection for %v", args)
+		}
+	}
+}
+
+func TestNewAppReportsIndexOpenFailure(t *testing.T) {
+	app, err := NewApp(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := app.Run([]string{"init", "--name=Broken index"}); err != nil {
+		t.Fatal(err)
+	}
+	cache := filepath.Join(app.store.KnodexaDir(), "cache.db")
+	if err := os.Remove(cache); err != nil && !os.IsNotExist(err) {
+		t.Fatal(err)
+	}
+	if err := os.Mkdir(cache, 0755); err != nil {
+		t.Fatal(err)
+	}
+	_, err = NewApp(app.rootDir)
+	if err == nil || !strings.Contains(err.Error(), "open knowledge index") {
+		t.Fatalf("expected actionable index error, got %v", err)
 	}
 }

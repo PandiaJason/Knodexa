@@ -1,0 +1,19 @@
+REUSABLE LESSONS:
+  * L-0066c278acbd42fe88080a54e0ad5584 (VERIFIED) [Source: 1]: Scope authority and evaluate contamination in shared conversations
+      Applicability: When an agent returns to a kind of work after conflicting unrelated work, use scoped agreements and a context boundary. Evaluate in the same conversation; fresh sessions measure retrieval only.
+  * L-233000 (VERIFIED) [Source: 1]: Validate CLI output with flags after task IDs
+      Applicability: When adding CLI flags to commands with positional task IDs or testing machine-readable output.
+  * L-33e4d0aef7647df1c53aff78b8ad99c0 (VERIFIED) [Source: 1]: Measure live outcomes and total usage before claiming memory benefits
+      Applicability: When evaluating engineering memory against an agent harness or reporting token and continuity improvements.
+  * L-77e038e4c667c2913364e4a63fabb807 (VERIFIED) [Source: 1]: Bind consistency checks to new work, not the source reference
+      Applicability: When restoring an established implementation approach after context switches or reusing it for differently named work.
+  * L-91bf8457788940c1a98fb95648494544 (PROPOSED) [Source: 1]: Compare approach memory against competent file memory
+      Applicability: When evaluating task-switch design consistency, use identical agreements and reference code, independent behavioral and AST checks, and repeated trials before claiming superiority.
+  * L-caf738f78968125b3e6c9e905909f04b (VERIFIED) [Source: 1]: Separate handoff improvements from total workflow cost
+      Applicability: When measuring continuity optimizations or claiming memory-tool speed/token advantages.
+  * L-f5a526137d1a4c6c8352b63ce5ed35f8 (PROPOSED) [Source: 1]: Do not treat retrieval or execution timeouts as evidence of quality superiority
+      Applicability: When claiming context-contamination improvements, compare preserved implementation behavior against competent scoped file memory. Keep timeouts unscored, preserve all planned trials, and separate workflow cost from quality.
+  * L-live-request-identity (VERIFIED) [Source: 1]: Capture the user's work phrase before switching focus
+      Applicability: When testing work identity continuity, have the producer record aliases and reference code, switch work in the same conversation, and return without task IDs or file paths. Observe actual resolver use and independently check original behavior and state preservation.
+  * L-work-identity-before-creation (VERIFIED) [Source: 1]: Resolve incoming requests before creating work
+      Applicability: When a new request may continue earlier work after unrelated tasks or a context change, retrieve identity before choosing an implementation approach or creating another task.

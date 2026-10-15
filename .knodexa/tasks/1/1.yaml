@@ -1,10 +1,608 @@
+approach_history:
+    - version: 1
+      summary: Implement continuity behavior in shared deterministic Go packages, with CLI and MCP adapters using those packages.
+      rules:
+        - Keep canonical Markdown/YAML authoritative and the SQLite cache rebuildable
+        - Preserve the deterministic zero-LLM core
+        - Choose approach inheritance through explicit parent and reuse relationships, never task-name prefixes
+        - Preserve established rules and acceptance criteria when compacting context
+        - Treat reference/literal checks as structural evidence; review semantic design consistency separately
+        - Prevent task-switch contamination through explicit relationships or unambiguous file scopes and return a target context boundary; never select authority by recency.
+        - Resolve incoming requests against recorded work identity before creating tasks; preserve existing completion state and distinguish continuation, independent work, and intentional replacement.
+        - Use Go for the application and required validation; retain one check wrapper and historical evidence rather than obsolete experiment scripts.
+      references:
+        - path: internal/approach/approach.go
+          sha256: 346e04392efa7f4f5634de1421a8297fa225d66056f9ceee3392e307b8c86895
+        - path: internal/continuity/resume.go
+          sha256: b16a06e084f18c2b2835715f8585d1e709ec2f2baddc55533d4289b7391d0db3
+        - path: internal/identity/resolve.go
+          sha256: 370d200dfd7ecce914d6ad8dfed2782324ef914fc8be985b5c9ac203fcb8f03a
+      recorded_at: 2026-10-14T08:00:34.289762Z
+    - version: 2
+      change_reason: Verified source identity, opt-in command integration, AST checks, agreement versions and unified prepare package implemented
+      summary: Implement continuity behavior in shared deterministic Go packages, with CLI and MCP adapters using those packages.
+      rules:
+        - Keep canonical Markdown/YAML authoritative and the SQLite cache rebuildable
+        - Preserve the deterministic zero-LLM core
+        - Choose approach inheritance through explicit parent and reuse relationships, never task-name prefixes
+        - Preserve established rules and acceptance criteria when compacting context
+        - Treat reference/literal checks as structural evidence; review semantic design consistency separately
+        - Prevent task-switch contamination through explicit relationships or unambiguous file scopes and return a target context boundary; never select authority by recency.
+        - Resolve incoming requests against recorded work identity before creating tasks; preserve existing completion state and distinguish continuation, independent work, and intentional replacement.
+        - Use Go for the application and required validation; retain one check wrapper and historical evidence rather than obsolete experiment scripts.
+      references:
+        - path: internal/approach/approach.go
+          sha256: 1105b4a5c5699e918cb1dcf11835a45f67de77a517787dfd555f5ee6f775caf1
+        - path: internal/continuity/resume.go
+          sha256: b16a06e084f18c2b2835715f8585d1e709ec2f2baddc55533d4289b7391d0db3
+        - path: internal/identity/resolve.go
+          sha256: 0bf432f7624a4aa8b6c7bcb9a25ee060885378604cf80e6ef8f6d65e07519808
+      recorded_at: 2026-10-14T09:53:10.18016Z
+    - version: 3
+      change_reason: Verified single-operation recording, compact handoffs, indexed source matching and advisory automatic focus tracking; retain comparative outcomes without assuming superiority.
+      summary: Implement continuity behavior in shared deterministic Go packages, with CLI and MCP adapters using those packages.
+      rules:
+        - Keep canonical Markdown/YAML authoritative and the SQLite cache rebuildable
+        - Preserve the deterministic zero-LLM core
+        - Choose approach inheritance through explicit parent and reuse relationships, never task-name prefixes
+        - Preserve established rules and acceptance criteria when compacting context
+        - Treat reference/literal checks as structural evidence; review semantic design consistency separately
+        - Prevent task-switch contamination through explicit relationships or unambiguous file scopes and return a target context boundary; never select authority by recency.
+        - Resolve incoming requests against recorded work identity before creating tasks; preserve existing completion state and distinguish continuation, independent work, and intentional replacement.
+        - Use Go for the application and required validation; retain one check wrapper and historical evidence rather than obsolete experiment scripts.
+      references:
+        - path: internal/approach/approach.go
+          sha256: 57a534e2947591501d413fbd2f573cb2de3e2be26421d279adb3c21437c50691
+        - path: internal/continuity/resume.go
+          sha256: 54feeaa4a1d32af9e3c1fadffffc04d3e6bc10f54eab9d46d15845f5ac0bc549
+        - path: internal/identity/resolve.go
+          sha256: f12904a2d68f1e9f5701e591ab3c6146ec763b0cd689519d8b2a11e0cc679253
+      recorded_at: 2026-10-14T15:54:19.650635Z
+    - version: 4
+      change_reason: Verified single-operation recording, compact handoffs, indexed source matching and advisory automatic focus tracking; retain comparative outcomes without assuming superiority.
+      summary: Implement continuity behavior in shared deterministic Go packages, with CLI and MCP adapters using those packages.
+      rules:
+        - Keep canonical Markdown/YAML authoritative and the SQLite cache rebuildable
+        - Preserve the deterministic zero-LLM core
+        - Choose approach inheritance through explicit parent and reuse relationships, never task-name prefixes
+        - Preserve established rules and acceptance criteria when compacting context
+        - Treat reference/literal checks as structural evidence; review semantic design consistency separately
+        - Prevent task-switch contamination through explicit relationships or unambiguous file scopes and return a target context boundary; never select authority by recency.
+        - Resolve incoming requests against recorded work identity before creating tasks; preserve existing completion state and distinguish continuation, independent work, and intentional replacement.
+        - Use Go for the application and required validation; retain one check wrapper and historical evidence rather than obsolete experiment scripts.
+      references:
+        - path: internal/approach/approach.go
+          sha256: 57a534e2947591501d413fbd2f573cb2de3e2be26421d279adb3c21437c50691
+        - path: internal/continuity/resume.go
+          sha256: 1634577f68815e4c488ad148220ff57cae555de4b86c74a212504a1a5ef3b608
+        - path: internal/identity/resolve.go
+          sha256: f12904a2d68f1e9f5701e591ab3c6146ec763b0cd689519d8b2a11e0cc679253
+      recorded_at: 2026-10-14T16:04:03.306717Z
+    - version: 5
+      change_reason: Verified child-local refactor reconciliation preserves inherited rules and completed parent baselines; retain comparative outcomes without assuming superiority.
+      summary: Implement continuity behavior in shared deterministic Go packages, with CLI and MCP adapters using those packages.
+      rules:
+        - Keep canonical Markdown/YAML authoritative and the SQLite cache rebuildable
+        - Preserve the deterministic zero-LLM core
+        - Choose approach inheritance through explicit parent and reuse relationships, never task-name prefixes
+        - Preserve established rules and acceptance criteria when compacting context
+        - Treat reference/literal checks as structural evidence; review semantic design consistency separately
+        - Prevent task-switch contamination through explicit relationships or unambiguous file scopes and return a target context boundary; never select authority by recency.
+        - Resolve incoming requests against recorded work identity before creating tasks; preserve existing completion state and distinguish continuation, independent work, and intentional replacement.
+        - Use Go for the application and required validation; retain one check wrapper and historical evidence rather than obsolete experiment scripts.
+      references:
+        - path: internal/approach/approach.go
+          sha256: 6e0a59401cd3773bf9cb02d1d5f557d0bbe42906d1e897df138d815144a5ebbc
+        - path: internal/continuity/resume.go
+          sha256: 1634577f68815e4c488ad148220ff57cae555de4b86c74a212504a1a5ef3b608
+        - path: internal/identity/resolve.go
+          sha256: f12904a2d68f1e9f5701e591ab3c6146ec763b0cd689519d8b2a11e0cc679253
+      recorded_at: 2026-10-14T17:12:47.520657Z
+    - version: 6
+      change_reason: Pin consistency checks to restored agreements, validate new scoped files and require explicit replacement reasons; retain comparative outcomes without assuming superiority.
+      summary: Implement continuity behavior in shared deterministic Go packages, with CLI and MCP adapters using those packages.
+      rules:
+        - Keep canonical Markdown/YAML authoritative and the SQLite cache rebuildable
+        - Preserve the deterministic zero-LLM core
+        - Choose approach inheritance through explicit parent and reuse relationships, never task-name prefixes
+        - Preserve established rules and acceptance criteria when compacting context
+        - Treat reference/literal checks as structural evidence; review semantic design consistency separately
+        - Prevent task-switch contamination through explicit relationships or unambiguous file scopes and return a target context boundary; never select authority by recency.
+        - Resolve incoming requests against recorded work identity before creating tasks; preserve existing completion state and distinguish continuation, independent work, and intentional replacement.
+        - Use Go for the application and required validation; retain one check wrapper and historical evidence rather than obsolete experiment scripts.
+      references:
+        - path: internal/approach/approach.go
+          sha256: 39bec4037609fdc6eecebf673471c1c772587eb5c58bb94327b4646b46e39c85
+        - path: internal/continuity/resume.go
+          sha256: 1634577f68815e4c488ad148220ff57cae555de4b86c74a212504a1a5ef3b608
+        - path: internal/identity/resolve.go
+          sha256: f12904a2d68f1e9f5701e591ab3c6146ec763b0cd689519d8b2a11e0cc679253
+      recorded_at: 2026-10-14T17:29:39.643337Z
+    - version: 7
+      change_reason: Add a shared portable agent protocol and safe instruction installer; host discovery remains explicit.
+      summary: Implement continuity behavior in shared deterministic Go packages, with CLI and MCP adapters using those packages.
+      rules:
+        - Keep canonical Markdown/YAML authoritative and the SQLite cache rebuildable
+        - Preserve the deterministic zero-LLM core
+        - Choose approach inheritance through explicit parent and reuse relationships, never task-name prefixes
+        - Preserve established rules and acceptance criteria when compacting context
+        - Treat reference/literal checks as structural evidence; review semantic design consistency separately
+        - Prevent task-switch contamination through explicit relationships or unambiguous file scopes and return a target context boundary; never select authority by recency.
+        - Resolve incoming requests against recorded work identity before creating tasks; preserve existing completion state and distinguish continuation, independent work, and intentional replacement.
+        - Use Go for the application and required validation; retain one check wrapper and historical evidence rather than obsolete experiment scripts.
+      references:
+        - path: internal/approach/approach.go
+          sha256: 39bec4037609fdc6eecebf673471c1c772587eb5c58bb94327b4646b46e39c85
+        - path: internal/continuity/resume.go
+          sha256: 1634577f68815e4c488ad148220ff57cae555de4b86c74a212504a1a5ef3b608
+        - path: internal/identity/resolve.go
+          sha256: f12904a2d68f1e9f5701e591ab3c6146ec763b0cd689519d8b2a11e0cc679253
+      recorded_at: 2026-10-14T17:36:59.556347Z
+    - version: 8
+      change_reason: Adapt researched memory mechanisms with relevance-first source recall, discoverable compaction and validated temporal retirement; maintain deterministic Go and honest evaluation limits.
+      summary: Implement continuity behavior in shared deterministic Go packages, with CLI and MCP adapters using those packages.
+      rules:
+        - Keep canonical Markdown/YAML authoritative and the SQLite cache rebuildable
+        - Preserve the deterministic zero-LLM core
+        - Choose approach inheritance through explicit parent and reuse relationships, never task-name prefixes
+        - Preserve established rules and acceptance criteria when compacting context
+        - Treat reference/literal checks as structural evidence; review semantic design consistency separately
+        - Prevent task-switch contamination through explicit relationships or unambiguous file scopes and return a target context boundary; never select authority by recency.
+        - Resolve incoming requests against recorded work identity before creating tasks; preserve existing completion state and distinguish continuation, independent work, and intentional replacement.
+        - Use Go for the application and required validation; retain one check wrapper and historical evidence rather than obsolete experiment scripts.
+      references:
+        - path: internal/approach/approach.go
+          sha256: 39bec4037609fdc6eecebf673471c1c772587eb5c58bb94327b4646b46e39c85
+        - path: internal/continuity/resume.go
+          sha256: 1634577f68815e4c488ad148220ff57cae555de4b86c74a212504a1a5ef3b608
+        - path: internal/identity/resolve.go
+          sha256: f12904a2d68f1e9f5701e591ab3c6146ec763b0cd689519d8b2a11e0cc679253
+      recorded_at: 2026-10-14T17:55:29.551195Z
+work_id: "1"
+code_anchors:
+    - path: internal/storage/fs.go
+      sha256: 121735e1c5b15ede9f8f2b077cf2b9dc0700e726e21e740f377dae4b92844500
+      symbols:
+        - NewStorage
+        - Storage
+        - Storage.AppendEvent
+        - Storage.AppendLink
+        - Storage.Init
+        - Storage.IsInitialized
+        - Storage.KnodexaDir
+        - Storage.ListDecisions
+        - Storage.ListEvidence
+        - Storage.ListFailures
+        - Storage.ListLessons
+        - Storage.ListObservations
+        - Storage.ListTasks
+        - Storage.ReadDecision
+        - Storage.ReadEvents
+        - Storage.ReadEvidence
+        - Storage.ReadLesson
+        - Storage.ReadLinks
+        - Storage.ReadProject
+        - Storage.ReadTask
+        - Storage.RootDir
+        - Storage.SaveDecision
+        - Storage.SaveEvidence
+        - Storage.SaveFailure
+        - Storage.SaveLesson
+        - Storage.SaveObservation
+        - Storage.SaveTask
+        - Storage.UpdateTask
+        - Storage.atomicWriteFile
+        - Storage.readTask
+        - Storage.saveTask
+      imports:
+        - bufio
+        - crypto/rand
+        - crypto/sha256
+        - encoding/hex
+        - encoding/json
+        - errors
+        - fmt
+        - gopkg.in/yaml.v3
+        - knodexa/internal/model
+        - os
+        - path/filepath
+        - sort
+        - strings
+        - sync
+        - time
+    - path: internal/storage/process_lock.go
+      sha256: 7cd757110a02b7d7c2cc2fca008c044398a72221cb0b219d92d6d98329e75fe1
+      symbols:
+        - WithProcessLock
+        - withProcessLock
+      imports:
+        - fmt
+        - os
+        - path/filepath
+        - time
+    - path: internal/identity/aliases.go
+      sha256: 736c2a5fb80c73312294007cd048265e921b3057b8ce90e52e2c4ac2f4e43348
+      symbols:
+        - AddAliases
+        - ValidateAliases
+      imports:
+        - fmt
+        - knodexa/internal/index
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - strings
+        - time
+    - path: internal/index/db.go
+      sha256: d660c74ef042a4249d0cc85bbc3350b729911359881e73b15d3f1f0985f63d3f
+      symbols:
+        - DB
+        - DB.Close
+        - DB.SqlDB
+        - DB.withWriteLock
+        - Open
+      imports:
+        - database/sql
+        - fmt
+        - knodexa/internal/storage
+        - modernc.org/sqlite
+        - os
+        - path/filepath
+        - sync
+    - path: internal/index/indexer.go
+      sha256: 535941292f9d23d830681e524ff9e0f12b001c3af4a936e05ff17cbd7de3c68e
+      symbols:
+        - ComputeHash
+        - Indexer
+        - Indexer.Rebuild
+        - Indexer.Sync
+        - Indexer.SyncWithStats
+        - Indexer.inventory
+        - Indexer.syncInternal
+        - NewIndexer
+        - SyncStats
+        - cachedRecord
+        - insertConstraint
+        - insertEdge
+        - insertEvidenceLink
+        - insertFile
+        - insertTag
+        - parseRecord
+        - parsedRecord
+        - sourceRecord
+        - upsertNode
+      imports:
+        - bufio
+        - bytes
+        - crypto/sha256
+        - database/sql
+        - encoding/hex
+        - encoding/json
+        - fmt
+        - gopkg.in/yaml.v3
+        - io/fs
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - os
+        - path/filepath
+        - sort
+        - strings
+        - time
+    - path: internal/index/records.go
+      sha256: 1bcda00ee2a3002b77c6e1dfce1836a350aab9e18c3aad9473904add70126837
+      symbols:
+        - DB.GetDecisionDocument
+        - DB.GetLessonDocument
+        - DB.GetTaskData
+        - DB.ListApproachTasks
+        - DB.ListTaskIdentities
+        - DB.recordData
+      imports:
+        - encoding/json
+        - fmt
+        - gopkg.in/yaml.v3
+        - knodexa/internal/model
+        - knodexa/internal/storage
+    - path: internal/index/queries.go
+      sha256: 154c05f6d5e8fb2030846d081394f1688df3d6a203c8e47a7462ece99feb48fc
+      symbols:
+        - DB.GetDecisionsForTask
+        - DB.GetEdgesFrom
+        - DB.GetEdgesTo
+        - DB.GetFailuresForTask
+        - DB.GetNode
+        - DB.GetNodesByType
+        - DB.GetRelatedLessons
+        - DB.GetRelatedLessonsForSources
+        - DB.GetUpstreamConstraints
+        - DB.SearchNodes
+        - DB.relatedTaskIDs
+        - rankedScanner
+        - rankedScanner.Scan
+        - scanEdges
+        - scanNode
+        - scannable
+      imports:
+        - database/sql
+        - fmt
+        - knodexa/internal/model
+        - strings
+        - time
+    - path: internal/context/builder.go
+      sha256: 93cb9b1ff8cc19616a072a6a141c647fb0bb07f087488546a2ade590b4133bf0
+      symbols:
+        - BuildOptions
+        - Builder
+        - Builder.Build
+        - Builder.BuildCompact
+        - Builder.BuildWithOptions
+        - Builder.applyTokenBudget
+        - NewBuilder
+        - appendUnique
+        - deferMemory
+      imports:
+        - fmt
+        - knodexa/internal/approach
+        - knodexa/internal/git
+        - knodexa/internal/index
+        - knodexa/internal/storage
+        - strings
+    - path: internal/context/types.go
+      sha256: 806ab4d0ccea73b05b370c67802091bd653ef7154f33d3bf70097c5296e9ffc1
+      symbols:
+        - BaselineInfo
+        - Boundary
+        - DecisionSummary
+        - DeferredMemory
+        - EstimateTokens
+        - FailureSummary
+        - LessonSummary
+        - Package
+        - Package.FormatHuman
+        - TaskSummary
+      imports:
+        - fmt
+        - knodexa/internal/approach
+        - strings
+    - path: internal/verify/verify.go
+      sha256: 431d5843a86bb1040665d128d6a32a7a087a941ee962b90e8cd19fcc5681be09
+      symbols:
+        - Engine
+        - Engine.AddEvidence
+        - Engine.RejectNode
+        - Engine.SupersedeNode
+        - Engine.VerifyNode
+        - NewEngine
+        - appendUnique
+      imports:
+        - fmt
+        - knodexa/internal/index
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - strings
+        - time
+    - path: internal/model/node.go
+      sha256: 6249fd67c216b177b2b05fc441ef8ce15dafc643b032cdc399bc0fa2ee26254d
+      symbols:
+        - ApproachCheck
+        - ApproachReference
+        - DecisionDocument
+        - DecisionFrontmatter
+        - EvidenceData
+        - FailureData
+        - LessonDocument
+        - LessonFrontmatter
+        - Node
+        - NodeType
+        - NodeType.IsValid
+        - ObservationData
+        - ProjectConfig
+        - ReferenceReconciliation
+        - TaskApproach
+        - TaskData
+      imports:
+        - time
+    - path: internal/cli/supersede.go
+      sha256: 60a56696657d640eae823247a98218a57bd4cf05538dace41f0270956bfd74ad
+      symbols:
+        - App.runSupersede
+      imports:
+        - flag
+        - fmt
+    - path: internal/mcp/tools.go
+      sha256: e1a378d8f3dbe4e42b3ed20839bacc3360e7423d90b30b1edab701cdc0868e69
+      symbols:
+        - ListTools
+        - NewToolHandler
+        - ToolHandler
+        - ToolHandler.HandleTool
+        - ToolHandler.handleAddEvidence
+        - ToolHandler.handleFindRelated
+        - ToolHandler.handleGetContext
+        - ToolHandler.handleProposeDecision
+        - ToolHandler.handleProposeLesson
+        - ToolHandler.handleRecordObservation
+        - ToolHandler.handleResumeTask
+        - ToolHandler.handleTaskStatus
+        - ToolHandler.handleVerify
+        - contextOptions
+        - newKnowledgeID
+        - referenceReconciliationSchema
+      imports:
+        - crypto/rand
+        - encoding/hex
+        - encoding/json
+        - fmt
+        - knodexa/internal/approach
+        - knodexa/internal/context
+        - knodexa/internal/continuity
+        - knodexa/internal/git
+        - knodexa/internal/identity
+        - knodexa/internal/index
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - knodexa/internal/verify
+        - math
+        - strings
+        - time
+    - path: internal/integration/instructions.go
+      sha256: 7962258c79db3699b249333bb820c5205c60b3b7617af75fb6050b4a8b7f6285
+      symbols:
+        - DefaultPath
+        - Install
+        - Render
+      imports:
+        - embed
+        - fmt
+        - knodexa/internal/storage
+        - os
+        - path/filepath
+        - strings
+    - path: internal/cli/agents.go
+      sha256: f143c3818ffd573a4ae3dd8131fd181e692c646bc36e0069b73bb2a6e1c29ec9
+      symbols:
+        - App.runAgents
+      imports:
+        - flag
+        - fmt
+        - knodexa/internal/integration
+    - path: internal/identity/resolve.go
+      sha256: f12904a2d68f1e9f5701e591ab3c6146ec763b0cd689519d8b2a11e0cc679253
+      symbols:
+        - Candidate
+        - Request
+        - Resolve
+        - Result
+        - Signal
+        - containsPhrase
+        - fileHints
+        - phrase
+        - resolve
+        - tokens
+      imports:
+        - fmt
+        - knodexa/internal/approach
+        - knodexa/internal/index
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - sort
+        - strings
+        - unicode
+    - path: internal/continuity/record.go
+      sha256: fb1372c49cdc287f0466ffa2ab5e8e4ce27d0e7ded6ce6fcbd9365402bbddc04
+      symbols:
+        - RecordInput
+        - RecordResult
+        - Service.Record
+      imports:
+        - context
+        - fmt
+        - knodexa/internal/approach
+        - knodexa/internal/codegraph
+        - knodexa/internal/identity
+        - knodexa/internal/model
+        - os/exec
+        - strings
+        - time
+    - path: internal/continuity/resume.go
+      sha256: 1634577f68815e4c488ad148220ff57cae555de4b86c74a212504a1a5ef3b608
+      symbols:
+        - NewService
+        - ResumeOptions
+        - Service
+        - Service.Resume
+      imports:
+        - fmt
+        - knodexa/internal/approach
+        - knodexa/internal/context
+        - knodexa/internal/git
+        - knodexa/internal/index
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - time
+    - path: internal/approach/approach.go
+      sha256: 39bec4037609fdc6eecebf673471c1c772587eb5c58bb94327b4646b46e39c85
+      symbols:
+        - Check
+        - CheckContracts
+        - Contract
+        - InstallVersion
+        - Report
+        - Resolve
+        - ResolveProposed
+        - Result
+        - Reuse
+        - Set
+        - ValidateTask
+        - ValidateValue
+        - readWithin
+        - resolve
+        - safePath
+      imports:
+        - crypto/sha256
+        - database/sql
+        - encoding/hex
+        - errors
+        - fmt
+        - knodexa/internal/index
+        - knodexa/internal/model
+        - knodexa/internal/storage
+        - os
+        - path/filepath
+        - strings
+        - time
+aliases:
+    - Knodexa
+    - work identity resolution
+    - engineering memory
+approach:
+    version: 9
+    change_reason: Verify cross-process task merge locks, stale-snapshot rejection and serialized SQLite initialization and synchronization; retain original failures and limited scope.
+    summary: Implement continuity behavior in shared deterministic Go packages, with CLI and MCP adapters using those packages.
+    rules:
+        - Keep canonical Markdown/YAML authoritative and the SQLite cache rebuildable
+        - Preserve the deterministic zero-LLM core
+        - Choose approach inheritance through explicit parent and reuse relationships, never task-name prefixes
+        - Preserve established rules and acceptance criteria when compacting context
+        - Treat reference/literal checks as structural evidence; review semantic design consistency separately
+        - Prevent task-switch contamination through explicit relationships or unambiguous file scopes and return a target context boundary; never select authority by recency.
+        - Resolve incoming requests against recorded work identity before creating tasks; preserve existing completion state and distinguish continuation, independent work, and intentional replacement.
+        - Use Go for the application and required validation; retain one check wrapper and historical evidence rather than obsolete experiment scripts.
+    references:
+        - path: internal/approach/approach.go
+          sha256: 39bec4037609fdc6eecebf673471c1c772587eb5c58bb94327b4646b46e39c85
+        - path: internal/continuity/resume.go
+          sha256: 1634577f68815e4c488ad148220ff57cae555de4b86c74a212504a1a5ef3b608
+        - path: internal/identity/resolve.go
+          sha256: f12904a2d68f1e9f5701e591ab3c6146ec763b0cd689519d8b2a11e0cc679253
+    recorded_at: 2026-10-14T18:26:55.455112Z
 id: "1"
 title: MVP Core Engine
 goal: Build deterministic local-first engineering memory core
 status: ACTIVE
 created_at: 2026-10-13T07:01:51.585504Z
-updated_at: 2026-10-13T07:01:51.585504Z
+updated_at: 2026-10-14T18:26:55.455112Z
 constraints:
     - Deterministic core
     - No cloud dependencies
     - Rebuildable SQLite index
+touches_files:
+    - internal/storage/fs.go
+    - internal/storage/process_lock.go
+    - internal/identity/aliases.go
+    - internal/index/db.go
+    - internal/index/indexer.go
+    - internal/index/records.go
+    - internal/index/queries.go
+    - internal/context/builder.go
+    - internal/context/types.go
+    - internal/verify/verify.go
+    - internal/model/node.go
+    - internal/cli/supersede.go
+    - internal/mcp/tools.go
+    - internal/integration/instructions.go
+    - internal/cli/agents.go
+    - internal/identity/resolve.go
+    - internal/continuity/record.go
+    - internal/continuity/resume.go
+    - internal/approach/approach.go
+baseline_commit: 133bf2310370a679e592291a82e5087ed87d7747

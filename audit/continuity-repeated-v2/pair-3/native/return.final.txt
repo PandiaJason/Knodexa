@@ -1,0 +1,5 @@
+Added `HandleWebhook` in `handlers/webhook.go`, delegating to `Handle` to preserve the established behavior.
+
+Tests cover raw values, result/error identity, observer ordering, nil observers, and panic propagation. `go test ./...` passes.
+
+Existing handler source and work memory remain unchanged.

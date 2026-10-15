@@ -1,0 +1,5 @@
+Implemented `handlers/reference.go` with exactly-once raw forwarding, unchanged result/error returns, and the required observer ordering.
+
+Added tests; `go test ./...` passes.
+
+Updated `memory/work-17.json` with the approach, rules, references, scopes, baseline commit, and alias `"webhook handler"`. No new task created.

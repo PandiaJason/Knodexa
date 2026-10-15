@@ -1,0 +1,1 @@
+Failed to initialize Knodexa: open knowledge index: failed to initialize schema: database is locked (5) (SQLITE_BUSY)

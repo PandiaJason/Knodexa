@@ -1,0 +1,83 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+func TestHandleWebhookPreservesValuesAndOrdering(t *testing.T) {
+	input := &struct{ Event string }{"  DeLiVeRy  "}
+	result := &struct{ Delivered bool }{true}
+	for _, serviceErr := range []error{nil, errors.New("delivery failed")} {
+		var events []string
+		calls := 0
+		got, err := HandleWebhook(input, transformerFunc(func(value any) (any, error) {
+			calls++
+			if value != input {
+				t.Fatal("raw input identity changed")
+			}
+			events = append(events, "transform")
+			return result, serviceErr
+		}), observerFuncs{
+			started: func(value any) {
+				if value != input {
+					t.Fatal("started input identity changed")
+				}
+				events = append(events, "started")
+			},
+			finished: func(value any) {
+				if value != result {
+					t.Fatal("finished result identity changed")
+				}
+				events = append(events, "finished")
+			},
+		})
+		if got != result || err != serviceErr || calls != 1 {
+			t.Fatalf("result or error identity changed, or call count = %d", calls)
+		}
+		want := []string{"started", "transform"}
+		if serviceErr == nil {
+			want = append(want, "finished")
+		}
+		if !reflect.DeepEqual(events, want) {
+			t.Fatalf("events = %v, want %v", events, want)
+		}
+	}
+}
+
+func TestHandleWebhookWithoutObserver(t *testing.T) {
+	for _, input := range []any{nil, "  DeLiVeRy \t event  ", 42} {
+		calls := 0
+		got, err := HandleWebhook(input, transformerFunc(func(value any) (any, error) {
+			calls++
+			if value != input {
+				t.Fatal("raw input changed")
+			}
+			return value, nil
+		}), nil)
+		if got != input || err != nil || calls != 1 {
+			t.Fatalf("got (%v, %v), calls = %d", got, err, calls)
+		}
+	}
+}
+
+func TestHandleWebhookPropagatesPanic(t *testing.T) {
+	marker := errors.New("service panic")
+	calls := 0
+	defer func() {
+		if got := recover(); got != marker {
+			t.Fatalf("panic = %v, want original marker", got)
+		}
+		if calls != 1 {
+			t.Fatalf("calls = %d, want 1", calls)
+		}
+	}()
+	HandleWebhook(nil, transformerFunc(func(any) (any, error) {
+		calls++
+		panic(marker)
+	}), observerFuncs{
+		started:  func(any) {},
+		finished: func(any) { t.Fatal("finished called after panic") },
+	})
+}

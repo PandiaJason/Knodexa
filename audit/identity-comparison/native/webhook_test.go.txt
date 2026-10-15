@@ -1,0 +1,84 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+func TestHandleWebhookDelivery(t *testing.T) {
+	input := &struct{ Event string }{"  Delivery Event  "}
+	result := &struct{ ID int }{17}
+	failure := errors.New("delivery failed")
+	for _, serviceErr := range []error{nil, failure} {
+		for _, observed := range []bool{false, true} {
+			events := []string{}
+			calls := 0
+			recorder := &recordingObserver{events: &events}
+			var observer Observer
+			if observed {
+				observer = recorder
+			}
+			got, err := HandleWebhook(input, transformerFunc(func(value any) (any, error) {
+				calls++
+				events = append(events, "transform")
+				if value != input {
+					t.Fatal("input identity changed")
+				}
+				return result, serviceErr
+			}), observer)
+			if got != result || err != serviceErr || calls != 1 {
+				t.Fatalf("result=%v error=%v calls=%d", got, err, calls)
+			}
+			want := []string{"transform"}
+			if observed {
+				want = []string{"started", "transform"}
+				if recorder.input != input {
+					t.Fatal("Started input identity changed")
+				}
+				if serviceErr == nil {
+					want = append(want, "finished")
+					if recorder.result != result {
+						t.Fatal("Finished result identity changed")
+					}
+				}
+			}
+			if !reflect.DeepEqual(events, want) {
+				t.Fatalf("events=%v want=%v", events, want)
+			}
+		}
+	}
+}
+
+func TestHandleWebhookRawValues(t *testing.T) {
+	for _, value := range []any{nil, "  Delivery\t Event  ", 42, []byte("delivery")} {
+		calls := 0
+		got, err := HandleWebhook(value, transformerFunc(func(input any) (any, error) {
+			calls++
+			if !reflect.DeepEqual(input, value) {
+				t.Fatal("raw input changed")
+			}
+			return input, nil
+		}), nil)
+		if err != nil || calls != 1 || !reflect.DeepEqual(got, value) {
+			t.Fatalf("result=%v error=%v calls=%d", got, err, calls)
+		}
+	}
+}
+
+func TestHandleWebhookPropagatesPanic(t *testing.T) {
+	marker := &struct{ Message string }{"delivery panic"}
+	events := []string{}
+	defer func() {
+		if got := recover(); got != marker {
+			t.Fatalf("panic=%v want=%v", got, marker)
+		}
+		if !reflect.DeepEqual(events, []string{"started", "transform"}) {
+			t.Fatalf("unexpected events: %v", events)
+		}
+	}()
+	HandleWebhook(nil, transformerFunc(func(any) (any, error) {
+		events = append(events, "transform")
+		panic(marker)
+	}), &recordingObserver{events: &events})
+}

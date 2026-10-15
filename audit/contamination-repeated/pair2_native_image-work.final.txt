@@ -1,0 +1,3 @@
+Created `images/normalize.py` with `normalize_label(value)`: strings are trimmed, whitespace collapsed, and uppercased; nonstrings return `""`. No service injection or hooks.
+
+Added 19 representative image tests. All 22 tests pass, including existing handler tests. Only the new image source and image test file were changed.

@@ -1,0 +1,141 @@
+{
+  "aliases": [
+    "production webhook delivery"
+  ],
+  "applicable_knowledge": {
+    "F-observer-panic": "Observer panics must propagate unchanged; existing implementation contains no recovery. Existing tests do not explicitly exercise observer panics.",
+    "L-sdk-contract": "A future new production handler entrypoint must expose HandlerContractVersion() string returning raw-v1. This future requirement does not alter the established unversioned Handle agreement."
+  },
+  "approach": "Keep Handle as a thin production adapter over the injected Transformer. Forward the raw value unchanged, optionally notify the Observer around the single service call, and return the service result and error unchanged.",
+  "baseline_commit": "dc932f0820d2ef155537c8199dd12a993986e66d",
+  "baseline_review": "Initial record had no saved baseline_commit or source hashes to compare. All referenced files exist. Current implementation inspected and recorded without modification; extension deferred.",
+  "constraints": [
+    "Raw input delegated exactly once; preserve result/error identity",
+    "Observer Started before service; Finished only on success",
+    "No trimming, coercion, retry or panic recovery"
+  ],
+  "created_at": "0001-01-01T00:00:00Z",
+  "extensions": [
+    {
+      "aliases": [
+        "production webhook delivery",
+        "HandleWebhook"
+      ],
+      "applicable_knowledge": [
+        "F-observer-panic",
+        "L-sdk-contract"
+      ],
+      "approach": "Add handlers/webhook.go using Handle for the established raw delegation behavior and contracts.Version for HandlerContractVersion. Add independent webhook contract tests, including observer and service panic identity and exact invocation counts.",
+      "baseline_commit": "dc932f0820d2ef155537c8199dd12a993986e66d",
+      "baseline_review": "Saved baseline matches HEAD. All four source references exist and their SHA-256 hashes match. Current source and tests inspected. Preserve the completed source agreement and pre-existing local record changes.",
+      "goal": "Expose HandleWebhook and the raw-v1 handler contract in package handlers",
+      "id": "work-prod-handle-webhook",
+      "output_references": [
+        {
+          "path": "handlers/webhook.go",
+          "sha256": "3f2b003a9039c074503a949d909493ddbf1fab3366215df09d3c5ac465a986d3"
+        },
+        {
+          "path": "handlers/webhook_test.go",
+          "sha256": "d949c9059da85a4b27060de417b4b962ff547f4c00cfa28eda63f58f3f563ce3"
+        }
+      ],
+      "required_verification": [
+        "go test ./...",
+        "Raw values, injected services, identity, callback ordering, service and observer panics, contract version"
+      ],
+      "rules": [
+        "Forward original input exactly once; preserve result and error identity",
+        "Started precedes Transform; Finished only on success; nil observer skips callbacks",
+        "No validation, coercion, trimming, retries, or panic recovery",
+        "Started panic precedes service invocation; Finished panic follows one successful invocation",
+        "Expose HandlerContractVersion() string returning raw-v1"
+      ],
+      "scopes": [
+        "handlers/webhook.go",
+        "handlers/webhook_test.go",
+        "Append extension metadata to memory/work-prod.json; preserve completed source fields"
+      ],
+      "source_references": [
+        {
+          "path": "handlers/reference.go",
+          "role": "Established production implementation and raw delegation source",
+          "sha256": "af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540"
+        },
+        {
+          "path": "handlers/reference_test.go",
+          "role": "Existing raw input, injected service, callback ordering, result/error identity and service panic verification",
+          "sha256": "e3826afde68bf0656f17f9f3d08fa48fdc7391186bdcf7eecf072eed3c46bc00"
+        },
+        {
+          "path": "contracts/version.go",
+          "role": "Existing raw-v1 compatibility constant; no new entrypoint implemented",
+          "sha256": "fd22829b597b46bee5a82356f5467e93d76c2fd0b4e89eee5636e4ce08a2b297"
+        },
+        {
+          "path": "memory/knowledge.json",
+          "role": "Applicable failure F-observer-panic and cross-task lesson L-sdk-contract",
+          "sha256": "c003d7fbf112a9aeb362586e97450ce00a1b1cd5d1fca120afb605908b9ef6a3"
+        }
+      ],
+      "status": "COMPLETED",
+      "title": "Additional production webhook delivery handler",
+      "verification": {
+        "command": "go test ./...",
+        "completed_source_preserved": true,
+        "result": "PASS: identitysample/contracts and identitysample/handlers"
+      }
+    }
+  ],
+  "goal": "Production webhook delivery through injected service",
+  "id": "work-prod",
+  "raw_delegation_rules": [
+    "Pass the original any value to the injected service without trimming, coercion, validation or replacement, including whitespace, empty strings, nil and non-string values",
+    "Call Transform exactly once after Started returns normally; never retry or recover panics",
+    "Return the exact service result and error, including a result returned with an error",
+    "With an observer, call Started with the original input before Transform and Finished with the exact result only when the service error is nil",
+    "A Started panic propagates unchanged before any service invocation; a Finished panic propagates unchanged after one successful service invocation",
+    "A service panic propagates unchanged and prevents Finished; a nil observer omits both callbacks"
+  ],
+  "required_verification": [
+    "Raw inputs, service substitution, observer ordering and error identity"
+  ],
+  "scopes": [
+    "handlers/",
+    "Review and document the existing production Handle implementation; preserve source and tests",
+    "No new production entrypoint or extension in this work"
+  ],
+  "source_references": [
+    {
+      "path": "handlers/reference.go",
+      "role": "Established production implementation and raw delegation source",
+      "sha256": "af5c7908d191482c900607bc4e9852af3ffdd0429f17c9170f9757385d342540"
+    },
+    {
+      "path": "handlers/reference_test.go",
+      "role": "Existing raw input, injected service, callback ordering, result/error identity and service panic verification",
+      "sha256": "e3826afde68bf0656f17f9f3d08fa48fdc7391186bdcf7eecf072eed3c46bc00"
+    },
+    {
+      "path": "contracts/version.go",
+      "role": "Existing raw-v1 compatibility constant; no new entrypoint implemented",
+      "sha256": "fd22829b597b46bee5a82356f5467e93d76c2fd0b4e89eee5636e4ce08a2b297"
+    },
+    {
+      "path": "memory/knowledge.json",
+      "role": "Applicable failure F-observer-panic and cross-task lesson L-sdk-contract",
+      "sha256": "c003d7fbf112a9aeb362586e97450ce00a1b1cd5d1fca120afb605908b9ef6a3"
+    }
+  ],
+  "status": "COMPLETED",
+  "title": "Production event forwarding",
+  "touches_files": [
+    "handlers/reference.go"
+  ],
+  "updated_at": "0001-01-01T00:00:00Z",
+  "verification": {
+    "command": "go test ./...",
+    "implementation_preserved": true,
+    "result": "PASS: identitysample/contracts and identitysample/handlers"
+  }
+}

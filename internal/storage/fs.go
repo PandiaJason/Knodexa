@@ -3,8 +3,10 @@ package storage
 import (
 	"bufio"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -18,6 +20,9 @@ import (
 )
 
 const KnodexaDir = ".knodexa"
+
+var ErrConflict = errors.New("task changed since it was read; reload and retry")
+var ErrTaskNotFound = errors.New("task not found")
 
 // Storage manages canonical file I/O within the repository's .knodexa directory.
 type Storage struct {
@@ -138,8 +143,57 @@ func (s *Storage) SaveTask(task *model.TaskData) error {
 	if err := ValidateID(task.ID); err != nil {
 		return fmt.Errorf("invalid task id: %w", err)
 	}
-	s.mu.Lock()
-	defer s.mu.Unlock()
+	return WithProcessLock(filepath.Join(s.knodexaDir, "tasks.lock"), func() error {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+		return s.saveTask(task)
+	})
+}
+
+// UpdateTask applies mergeable changes to freshly read canonical data while the
+// process lock is held. Callbacks must not invoke other mutation operations.
+func (s *Storage) UpdateTask(id string, change func(*model.TaskData) error) error {
+	if err := ValidateID(id); err != nil {
+		return err
+	}
+	return WithProcessLock(filepath.Join(s.knodexaDir, "tasks.lock"), func() error {
+		s.mu.Lock()
+		defer s.mu.Unlock()
+		task, err := s.readTask(id)
+		if err != nil {
+			return err
+		}
+		before, err := yaml.Marshal(task)
+		if err != nil {
+			return err
+		}
+		if err := change(task); err != nil {
+			return err
+		}
+		if task.ID != id {
+			return fmt.Errorf("UpdateTask cannot change task identity")
+		}
+		after, err := yaml.Marshal(task)
+		if err != nil {
+			return err
+		}
+		if string(before) == string(after) {
+			return nil
+		}
+		return s.saveTask(task)
+	})
+}
+
+func (s *Storage) saveTask(task *model.TaskData) error {
+	current, err := s.readTask(task.ID)
+	if err != nil && !errors.Is(err, ErrTaskNotFound) {
+		return err
+	}
+	if current != nil {
+		if task.SnapshotHash == "" || task.SnapshotHash != current.SnapshotHash {
+			return fmt.Errorf("%w: %s", ErrConflict, task.ID)
+		}
+	}
 
 	var dir string
 	if task.ParentID != "" {
@@ -161,7 +215,18 @@ func (s *Storage) SaveTask(task *model.TaskData) error {
 		return fmt.Errorf("failed to marshal task yaml: %w", err)
 	}
 
-	return s.atomicWriteFile(filePath, data, 0644)
+	if err := s.atomicWriteFile(filePath, data, 0644); err != nil {
+		return err
+	}
+	if current != nil && current.SnapshotPath != filePath {
+		if err := os.Remove(current.SnapshotPath); err != nil {
+			return fmt.Errorf("remove previous task location: %w", err)
+		}
+	}
+	hash := sha256.Sum256(data)
+	task.SnapshotHash = hex.EncodeToString(hash[:])
+	task.SnapshotPath = filePath
+	return nil
 }
 
 // ReadTask loads a task YAML by ID.
@@ -171,6 +236,10 @@ func (s *Storage) ReadTask(taskID string) (*model.TaskData, error) {
 	}
 	s.mu.RLock()
 	defer s.mu.RUnlock()
+	return s.readTask(taskID)
+}
+
+func (s *Storage) readTask(taskID string) (*model.TaskData, error) {
 
 	tasksDir := filepath.Join(s.knodexaDir, "tasks")
 	var foundPath string
@@ -189,7 +258,7 @@ func (s *Storage) ReadTask(taskID string) (*model.TaskData, error) {
 		return nil, err
 	}
 	if foundPath == "" {
-		return nil, fmt.Errorf("task not found: %s", taskID)
+		return nil, fmt.Errorf("%w: %s", ErrTaskNotFound, taskID)
 	}
 
 	data, err := os.ReadFile(foundPath)
@@ -201,6 +270,9 @@ func (s *Storage) ReadTask(taskID string) (*model.TaskData, error) {
 	if err := yaml.Unmarshal(data, &task); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal task %s: %w", taskID, err)
 	}
+	hash := sha256.Sum256(data)
+	task.SnapshotHash = hex.EncodeToString(hash[:])
+	task.SnapshotPath = foundPath
 	return &task, nil
 }
 
@@ -217,17 +289,27 @@ func (s *Storage) ListTasks() ([]model.TaskData, error) {
 	}
 
 	err := filepath.Walk(tasksDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() || !strings.HasSuffix(info.Name(), ".yaml") {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() || !strings.HasSuffix(info.Name(), ".yaml") {
 			return nil
 		}
 		data, err := os.ReadFile(path)
 		if err != nil {
-			return nil
+			return fmt.Errorf("read %s: %w", path, err)
 		}
 		var task model.TaskData
-		if err := yaml.Unmarshal(data, &task); err == nil && task.ID != "" {
-			tasks = append(tasks, task)
+		if err := yaml.Unmarshal(data, &task); err != nil {
+			return fmt.Errorf("parse %s: %w", path, err)
 		}
+		if err := ValidateID(task.ID); err != nil {
+			return fmt.Errorf("%s: %w", path, err)
+		}
+		hash := sha256.Sum256(data)
+		task.SnapshotHash = hex.EncodeToString(hash[:])
+		task.SnapshotPath = path
+		tasks = append(tasks, task)
 		return nil
 	})
 	if err != nil {
@@ -306,28 +388,22 @@ func (s *Storage) ListDecisions() ([]model.DecisionDocument, error) {
 		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".md") {
 			continue
 		}
-		id := strings.TrimSuffix(entry.Name(), ".md")
 		data, err := os.ReadFile(filepath.Join(dir, entry.Name()))
 		if err != nil {
-			continue
+			return nil, fmt.Errorf("read %s: %w", entry.Name(), err)
 		}
 		yamlBlock, body, err := SplitFrontmatter(data)
 		if err != nil {
-			continue
+			return nil, fmt.Errorf("parse %s: %w", entry.Name(), err)
 		}
 		var fm model.DecisionFrontmatter
-		if err := yaml.Unmarshal(yamlBlock, &fm); err == nil && fm.ID != "" {
-			results = append(results, model.DecisionDocument{
-				Frontmatter: fm,
-				Body:        body,
-			})
-		} else if fm.ID == "" {
-			fm.ID = id
-			results = append(results, model.DecisionDocument{
-				Frontmatter: fm,
-				Body:        body,
-			})
+		if err := yaml.Unmarshal(yamlBlock, &fm); err != nil {
+			return nil, fmt.Errorf("parse %s: %w", entry.Name(), err)
 		}
+		if err := ValidateID(fm.ID); err != nil {
+			return nil, fmt.Errorf("%s: %w", entry.Name(), err)
+		}
+		results = append(results, model.DecisionDocument{Frontmatter: fm, Body: body})
 	}
 
 	sort.Slice(results, func(i, j int) bool {
@@ -404,19 +480,20 @@ func (s *Storage) ListLessons() ([]model.LessonDocument, error) {
 		}
 		data, err := os.ReadFile(filepath.Join(dir, entry.Name()))
 		if err != nil {
-			continue
+			return nil, fmt.Errorf("read %s: %w", entry.Name(), err)
 		}
 		yamlBlock, body, err := SplitFrontmatter(data)
 		if err != nil {
-			continue
+			return nil, fmt.Errorf("parse %s: %w", entry.Name(), err)
 		}
 		var fm model.LessonFrontmatter
-		if err := yaml.Unmarshal(yamlBlock, &fm); err == nil && fm.ID != "" {
-			results = append(results, model.LessonDocument{
-				Frontmatter: fm,
-				Body:        body,
-			})
+		if err := yaml.Unmarshal(yamlBlock, &fm); err != nil {
+			return nil, fmt.Errorf("parse %s: %w", entry.Name(), err)
 		}
+		if err := ValidateID(fm.ID); err != nil {
+			return nil, fmt.Errorf("%s: %w", entry.Name(), err)
+		}
+		results = append(results, model.LessonDocument{Frontmatter: fm, Body: body})
 	}
 
 	sort.Slice(results, func(i, j int) bool {
@@ -460,6 +537,13 @@ func (s *Storage) ReadEvidence(id string) (*model.EvidenceData, error) {
 	if err := yaml.Unmarshal(data, &ev); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal evidence: %w", err)
 	}
+	var execution struct {
+		ExitCode *int `yaml:"exit_code"`
+	}
+	if err := yaml.Unmarshal(data, &execution); err != nil {
+		return nil, err
+	}
+	ev.ExitCodeRecorded = execution.ExitCode != nil
 	return &ev, nil
 }
 
@@ -484,12 +568,16 @@ func (s *Storage) ListEvidence() ([]model.EvidenceData, error) {
 		}
 		data, err := os.ReadFile(filepath.Join(dir, entry.Name()))
 		if err != nil {
-			continue
+			return nil, fmt.Errorf("read %s: %w", entry.Name(), err)
 		}
 		var ev model.EvidenceData
-		if err := yaml.Unmarshal(data, &ev); err == nil && ev.ID != "" {
-			results = append(results, ev)
+		if err := yaml.Unmarshal(data, &ev); err != nil {
+			return nil, fmt.Errorf("parse %s: %w", entry.Name(), err)
 		}
+		if err := ValidateID(ev.ID); err != nil {
+			return nil, fmt.Errorf("%s: %w", entry.Name(), err)
+		}
+		results = append(results, ev)
 	}
 
 	sort.Slice(results, func(i, j int) bool {
@@ -584,12 +672,16 @@ func (s *Storage) ListFailures() ([]model.FailureData, error) {
 		}
 		data, err := os.ReadFile(filepath.Join(dir, entry.Name()))
 		if err != nil {
-			continue
+			return nil, fmt.Errorf("read %s: %w", entry.Name(), err)
 		}
 		var fail model.FailureData
-		if err := yaml.Unmarshal(data, &fail); err == nil && fail.ID != "" {
-			results = append(results, fail)
+		if err := yaml.Unmarshal(data, &fail); err != nil {
+			return nil, fmt.Errorf("parse %s: %w", entry.Name(), err)
 		}
+		if err := ValidateID(fail.ID); err != nil {
+			return nil, fmt.Errorf("%s: %w", entry.Name(), err)
+		}
+		results = append(results, fail)
 	}
 	return results, nil
 }
@@ -640,9 +732,13 @@ func (s *Storage) ReadLinks() ([]model.Edge, error) {
 			continue
 		}
 		var edge model.Edge
-		if err := json.Unmarshal([]byte(line), &edge); err == nil && edge.FromID != "" && edge.ToID != "" {
-			edges = append(edges, edge)
+		if err := json.Unmarshal([]byte(line), &edge); err != nil {
+			return nil, fmt.Errorf("parse links.jsonl: %w", err)
 		}
+		if edge.FromID == "" || edge.ToID == "" {
+			return nil, fmt.Errorf("links.jsonl: edge endpoints are required")
+		}
+		edges = append(edges, edge)
 	}
 	return edges, scanner.Err()
 }

@@ -1,0 +1,88 @@
+{
+  "approach_selection": {
+    "mode": "file_scope",
+    "sources": [
+      "service-design"
+    ],
+    "candidates": [
+      "service-design"
+    ],
+    "excluded_sources": [
+      "image-design"
+    ],
+    "review_required": false
+  },
+  "context_boundary": {
+    "previous_task": "image-design",
+    "target_task": "delivery-job",
+    "discard_sources": [
+      "image-design"
+    ],
+    "instruction": "Use the target task constraints, acceptance criteria, and selected agreements. Set aside conventions from unrelated work still present in conversation history. Relevant lessons are advisory; they do not override these agreements. Read selected references before editing. If selection is missing or ambiguous, resolve the scope before claiming consistency."
+  },
+  "approach_status": {
+    "task_id": "delivery-job",
+    "structural_checks_passed": true,
+    "semantic_review_required": true,
+    "results": [
+      {
+        "source_task": "service-design",
+        "path": "handlers/reference.py",
+        "kind": "reference",
+        "passed": true,
+        "detail": "reference unchanged"
+      }
+    ]
+  },
+  "established_approach": [
+    {
+      "source_task": "service-design",
+      "approach": {
+        "scopes": [
+          "handlers/"
+        ],
+        "summary": "Injected service delegation",
+        "rules": [
+          "Handlers delegate transformation to the injected service; never embed string transformations.",
+          "Return the injected service result unchanged, including nonstring results.",
+          "Propagate service exceptions unchanged; call transform exactly once.",
+          "Do not add dependencies or modify the reference implementation."
+        ],
+        "references": [
+          {
+            "path": "handlers/reference.py",
+            "sha256": "46464a9cab084389a92f20ed5675c61a3d3e24f5a966820735d1c79c938d091e"
+          }
+        ],
+        "recorded_at": "2026-10-14T06:09:44.61855Z"
+      }
+    }
+  ],
+  "detail_level": "compact",
+  "detail_hint": "Full rationale and evidence IDs: knodexa show <id> or knodexa_get_detail",
+  "context_pruned": false,
+  "token_budget": 1500,
+  "budget_exceeded": false,
+  "task": {
+    "id": "delivery-job",
+    "title": "delivery-job",
+    "goal": "",
+    "status": "ACTIVE"
+  },
+  "accepted_constraints": [
+    "Deterministic behavior: zero LLM calls in core engine",
+    "Evidence-driven verification for decisions and lessons",
+    "Preserve existing repository constraints and public APIs"
+  ],
+  "baseline": {
+    "stored_commit": "b5d8869c95b720b89dc198c79227018cf17f795c",
+    "commit": "b5d8869",
+    "branch": "main",
+    "dirty": true
+  },
+  "required_verification": [
+    "Correctness test suite must pass",
+    "No regressions in existing functionality"
+  ],
+  "estimated_tokens": 450
+}

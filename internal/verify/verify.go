@@ -12,9 +12,9 @@ import (
 
 // Engine manages lifecycle state transitions and verification evidence.
 type Engine struct {
-	store   *storage.Storage
-	idx     *index.Indexer
-	db      *index.DB
+	store *storage.Storage
+	idx   *index.Indexer
+	db    *index.DB
 }
 
 // NewEngine constructs a verification Engine.
@@ -36,6 +36,9 @@ func (e *Engine) AddEvidence(ev *model.EvidenceData, actor string) error {
 	}
 	if ev.CreatedAt.IsZero() {
 		ev.CreatedAt = time.Now().UTC()
+	}
+	if ev.VerifiedBy == "" {
+		ev.VerifiedBy = actor
 	}
 
 	if err := e.store.SaveEvidence(ev); err != nil {
@@ -75,10 +78,28 @@ func (e *Engine) VerifyNode(nodeID string, evidenceIDs []string, notes string, a
 		return fmt.Errorf("verification requires at least one supporting evidence ID")
 	}
 
-	// Validate evidence IDs exist
+	// Validate supporting evidence, not merely the existence of a file.
 	for _, eid := range evidenceIDs {
-		if _, err := e.store.ReadEvidence(eid); err != nil {
+		ev, err := e.store.ReadEvidence(eid)
+		if err != nil {
 			return fmt.Errorf("evidence %s not found: %w", eid, err)
+		}
+		if ev.NodeID != nodeID {
+			return fmt.Errorf("evidence %s belongs to %s, not %s", eid, ev.NodeID, nodeID)
+		}
+		if !ev.EvidenceType.IsValid() {
+			return fmt.Errorf("evidence %s has an invalid type", eid)
+		}
+		if strings.TrimSpace(ev.OutputSummary) == "" || strings.TrimSpace(ev.VerifiedBy) == "" {
+			return fmt.Errorf("evidence %s requires an output summary and recorded actor", eid)
+		}
+		if ev.EvidenceType != model.EvidenceManualSignOff {
+			if strings.TrimSpace(ev.Command) == "" || !ev.ExitCodeRecorded {
+				return fmt.Errorf("evidence %s requires a command and explicit exit code", eid)
+			}
+			if ev.ExitCode != 0 {
+				return fmt.Errorf("evidence %s reports failed execution (exit %d)", eid, ev.ExitCode)
+			}
 		}
 	}
 
@@ -205,7 +226,31 @@ func (e *Engine) RejectNode(nodeID string, reason string, actor string) error {
 }
 
 // SupersedeNode marks an older verified knowledge item as SUPERSEDED by a newer item.
-func (e *Engine) SupersedeNode(nodeID, supersededByID string, actor string) error {
+func (e *Engine) SupersedeNode(nodeID, supersededByID, reason, actor string) error {
+	if nodeID == supersededByID || strings.TrimSpace(reason) == "" {
+		return fmt.Errorf("supersession requires a different replacement and explicit reason")
+	}
+	// Read canonical replacement metadata; an index entry alone is not authority.
+	switch {
+	case strings.HasPrefix(nodeID, "D-") && strings.HasPrefix(supersededByID, "D-"):
+		replacement, err := e.store.ReadDecision(supersededByID)
+		if err != nil {
+			return fmt.Errorf("replacement decision: %w", err)
+		}
+		if replacement.Frontmatter.Status != model.StatusVerified {
+			return fmt.Errorf("replacement must be VERIFIED")
+		}
+	case strings.HasPrefix(nodeID, "L-") && strings.HasPrefix(supersededByID, "L-"):
+		replacement, err := e.store.ReadLesson(supersededByID)
+		if err != nil {
+			return fmt.Errorf("replacement lesson: %w", err)
+		}
+		if replacement.Frontmatter.Status != model.StatusVerified {
+			return fmt.Errorf("replacement must be VERIFIED")
+		}
+	default:
+		return fmt.Errorf("supersession requires decision-to-decision or lesson-to-lesson replacement")
+	}
 	now := time.Now().UTC()
 
 	if strings.HasPrefix(nodeID, "D-") {
@@ -216,8 +261,13 @@ func (e *Engine) SupersedeNode(nodeID, supersededByID string, actor string) erro
 		if err := model.ValidateTransition(doc.Frontmatter.Status, model.StatusSuperseded, false); err != nil {
 			return err
 		}
+		if doc.Frontmatter.Status != model.StatusVerified {
+			return fmt.Errorf("only VERIFIED knowledge can be superseded")
+		}
 		doc.Frontmatter.Status = model.StatusSuperseded
 		doc.Frontmatter.SupersededBy = supersededByID
+		doc.Frontmatter.InvalidatedAt = &now
+		doc.Frontmatter.SupersessionReason = reason
 		doc.Frontmatter.UpdatedAt = now
 		if err := e.store.SaveDecision(doc); err != nil {
 			return err
@@ -230,7 +280,13 @@ func (e *Engine) SupersedeNode(nodeID, supersededByID string, actor string) erro
 		if err := model.ValidateTransition(doc.Frontmatter.Status, model.StatusSuperseded, false); err != nil {
 			return err
 		}
+		if doc.Frontmatter.Status != model.StatusVerified {
+			return fmt.Errorf("only VERIFIED knowledge can be superseded")
+		}
 		doc.Frontmatter.Status = model.StatusSuperseded
+		doc.Frontmatter.SupersededBy = supersededByID
+		doc.Frontmatter.InvalidatedAt = &now
+		doc.Frontmatter.SupersessionReason = reason
 		doc.Frontmatter.UpdatedAt = now
 		if err := e.store.SaveLesson(doc); err != nil {
 			return err
@@ -252,6 +308,7 @@ func (e *Engine) SupersedeNode(nodeID, supersededByID string, actor string) erro
 		TargetID:  nodeID,
 		Payload: map[string]interface{}{
 			"superseded_by": supersededByID,
+			"reason":        reason,
 		},
 	})
 

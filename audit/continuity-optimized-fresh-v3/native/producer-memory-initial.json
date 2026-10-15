@@ -1,0 +1,32 @@
+{
+  "id": "work-17",
+  "title": "Event forwarding adapters",
+  "goal": "Deliver raw events through injected services with observer ordering",
+  "status": "ACTIVE",
+  "created_at": "0001-01-01T00:00:00Z",
+  "updated_at": "0001-01-01T00:00:00Z",
+  "constraints": [
+    "Delegate raw values exactly once; do not normalize or coerce",
+    "Preserve result and error identity",
+    "Observer started before service; finished only on success"
+  ],
+  "touches_files": [
+    "handlers/reference.go"
+  ],
+  "baseline_commit": "1b37254b66b6703c8042dff56f8b64c7be8ef0f9",
+  "approach": "Handle forwards raw input to the injected Transformer exactly once, calling Started before transformation and Finished only when the returned error is nil, then returning the original result and error unchanged.",
+  "explicit_rules": [
+    "Do not trim, uppercase, coerce, retry, recover panics, or replace values",
+    "Skip observer callbacks when the observer is nil",
+    "Preserve result and error identity, including a result returned alongside an error"
+  ],
+  "references": [
+    {"path": "handlers/reference.go"},
+    {"path": "handlers/reference_test.go"}
+  ],
+  "scopes": ["handlers", "raw event forwarding", "observer ordering"],
+  "aliases": ["webhook handler"],
+  "required_verification": [
+    "Service substitution, error identity, and observer ordering tests"
+  ]
+}

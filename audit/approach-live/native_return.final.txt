@@ -1,0 +1,5 @@
+Created `webhook.py` exposing `handle(value, service)`.
+
+Applied the recovered agreement: call `service.transform(value)` exactly once, return its result unchanged, and propagate exceptions unchanged. An uppercase service converts `"hello"` to `"HELLO"`.
+
+All 12 tests passed, including inherited acceptance criteria and the uppercase case. Reference, engineering memory, labels utility, and existing changes were preserved.

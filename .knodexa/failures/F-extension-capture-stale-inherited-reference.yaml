@@ -1,0 +1,5 @@
+id: F-extension-capture-stale-inherited-reference
+task_id: '1'
+summary: Correct refactored extension could not be indexed because its inherited reference path was stale.
+causal_details: 'hard-continuity-v1/refactor/knodexa returned correct behavior, applied the SDK lesson, reported handlers/reference.go -> handlers/transport.go and preserved completed source facts. Its record webhook-extension command failed the inherited missing-reference check. It retained an unindexed webhook-agreement.json. Do not silently relax parent constraints or accept a new baseline; a reviewed reference reconciliation/version mechanism for the child remains necessary.'
+attempted_at: 2026-10-14T16:51:24Z

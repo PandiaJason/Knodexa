@@ -1,0 +1,9 @@
+id: E-54c3559bf77e9c33f96881c3bd5e8524
+title: Shared instruction installer preservation tests pass
+node_id: L-baf62ba7d2cc8b587a2931eae58f0ac6
+evidence_type: TEST_RUN
+created_at: 2026-10-14T17:36:55.33314Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: Go vet, race tests, CLI smoke and installer regressions pass. YAML skill metadata validated in Go; host adoption remains unevaluated.
+verified_by: agent

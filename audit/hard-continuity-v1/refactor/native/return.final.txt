@@ -1,0 +1,5 @@
+Added `HandleWebhook` using the current `DispatchProduction` behavior, plus `HandlerContractVersion()` returning `raw-v1`.
+
+Tests cover raw delegation, callback ordering, result/error identity, and panic propagation. `go test ./...` passes.
+
+Recorded the stale baseline (`dc932f0` → `fd715f6`), missing `handlers/reference.go`, renamed dispatcher, and changed test hash in the extension memory. The original completed record and baseline remain unchanged.

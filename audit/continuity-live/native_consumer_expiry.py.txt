@@ -1,0 +1,18 @@
+def validate_claims(claims, now):
+    if not isinstance(claims, dict):
+        return False
+
+    sub = claims.get("sub")
+    if not isinstance(sub, str) or not sub.strip():
+        return False
+
+    exp = claims.get("exp")
+    # bool subclasses int, but is not a timestamp.
+    if not isinstance(exp, int) or isinstance(exp, bool):
+        return False
+    if not isinstance(now, int) or isinstance(now, bool):
+        return False
+    if exp <= 0 or now < 0:
+        return False
+
+    return now < exp + 7

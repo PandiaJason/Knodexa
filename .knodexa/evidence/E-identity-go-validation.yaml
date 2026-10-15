@@ -1,0 +1,9 @@
+id: E-identity-go-validation
+node_id: D-98b76dbc98184c7f9d97920a8150f053
+title: Go work identity validation
+evidence_type: TEST_RUN
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: Full race-enabled Go suite and standalone checks passed; audit/identity-checks.log. Request resolution tests cover no task ID, weak and conflicting matches, preserved completed state, restored constraints and failures, explicit intent, aliases, CLI creation guards, and MCP integration.
+verified_by: Codex Go validation runner
+created_at: 2026-10-14T07:57:24Z

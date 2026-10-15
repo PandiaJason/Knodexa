@@ -1,0 +1,103 @@
+{
+  "scope": "One paired live pilot; same producer source and agreements. Codex CLI file tools versus Knodexa resume. Background memories disabled. Independent AST and service-substitution checks, not general semantic-quality scoring.",
+  "model": "gpt-6.1-sol",
+  "arms": {
+    "native": {
+      "switch": {
+        "exit_code": 0,
+        "elapsed_seconds": 31.47,
+        "usage": [
+          {
+            "input_tokens": 61040,
+            "cached_input_tokens": 51456,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 836,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "thread_id": "01a138ec-4e48-73b3-971f-eb01c644e7b6",
+        "events": 13
+      },
+      "consumer": {
+        "exit_code": 0,
+        "elapsed_seconds": 38.59,
+        "usage": [
+          {
+            "input_tokens": 81302,
+            "cached_input_tokens": 66432,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1084,
+            "reasoning_output_tokens": 45
+          }
+        ],
+        "thread_id": "01a138ec-c965-7a43-800f-6ae7aecf2630",
+        "events": 16,
+        "grade": {
+          "service_behavior_passed": true,
+          "behavior_error": "",
+          "ast_delegation": true,
+          "no_embedded_transform": true,
+          "approach_preserved": true
+        },
+        "protected_files_preserved": true,
+        "tool_items": 5
+      }
+    },
+    "knodexa": {
+      "switch": {
+        "exit_code": 0,
+        "elapsed_seconds": 31.14,
+        "usage": [
+          {
+            "input_tokens": 61632,
+            "cached_input_tokens": 54784,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 738,
+            "reasoning_output_tokens": 0
+          }
+        ],
+        "thread_id": "01a138ed-6655-73d1-8e1d-4f78a478f0eb",
+        "events": 13
+      },
+      "consumer": {
+        "exit_code": 0,
+        "elapsed_seconds": 33.52,
+        "usage": [
+          {
+            "input_tokens": 81570,
+            "cached_input_tokens": 72704,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 774,
+            "reasoning_output_tokens": 42
+          }
+        ],
+        "thread_id": "01a138ed-e005-72a1-b88f-adfe2900bde0",
+        "events": 26,
+        "grade": {
+          "service_behavior_passed": true,
+          "behavior_error": "",
+          "ast_delegation": true,
+          "no_embedded_transform": true,
+          "approach_preserved": true
+        },
+        "protected_files_preserved": true,
+        "tool_items": 10
+      }
+    }
+  },
+  "producer": {
+    "exit_code": 0,
+    "elapsed_seconds": 24.05,
+    "usage": [
+      {
+        "input_tokens": 60936,
+        "cached_input_tokens": 51712,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 770,
+        "reasoning_output_tokens": 0
+      }
+    ],
+    "thread_id": "01a138eb-efed-76e1-8632-bb1817382713",
+    "events": 13
+  }
+}

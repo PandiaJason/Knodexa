@@ -1,0 +1,5 @@
+Created `labels.py` with `normalize_label(value)` and `test_labels.py`. Nonstrings return `""`; strings have surrounding whitespace trimmed and internal whitespace collapsed.
+
+All 5 tests passed using `python3 -B -m unittest -v test_labels`.
+
+Only the two requested files were added; existing changes were preserved.

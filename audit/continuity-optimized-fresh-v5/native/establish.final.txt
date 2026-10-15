@@ -1,0 +1,3 @@
+Implemented [handlers/reference.go](handlers/reference.go) with exact-once delegation, unchanged result/error returns, and the required observer ordering.
+
+Added tests; `go test ./...` passed. Updated work-17’s memory with the approach, rules, references, baseline commit, and alias “webhook handler.” No new task created.

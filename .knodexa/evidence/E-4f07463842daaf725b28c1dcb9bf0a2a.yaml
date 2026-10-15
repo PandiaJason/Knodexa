@@ -1,0 +1,9 @@
+id: E-4f07463842daaf725b28c1dcb9bf0a2a
+title: Restored agreement guard regression passes
+node_id: L-f9ac8d4f15fe4298ce11327edcecbd22
+evidence_type: TEST_RUN
+created_at: 2026-10-14T17:29:25.821614Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: Full checks passed including compiling extension rejection after saved checks are removed and blank agreement replacement rejection. No model comparison performed.
+verified_by: agent

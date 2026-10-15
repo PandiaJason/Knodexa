@@ -1,0 +1,3 @@
+Created `batch/transform.py` with `transform_batch(values, service)`. It coerces and strips inputs, retries `RuntimeError` once, returns `None` for transformation failures, and returns a fresh list without observer hooks.
+
+Added 11 batch tests covering failures, retry counts, and list identity. All 33 tests pass. Only batch source and its new test file changed.

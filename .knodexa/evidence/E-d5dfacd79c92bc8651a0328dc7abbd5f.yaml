@@ -1,0 +1,9 @@
+id: E-d5dfacd79c92bc8651a0328dc7abbd5f
+title: Audit regression and race suite
+node_id: D-9f37339a286629c08db6b952b35644de
+evidence_type: TEST_RUN
+created_at: 2026-10-13T13:25:34.182889Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh
+exit_code: 0
+output_summary: Static analysis, all race-enabled Go packages, fresh-binary audit probes, and isolated CLI smoke checks passed. Changes were uncommitted during validation.
+verified_by: agent

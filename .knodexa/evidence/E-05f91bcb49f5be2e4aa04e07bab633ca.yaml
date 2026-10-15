@@ -1,0 +1,9 @@
+id: E-05f91bcb49f5be2e4aa04e07bab633ca
+title: Continuity contract and standalone verification
+node_id: D-515418f86ef46414e03b8dbc25722d7e
+evidence_type: TEST_RUN
+created_at: 2026-10-14T05:16:49.948502Z
+command: GOCACHE=/private/tmp/knodexa-go-cache ./scripts/check.sh; python3 audit/approach_demo.py
+exit_code: 0
+output_summary: Full race-enabled suite, static analysis, and original audit probes passed. Generic-name reuse, cycle rejection, correct target binding, reference drift, and exports tested. Demo functional test passes with drift while structural contract flags it; corrected implementation passes checks, with semantic review still required.
+verified_by: agent

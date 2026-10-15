@@ -1,0 +1,44 @@
+{
+  "before": {
+    "BenchmarkSyncUnchanged": {
+      "samples_ms": [
+        130.380742,
+        133.127125,
+        128.934058
+      ],
+      "median_ms": 130.380742
+    },
+    "BenchmarkSyncOneChangedTask": {
+      "samples_ms": [
+        197.198525,
+        134.234917,
+        134.354075
+      ],
+      "median_ms": 134.354075
+    }
+  },
+  "after": {
+    "BenchmarkSyncUnchanged": {
+      "samples_ms": [
+        36.8224,
+        37.345267,
+        35.779058
+      ],
+      "median_ms": 36.8224
+    },
+    "BenchmarkSyncOneChangedTask": {
+      "samples_ms": [
+        47.0654,
+        46.52915,
+        43.86225
+      ],
+      "median_ms": 46.52915
+    }
+  },
+  "unchanged_speedup": 3.5407996762840006,
+  "single_edit_speedup": 2.8875248097160595,
+  "repository_context_bytes": {
+    "compact": 1368,
+    "full": 1706
+  }
+}

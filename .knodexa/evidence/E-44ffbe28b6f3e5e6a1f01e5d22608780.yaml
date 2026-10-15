@@ -1,0 +1,9 @@
+id: E-44ffbe28b6f3e5e6a1f01e5d22608780
+title: Three real host trials and independent-process audit completed
+node_id: D-7ef1bf65ec049eecc7db3678ca528751
+evidence_type: TEST_RUN
+created_at: 2026-10-14T18:11:10.082089Z
+command: GOCACHE=/private/tmp/knodexa-go-cache KNODEXA_LIVE_HOST=1 go test ./internal/experiment -run '^TestLiveHostIntegration$' -count=1 -timeout=11m -v
+exit_code: 0
+output_summary: All three declared fresh ephemeral Codex trials restored before editing, checked agreements, passed independent behavior tests and preserved parent bytes. Distribution-folder control used manual repository search. Separate eight-process audit found same-task 1/8 retention and public CLI 3 retained updates from 4 successes, with four SQLITE_BUSY initialization failures. These are unsafe findings, not concurrency passes. Full Go checks passed. See audit/host-and-concurrency-v1/REPORT.md; no cross-tool superiority claim.
+verified_by: agent

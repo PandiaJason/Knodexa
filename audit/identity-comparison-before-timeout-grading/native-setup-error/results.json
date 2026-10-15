@@ -1,0 +1,24 @@
+{
+  "arm": "native",
+  "background_memories_enabled": false,
+  "establish": {
+    "exit_code": 0,
+    "seconds": 72.605564791,
+    "thread_id": "01a13982-fd9e-77f1-a507-800a89283b9d",
+    "tool_items": 5,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 57728,
+        "input_tokens": 63406,
+        "output_tokens": 1830,
+        "reasoning_output_tokens": 19
+      }
+    ]
+  },
+  "establish_independent_checks_passed": true,
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "scope": "Same-conversation identity return; modular file memory, actual producer capture, no task ID or file path on return",
+  "status": "running"
+}

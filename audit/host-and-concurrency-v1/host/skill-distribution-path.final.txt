@@ -1,0 +1,5 @@
+Added `ForwardWebhook` in `handlers/webhook.go`. It calls the transformer exactly once and preserves raw input, result, and error identity.
+
+Tests cover identity preservation, unchanged strings, nil, and typed nil values.
+
+Verified with `go test -race ./...`, `go vet ./...`, `git diff --check`, and repository agreement checks.

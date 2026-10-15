@@ -1,0 +1,150 @@
+{
+  "arms": {
+    "knodexa": {
+      "actual_resolver_observed": true,
+      "background_memories_enabled": false,
+      "baseline_drift_reported": true,
+      "completed_memory_preserved": true,
+      "establish": {
+        "exit_code": 0,
+        "seconds": 108.935399416,
+        "thread_id": "01a13984-2862-7392-b5ad-5de94ea75636",
+        "tool_items": 22,
+        "usage": [
+          {
+            "cache_write_input_tokens": 0,
+            "cached_input_tokens": 161152,
+            "input_tokens": 172964,
+            "output_tokens": 2250,
+            "reasoning_output_tokens": 37
+          }
+        ]
+      },
+      "establish_independent_checks_passed": true,
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "low",
+      "reference_preserved": true,
+      "resolver_request_had_no_file_path": true,
+      "resolver_request_had_no_task_id": true,
+      "return": {
+        "agent_resolved_task": "work-17",
+        "agent_resolver_request": "Add another webhook handler for delivery events. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep our established layout and behavior. Add and run relevant tests.",
+        "exit_code": 0,
+        "seconds": 63.80759875,
+        "thread_id": "01a13984-2862-7392-b5ad-5de94ea75636",
+        "tool_items": 8,
+        "usage": [
+          {
+            "cache_write_input_tokens": 0,
+            "cached_input_tokens": 381824,
+            "input_tokens": 403216,
+            "output_tokens": 5067,
+            "reasoning_output_tokens": 107
+          }
+        ]
+      },
+      "return_independent_checks_passed": true,
+      "saved_baseline_preserved": true,
+      "scope": "One real agent, shared conversation, recorded memory from producer, unrelated work, then a natural-language return without task ID or file path",
+      "status": "passed",
+      "switch": {
+        "exit_code": 0,
+        "seconds": 60.654916417,
+        "thread_id": "01a13984-2862-7392-b5ad-5de94ea75636",
+        "tool_items": 11,
+        "usage": [
+          {
+            "cache_write_input_tokens": 0,
+            "cached_input_tokens": 286720,
+            "input_tokens": 303121,
+            "output_tokens": 3431,
+            "reasoning_output_tokens": 58
+          }
+        ]
+      },
+      "unrelated_new_tasks": []
+    },
+    "native": {
+      "arm": "native",
+      "background_memories_enabled": false,
+      "establish": {
+        "exit_code": 0,
+        "seconds": 63.588718208,
+        "thread_id": "01a13989-bb92-7080-aac9-fb9b600faecc",
+        "tool_items": 5,
+        "usage": [
+          {
+            "cache_write_input_tokens": 0,
+            "cached_input_tokens": 54400,
+            "input_tokens": 63514,
+            "output_tokens": 1909,
+            "reasoning_output_tokens": 13
+          }
+        ]
+      },
+      "establish_independent_checks_passed": true,
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "low",
+      "return": {
+        "exit_code": 124,
+        "seconds": 180.021195083,
+        "thread_id": "01a13989-bb92-7080-aac9-fb9b600faecc",
+        "tool_items": 3
+      },
+      "scope": "Same-conversation identity return; modular file memory, actual producer capture, no task ID or file path on return",
+      "status": "inconclusive",
+      "switch": {
+        "exit_code": 0,
+        "seconds": 44.552163916,
+        "thread_id": "01a13989-bb92-7080-aac9-fb9b600faecc",
+        "tool_items": 4,
+        "usage": [
+          {
+            "cache_write_input_tokens": 0,
+            "cached_input_tokens": 105472,
+            "input_tokens": 121394,
+            "output_tokens": 3113,
+            "reasoning_output_tokens": 13
+          }
+        ]
+      }
+    }
+  },
+  "harness_interruption": {
+    "arm": "native",
+    "path": "native-setup-error",
+    "reason": "Native producer behavior passed, but the harness incorrectly required Knodexa's typed approach structure for valid prose memory. Corrected schema handling; retained interrupted attempt; completed a fresh native arm without replacing a scored quality outcome."
+  },
+  "metrics": {
+    "knodexa": {
+      "cached_input_tokens": 829696,
+      "common_quality_passed": true,
+      "input_tokens": 879301,
+      "quality_scored": true,
+      "tool_items": 41,
+      "workflow_seconds": 233.397914583
+    },
+    "native": {
+      "cached_input_tokens": 159872,
+      "common_quality_passed": false,
+      "input_tokens": 184908,
+      "quality_scored": false,
+      "tool_items": 12,
+      "workflow_seconds": 288.16207720700004
+    }
+  },
+  "paired_quality_outcome": "inconclusive",
+  "plan": {
+    "arms": [
+      "native",
+      "knodexa"
+    ],
+    "background_memories_enabled": false,
+    "model": "gpt-6.1-sol",
+    "order": "native first",
+    "pairs": 1,
+    "primary": "independent return behavior passes and source reference/memory preserved",
+    "reasoning_effort": "low",
+    "return_supplies_task_id_or_path": false
+  }
+}

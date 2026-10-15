@@ -1,0 +1,42 @@
+{
+  "aliases": [
+    "webhook handler"
+  ],
+  "approach": "Handle forwards raw input to the injected Transformer exactly once, calling Started before transformation and Finished only when the returned error is nil, then returning the original result and error unchanged.",
+  "baseline_commit": "331cddd92ff093399e404381bff3a803f3820c4a",
+  "constraints": [
+    "Delegate raw values exactly once; do not normalize or coerce",
+    "Preserve result and error identity",
+    "Observer started before service; finished only on success"
+  ],
+  "created_at": "0001-01-01T00:00:00Z",
+  "explicit_rules": [
+    "Do not trim, uppercase, coerce, retry, recover panics, or replace values",
+    "Skip observer callbacks when the observer is nil",
+    "Preserve result and error identity, including a result returned alongside an error"
+  ],
+  "goal": "Deliver raw events through injected services with observer ordering",
+  "id": "work-17",
+  "references": [
+    {
+      "path": "handlers/reference.go"
+    },
+    {
+      "path": "handlers/reference_test.go"
+    }
+  ],
+  "required_verification": [
+    "Service substitution, error identity, and observer ordering tests"
+  ],
+  "scopes": [
+    "handlers",
+    "raw event forwarding",
+    "observer ordering"
+  ],
+  "status": "COMPLETED",
+  "title": "Event forwarding adapters",
+  "touches_files": [
+    "handlers/reference.go"
+  ],
+  "updated_at": "0001-01-01T00:00:00Z"
+}

@@ -1,0 +1,59 @@
+{
+  "failed_test_verifies_decision": false,
+  "unrelated_evidence_verifies_lesson": false,
+  "decision_arguments_discarded": false,
+  "custom_acceptance_criteria_lost": false,
+  "grandparent_decision_missing": false,
+  "unrelated_lesson_transferred": false,
+  "lesson_guidance_missing": false,
+  "token_budget_exceeded_without_signal": false,
+  "removed_constraint_still_in_context": false,
+  "deleted_task_still_retrievable": false,
+  "observed_context": {
+    "context_pruned": false,
+    "token_budget": 1500,
+    "budget_exceeded": false,
+    "task": {
+      "id": "leaf",
+      "parent_id": "child",
+      "title": "leaf",
+      "goal": "Audit task",
+      "status": "ACTIVE"
+    },
+    "accepted_constraints": [
+      "OLD constraint",
+      "Deterministic behavior: zero LLM calls in core engine",
+      "Evidence-driven verification for decisions and lessons",
+      "Preserve existing repository constraints and public APIs"
+    ],
+    "previous_decisions": [
+      {
+        "rationale": "## Rationale\nUse immutable snapshots\n\n## Constraints\n- Must retain snapshots\n\n## Rejected alternatives\n- Mutable global cache",
+        "id": "D-43a910a4159679a306ba05188c880f2a",
+        "title": "Root decision",
+        "status": "VERIFIED",
+        "confidence": 0.8
+      }
+    ],
+    "relevant_lessons": [
+      {
+        "description": "Reject boolean expiration timestamps explicitly",
+        "applicability": "When validating auth expiry",
+        "id": "L-c2a4b5aed4e4199149d082ef14e70b62",
+        "title": "Auth lesson",
+        "source_task": "ROOT",
+        "confidence": 0.8,
+        "relevance": "high",
+        "verification_status": "VERIFIED"
+      }
+    ],
+    "baseline": {
+      "commit": "unknown",
+      "dirty": false
+    },
+    "required_verification": [
+      "Run the custom acceptance benchmark"
+    ],
+    "estimated_tokens": 197
+  }
+}

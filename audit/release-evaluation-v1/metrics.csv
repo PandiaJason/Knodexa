@@ -1,0 +1,5 @@
+case,arm,quality_scored,common_quality_passed,response_completed,workflow_seconds,tool_items,input_tokens,cached_input_tokens,outcome
+same-conversation-return,knodexa,True,True,True,153.466222792,18,436829,384640,tie
+same-conversation-return,native,True,True,True,118.746079166,11,365374,339968,tie
+fresh-context-return,knodexa,False,False,,92.181979958,13,64454,58496,inconclusive
+fresh-context-return,native,False,False,,4.167521625,0,0,0,inconclusive

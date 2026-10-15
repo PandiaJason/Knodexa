@@ -1,0 +1,7 @@
+* text=auto
+*.png binary
+
+# Preserve the exact formatting of retained evaluation fixtures and generated
+# memory exports rather than normalizing historical evidence during publication.
+audit/** whitespace=-blank-at-eof,-blank-at-eol
+.knodexa/exports/** whitespace=-blank-at-eof,-blank-at-eol

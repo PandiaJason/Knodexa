@@ -1,0 +1,62 @@
+{
+  "failed_test_verifies_decision": false,
+  "unrelated_evidence_verifies_lesson": false,
+  "decision_arguments_discarded": false,
+  "custom_acceptance_criteria_lost": false,
+  "grandparent_decision_missing": false,
+  "unrelated_lesson_transferred": false,
+  "lesson_guidance_missing": false,
+  "token_budget_exceeded_without_signal": false,
+  "removed_constraint_still_in_context": false,
+  "deleted_task_still_retrievable": false,
+  "observed_context": {
+    "detail_level": "compact",
+    "detail_hint": "Full rationale and evidence IDs: knodexa show <id> or knodexa_get_detail",
+    "context_pruned": false,
+    "token_budget": 1500,
+    "budget_exceeded": false,
+    "task": {
+      "id": "leaf",
+      "parent_id": "child",
+      "title": "leaf",
+      "goal": "Audit task",
+      "status": "ACTIVE"
+    },
+    "accepted_constraints": [
+      "OLD constraint",
+      "Deterministic behavior: zero LLM calls in core engine",
+      "Evidence-driven verification for decisions and lessons",
+      "Preserve existing repository constraints and public APIs",
+      "Must retain snapshots"
+    ],
+    "previous_decisions": [
+      {
+        "summary": "Use immutable snapshots",
+        "id": "D-fb8cbcb69ec184b92ee1f711a64858b1",
+        "title": "Root decision",
+        "status": "VERIFIED",
+        "confidence": 0.8
+      }
+    ],
+    "relevant_lessons": [
+      {
+        "description": "Reject boolean expiration timestamps explicitly",
+        "applicability": "When validating auth expiry",
+        "id": "L-0dc3bb1a6bf146f7629a7f7e0b8eb690",
+        "title": "Auth lesson",
+        "source_task": "ROOT",
+        "confidence": 0.8,
+        "relevance": "high",
+        "verification_status": "VERIFIED"
+      }
+    ],
+    "baseline": {
+      "commit": "unknown",
+      "dirty": false
+    },
+    "required_verification": [
+      "Run the custom acceptance benchmark"
+    ],
+    "estimated_tokens": 195
+  }
+}

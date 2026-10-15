@@ -1,0 +1,19 @@
+?   	identitysample/archive	[no test files]
+?   	identitysample/batch	[no test files]
+ok  	identitysample/contracts	(cached)
+?   	identitysample/diagnostic	[no test files]
+# identitysample/handlers [identitysample/handlers.test]
+handlers/reference_test.go:9:6: auditService redeclared in this block
+	handlers/hard_independent_test.go:3:6: other declaration of auditService
+handlers/reference_test.go:18:24: method auditService.Transform already declared at handlers/hard_independent_test.go:4:22
+handlers/reference_test.go:28:6: auditObserver redeclared in this block
+	handlers/hard_independent_test.go:5:6: other declaration of auditObserver
+handlers/reference_test.go:33:25: method auditObserver.Started already declared at handlers/hard_independent_test.go:6:23
+handlers/reference_test.go:37:25: method auditObserver.Finished already declared at handlers/hard_independent_test.go:7:23
+handlers/reference_test.go:41:6: TestIndependentIdentityContract redeclared in this block
+	handlers/hard_independent_test.go:8:6: other declaration of TestIndependentIdentityContract
+FAIL	identitysample/handlers [build failed]
+?   	identitysample/legacy	[no test files]
+?   	identitysample/preview	[no test files]
+?   	identitysample/search	[no test files]
+FAIL
