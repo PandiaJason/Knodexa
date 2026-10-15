@@ -1,0 +1,92 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+type transformFunc func(any) (any, error)
+
+func (f transformFunc) Transform(v any) (any, error) { return f(v) }
+
+type observerFuncs struct {
+	started  func(any)
+	finished func(any)
+}
+
+func (o observerFuncs) Started(v any)  { o.started(v) }
+func (o observerFuncs) Finished(v any) { o.finished(v) }
+
+func TestHandle(t *testing.T) {
+	sentinel := errors.New("service error")
+	for _, serviceErr := range []error{nil, sentinel} {
+		for _, observe := range []bool{false, true} {
+			input, result := &struct{ Raw string }{"  MiXeD  "}, &struct{ N int }{42}
+			var events []string
+			calls := 0
+			var observer Observer
+			if observe {
+				observer = observerFuncs{
+					started: func(v any) {
+						if v != input {
+							t.Fatal("input identity changed")
+						}
+						events = append(events, "started")
+					},
+					finished: func(v any) {
+						if v != result {
+							t.Fatal("result identity changed")
+						}
+						events = append(events, "finished")
+					},
+				}
+			}
+			got, err := Handle(input, transformFunc(func(v any) (any, error) {
+				calls++
+				if v != input {
+					t.Fatal("raw input replaced")
+				}
+				events = append(events, "transform")
+				return result, serviceErr
+			}), observer)
+			if got != result || err != serviceErr || calls != 1 {
+				t.Fatalf("got (%v, %v), calls %d", got, err, calls)
+			}
+			want := []string{"transform"}
+			if observe {
+				want = []string{"started", "transform"}
+				if serviceErr == nil {
+					want = append(want, "finished")
+				}
+			}
+			if !reflect.DeepEqual(events, want) {
+				t.Fatalf("events %v, want %v", events, want)
+			}
+		}
+	}
+}
+
+func TestHandleRawValues(t *testing.T) {
+	for _, value := range []any{nil, "  MiXeD  ", 17} {
+		got, err := Handle(value, transformFunc(func(v any) (any, error) {
+			if v != value {
+				t.Fatalf("got input %#v, want %#v", v, value)
+			}
+			return v, nil
+		}), nil)
+		if got != value || err != nil {
+			t.Fatalf("got (%#v, %v)", got, err)
+		}
+	}
+}
+
+func TestHandlePropagatesPanic(t *testing.T) {
+	marker := &struct{}{}
+	defer func() {
+		if recover() != marker {
+			t.Fatal("panic replaced or recovered")
+		}
+	}()
+	Handle(nil, transformFunc(func(any) (any, error) { panic(marker) }), nil)
+}

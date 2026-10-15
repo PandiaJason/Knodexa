@@ -1,0 +1,24 @@
+package handlers
+
+// Transformer processes a raw value.
+type Transformer interface {
+	Transform(value any) (any, error)
+}
+
+// Observer receives notifications before processing and after success.
+type Observer interface {
+	Started(value any)
+	Finished(result any)
+}
+
+// Handle forwards value once and preserves the service's result and error.
+func Handle(value any, service Transformer, observer Observer) (any, error) {
+	if observer != nil {
+		observer.Started(value)
+	}
+	result, err := service.Transform(value)
+	if err == nil && observer != nil {
+		observer.Finished(result)
+	}
+	return result, err
+}

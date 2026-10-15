@@ -1,0 +1,103 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+func TestWebhookDelivery(t *testing.T) {
+	pointer := &struct{ N int }{42}
+	for _, value := range []any{"hello", " hello ", "", nil, 17, pointer} {
+		for _, observed := range []bool{false, true} {
+			for _, serviceError := range []error{nil, errors.New("delivery failed")} {
+				events := []string{}
+				resultValue := &struct{ N int }{7}
+				service := &auditService{events: &events, result: resultValue, err: serviceError}
+				observer := &auditObserver{events: &events}
+				var hook Observer
+				if observed {
+					hook = observer
+				}
+				result, err := HandleWebhook(value, service, hook)
+				if result != resultValue || err != serviceError || service.calls != 1 || service.received != value {
+					t.Fatalf("delegation mismatch for %#v: result=%v err=%v calls=%d", value, result, err, service.calls)
+				}
+				want := []string{"transform"}
+				if observed {
+					want = []string{"started", "transform"}
+					if observer.started != value {
+						t.Fatal("Started payload changed")
+					}
+					if serviceError == nil {
+						want = append(want, "finished")
+						if observer.finished != resultValue {
+							t.Fatal("Finished payload changed")
+						}
+					}
+				}
+				if !reflect.DeepEqual(events, want) {
+					t.Fatalf("events=%v, want %v", events, want)
+				}
+			}
+		}
+	}
+}
+
+type webhookPanicObserver struct {
+	events *[]string
+	stage  string
+	value  any
+}
+
+func (o *webhookPanicObserver) Started(any) {
+	*o.events = append(*o.events, "started")
+	if o.stage == "started" {
+		panic(o.value)
+	}
+}
+
+func (o *webhookPanicObserver) Finished(any) {
+	*o.events = append(*o.events, "finished")
+	if o.stage == "finished" {
+		panic(o.value)
+	}
+}
+
+func TestWebhookPanics(t *testing.T) {
+	for _, stage := range []string{"started", "transform", "finished"} {
+		t.Run(stage, func(t *testing.T) {
+			events := []string{}
+			panicValue := &struct{ N int }{13}
+			service := &auditService{events: &events}
+			observer := &webhookPanicObserver{events: &events, stage: stage, value: panicValue}
+			want := []string{"started"}
+			wantCalls := 0
+			if stage != "started" {
+				want = append(want, "transform")
+				wantCalls = 1
+			}
+			if stage == "transform" {
+				service.panicValue = panicValue
+			}
+			if stage == "finished" {
+				want = append(want, "finished")
+			}
+			defer func() {
+				if got := recover(); got != panicValue {
+					t.Fatalf("panic=%v, want original %v", got, panicValue)
+				}
+				if service.calls != wantCalls || !reflect.DeepEqual(events, want) {
+					t.Fatalf("calls=%d events=%v, want calls=%d events=%v", service.calls, events, wantCalls, want)
+				}
+			}()
+			HandleWebhook(" raw ", service, observer)
+		})
+	}
+}
+
+func TestHandlerContractVersion(t *testing.T) {
+	if got := HandlerContractVersion(); got != "raw-v1" {
+		t.Fatalf("version=%q, want raw-v1", got)
+	}
+}

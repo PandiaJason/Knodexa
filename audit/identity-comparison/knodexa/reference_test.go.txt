@@ -1,0 +1,81 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+type transformFunc func(any) (any, error)
+
+func (f transformFunc) Transform(value any) (any, error) { return f(value) }
+
+type observerFuncs struct {
+	started  func(any)
+	finished func(any)
+}
+
+func (o observerFuncs) Started(value any)   { o.started(value) }
+func (o observerFuncs) Finished(result any) { o.finished(result) }
+
+func TestHandle(t *testing.T) {
+	inputPointer := &struct{ Value string }{" raw "}
+	result := &struct{ Value string }{" result "}
+	originalError := errors.New("original")
+	for _, input := range []any{" raw Mixed Case ", inputPointer, 42, nil} {
+		for _, wantErr := range []error{nil, originalError} {
+			for _, observe := range []bool{false, true} {
+				calls := 0
+				var events []string
+				var observer Observer
+				if observe {
+					observer = observerFuncs{
+						started: func(value any) {
+							if value != input {
+								t.Fatal("Started changed input")
+							}
+							events = append(events, "started")
+						},
+						finished: func(value any) {
+							if value != result {
+								t.Fatal("Finished changed result")
+							}
+							events = append(events, "finished")
+						},
+					}
+				}
+				got, err := Handle(input, transformFunc(func(value any) (any, error) {
+					calls++
+					if value != input {
+						t.Fatal("Transform changed input")
+					}
+					events = append(events, "transform")
+					return result, wantErr
+				}), observer)
+				if calls != 1 || got != result || err != wantErr {
+					t.Fatalf("calls=%d result=%v err=%v", calls, got, err)
+				}
+				wantEvents := []string{"transform"}
+				if observe {
+					wantEvents = []string{"started", "transform"}
+					if wantErr == nil {
+						wantEvents = append(wantEvents, "finished")
+					}
+				}
+				if !reflect.DeepEqual(events, wantEvents) {
+					t.Fatalf("events=%v want=%v", events, wantEvents)
+				}
+			}
+		}
+	}
+}
+
+func TestHandlePropagatesPanic(t *testing.T) {
+	panicValue := &struct{}{}
+	defer func() {
+		if recover() != panicValue {
+			t.Fatal("original panic was not propagated")
+		}
+	}()
+	Handle(nil, transformFunc(func(any) (any, error) { panic(panicValue) }), nil)
+}

@@ -1,0 +1,5 @@
+Implemented [handlers/reference.go](handlers/reference.go) with exact-once raw input forwarding, unchanged result/error identity, and the required observer ordering.
+
+Tests passed with `go test ./...`, covering success, errors, nil observers, raw values, and panic propagation.
+
+Recorded the established approach, source reference, and alias **“webhook handler”** under **work-17**. No new task was created.

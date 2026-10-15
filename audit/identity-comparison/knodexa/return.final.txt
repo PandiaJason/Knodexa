@@ -1,0 +1,5 @@
+Added `HandleWebhook` in [handlers/webhook.go](handlers/webhook.go), preserving raw input, single delegation, observer ordering, and original result/error identity.
+
+Tests cover success, errors, nil observers, and panic propagation. `go test ./...` passes.
+
+Existing handler references and Knodexa memory remain unchanged.

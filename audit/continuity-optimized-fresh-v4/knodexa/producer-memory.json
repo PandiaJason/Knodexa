@@ -1,0 +1,55 @@
+{
+  "work_id": "work-17",
+  "code_anchors": [
+    {
+      "path": "handlers/reference.go",
+      "sha256": "a1cc51b14f7170e72bf95d491d4c97ed4278395fb74447e773ae5041bbfff349",
+      "symbols": [
+        "Handle",
+        "Observer",
+        "Transformer"
+      ]
+    }
+  ],
+  "aliases": [
+    "webhook handler"
+  ],
+  "approach": {
+    "version": 1,
+    "scopes": [
+      "handlers/"
+    ],
+    "summary": "Forward raw webhook values through an injected Transformer with optional Observer lifecycle callbacks.",
+    "rules": [
+      "Delegate raw input exactly once without normalization, coercion, retries, or panic recovery.",
+      "Call Started before Transform when observer is non-nil; call Finished only on success.",
+      "Return the original result and error unchanged.",
+      "Use Go standard library."
+    ],
+    "references": [
+      {
+        "path": "handlers/reference.go",
+        "sha256": "a1cc51b14f7170e72bf95d491d4c97ed4278395fb74447e773ae5041bbfff349"
+      }
+    ],
+    "recorded_at": "2026-10-14T15:53:16.76536Z"
+  },
+  "id": "work-17",
+  "title": "Event forwarding adapters",
+  "goal": "Deliver raw events through injected services with observer ordering",
+  "status": "COMPLETED",
+  "created_at": "0001-01-01T00:00:00Z",
+  "updated_at": "2026-10-14T15:53:16.76536Z",
+  "constraints": [
+    "Delegate raw values exactly once; do not normalize or coerce",
+    "Preserve result and error identity",
+    "Observer started before service; finished only on success"
+  ],
+  "touches_files": [
+    "handlers/reference.go"
+  ],
+  "baseline_commit": "930d9defc53fda4828e36da7e76736cf50181218",
+  "required_verification": [
+    "Service substitution, error identity, and observer ordering tests"
+  ]
+}

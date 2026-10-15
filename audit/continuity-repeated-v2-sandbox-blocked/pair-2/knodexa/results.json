@@ -1,0 +1,13 @@
+{
+  "background_memories_enabled": false,
+  "establish": {
+    "exit_code": 1,
+    "seconds": 0.176160291,
+    "thread_id": "",
+    "tool_items": 0
+  },
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "scope": "One real agent, shared conversation, recorded memory from producer, unrelated work, then a natural-language return without task ID or file path",
+  "status": "inconclusive"
+}

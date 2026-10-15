@@ -1,0 +1,3 @@
+Added `HandleWebhook` in [handlers/webhook.go](handlers/webhook.go), following the established raw forwarding, result/error identity, and observer ordering.
+
+Added relevant tests; `go test ./...` passed. Existing handler references, image code, and Knodexa memory remain unchanged.

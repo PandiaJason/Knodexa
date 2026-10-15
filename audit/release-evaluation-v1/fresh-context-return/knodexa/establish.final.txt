@@ -1,0 +1,3 @@
+Implemented [handlers/reference.go](handlers/reference.go) with exact-once raw delegation, observer ordering, unchanged result/error returns, and panic propagation.
+
+`go test ./...` passed. Recorded the approach and source reference for `work-17`, including the alias “webhook handler.” No new task was created.

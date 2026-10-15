@@ -1,0 +1,5 @@
+Added `HandleWebhook` with the established behavior and `HandlerContractVersion()` returning `"raw-v1"`.
+
+Tests cover raw inputs, result/error identity, observer ordering, and panic propagation. `go test ./...` passes.
+
+Preserved the completed source memory, agreement, and reference implementation. Reviewed the changed Git baseline; no stale or missing references were found.

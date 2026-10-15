@@ -1,0 +1,6 @@
+package handlers
+import "testing"
+type auditCrashObserver struct{ token any; started bool }
+func(o *auditCrashObserver)Started(any){if o.started{panic(o.token)}}
+func(o *auditCrashObserver)Finished(any){if !o.started{panic(o.token)}}
+func TestRecordedObserverFailure(t *testing.T){for _,started:=range []bool{true,false}{func(){events:=[]string{};token:=&struct{N int}{123};service:=&auditService{events:&events};observer:=&auditCrashObserver{token:token,started:started};defer func(){if recover()!=token{t.Error("observer panic swallowed/replaced")};expected:=1;if started{expected=0};if service.calls!=expected{t.Error("service invocation order/retry changed")}}();HandleWebhook("x",service,observer)}()}}

@@ -1,0 +1,74 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+func TestHandleWebhook(t *testing.T) {
+	inputPointer := &struct{ Value string }{" raw "}
+	for _, input := range []any{nil, " raw MixedCase ", 42, inputPointer} {
+		for _, failure := range []error{nil, errors.New("original error")} {
+			for _, observed := range []bool{false, true} {
+				var calls []string
+				result := &struct{ Value string }{" original result "}
+				service := transformFunc(func(value any) (any, error) {
+					calls = append(calls, "transform")
+					if value != input {
+						t.Fatalf("input replaced: got %#v, want %#v", value, input)
+					}
+					return result, failure
+				})
+				var observer Observer
+				if observed {
+					observer = observerFuncs{
+						started: func(value any) {
+							calls = append(calls, "started")
+							if value != input {
+								t.Fatal("Started input replaced")
+							}
+						},
+						finished: func(value any) {
+							calls = append(calls, "finished")
+							if value != result {
+								t.Fatal("Finished result replaced")
+							}
+						},
+					}
+				}
+				got, err := HandleWebhook(input, service, observer)
+				if got != result || err != failure {
+					t.Fatal("result or error identity changed")
+				}
+				want := []string{"transform"}
+				if observed {
+					want = []string{"started", "transform"}
+					if failure == nil {
+						want = append(want, "finished")
+					}
+				}
+				if !reflect.DeepEqual(calls, want) {
+					t.Fatalf("calls = %v, want %v", calls, want)
+				}
+			}
+		}
+	}
+}
+
+func TestHandleWebhookPropagatesPanic(t *testing.T) {
+	marker := &struct{}{}
+	calls := 0
+	defer func() {
+		if got := recover(); got != marker {
+			t.Fatalf("panic = %v, want original marker", got)
+		}
+		if calls != 1 {
+			t.Fatalf("Transform called %d times", calls)
+		}
+	}()
+	HandleWebhook(nil, transformFunc(func(any) (any, error) {
+		calls++
+		panic(marker)
+	}), observerFuncs{started: func(any) {}, finished: func(any) { t.Fatal("Finished called after panic") }})
+}

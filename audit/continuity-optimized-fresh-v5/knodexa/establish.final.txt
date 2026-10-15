@@ -1,0 +1,5 @@
+Implemented [handlers/reference.go](handlers/reference.go) with one raw-input delegation, unchanged result/error returns, and the required observer ordering.
+
+Tests pass with `go test ./...`, covering identity, ordering, nil observers, and panic propagation.
+
+Recorded the established approach and source reference for `work-17`, including the “webhook handler” alias.

@@ -1,0 +1,13 @@
+package handlers
+
+// HandleWebhook forwards a delivery event through the service.
+func HandleWebhook(value any, service Transformer, observer Observer) (any, error) {
+	if observer != nil {
+		observer.Started(value)
+	}
+	result, err := service.Transform(value)
+	if err == nil && observer != nil {
+		observer.Finished(result)
+	}
+	return result, err
+}

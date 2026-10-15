@@ -1,0 +1,5 @@
+Implemented [handlers/reference.go](handlers/reference.go) with the requested interfaces and `Handle` behavior.
+
+Tests pass with `go test ./...`, covering delegation, identity preservation, observer ordering, and panic propagation.
+
+Recorded work-17’s approach, reference, “webhook handler” alias, and stable source identity in Knodexa. No new task was created.

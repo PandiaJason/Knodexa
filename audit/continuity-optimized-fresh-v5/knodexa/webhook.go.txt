@@ -1,0 +1,6 @@
+package handlers
+
+// HandleWebhook delivers a raw delivery event through the supplied service.
+func HandleWebhook(value any, service Transformer, observer Observer) (any, error) {
+	return Handle(value, service, observer)
+}

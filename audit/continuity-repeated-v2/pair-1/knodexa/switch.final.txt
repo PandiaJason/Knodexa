@@ -1,0 +1,5 @@
+Implemented `images.NormalizeLabel`: strings are trimmed, whitespace collapsed, and uppercased; nonstrings return `""`.
+
+`go test ./...` passes, covering whitespace and malformed values. Recorded image-42’s image scope approach, reference, alias, and source identity in Knodexa.
+
+Handler code, tests, and work-17 memory remain unchanged.

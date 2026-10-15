@@ -1,0 +1,5 @@
+Added `HandleWebhook(value any, service Transformer, observer Observer) (any, error)` using the established handler behavior.
+
+Tests cover service substitution, raw value and result identity, error identity, observer ordering, nil observers, and panic propagation.
+
+`go test ./...` passes. Existing references and agreement remain unchanged.

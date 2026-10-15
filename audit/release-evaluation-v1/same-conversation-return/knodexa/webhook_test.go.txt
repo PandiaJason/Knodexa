@@ -1,0 +1,11 @@
+package handlers
+
+import "testing"
+
+func TestHandleWebhook(t *testing.T) {
+	testHandler(t, HandleWebhook)
+}
+
+func TestHandleWebhookPropagatesPanic(t *testing.T) {
+	testHandlerPropagatesPanic(t, HandleWebhook)
+}

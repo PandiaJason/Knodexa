@@ -1,0 +1,88 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+func TestHandleWebhook(t *testing.T) {
+	for _, failure := range []bool{false, true} {
+		name := "success"
+		if failure {
+			name = "error"
+		}
+		t.Run(name, func(t *testing.T) {
+			input := &struct{ Raw string }{"  MiXeD  "}
+			result := &struct{ Value int }{42}
+			var serviceErr error
+			if failure {
+				serviceErr = errors.New("service failure")
+			}
+			var events []string
+			calls := 0
+			service := transformerFunc(func(value any) (any, error) {
+				calls++
+				if value != input {
+					t.Fatal("input identity changed")
+				}
+				events = append(events, "transform")
+				return result, serviceErr
+			})
+			observer := observerFuncs{
+				started: func(value any) {
+					if value != input {
+						t.Fatal("observer input identity changed")
+					}
+					events = append(events, "started")
+				},
+				finished: func(value any) {
+					if value != result {
+						t.Fatal("observer result identity changed")
+					}
+					events = append(events, "finished")
+				},
+			}
+			got, err := HandleWebhook(input, service, observer)
+			if got != result || err != serviceErr {
+				t.Fatal("result or error identity changed")
+			}
+			if calls != 1 {
+				t.Fatalf("Transform called %d times", calls)
+			}
+			want := []string{"started", "transform"}
+			if !failure {
+				want = append(want, "finished")
+			}
+			if !reflect.DeepEqual(events, want) {
+				t.Fatalf("events = %v, want %v", events, want)
+			}
+		})
+	}
+}
+
+func TestHandleWebhookWithoutObserver(t *testing.T) {
+	for _, input := range []any{nil, "  MiXeD  ", 17} {
+		calls := 0
+		got, err := HandleWebhook(input, transformerFunc(func(value any) (any, error) {
+			calls++
+			if value != input {
+				t.Fatal("raw input changed")
+			}
+			return value, nil
+		}), nil)
+		if got != input || err != nil || calls != 1 {
+			t.Fatalf("got (%v, %v), calls %d", got, err, calls)
+		}
+	}
+}
+
+func TestHandleWebhookPropagatesPanic(t *testing.T) {
+	marker := &struct{}{}
+	defer func() {
+		if recover() != marker {
+			t.Fatal("service panic was replaced or recovered")
+		}
+	}()
+	HandleWebhook(nil, transformerFunc(func(any) (any, error) { panic(marker) }), nil)
+}

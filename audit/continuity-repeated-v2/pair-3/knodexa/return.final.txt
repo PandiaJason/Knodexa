@@ -1,0 +1,3 @@
+Added `handlers.HandleWebhook` using the established forwarding behavior. Tests cover raw input, single delegation, result/error identity, observer ordering, and panic propagation.
+
+`go test ./...` passes. Existing source files and recorded memory remain unchanged.

@@ -1,0 +1,27 @@
+{
+  "case": "refactor",
+  "arm": "knodexa",
+  "phase": {
+    "exit_code": 0,
+    "seconds": 93.881051125,
+    "thread_id": "01a13b4c-c491-77e3-8c7a-cf59b5e6ff8f",
+    "tool_items": 12,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 163456,
+        "input_tokens": 194971,
+        "output_tokens": 2494,
+        "reasoning_output_tokens": 72
+      }
+    ],
+    "agent_resolved_task": "webhook-extension",
+    "agent_resolver_request": "additional production webhook handler"
+  },
+  "behavior_passed": false,
+  "completed_memory_preserved": true,
+  "reference_preserved": true,
+  "stale_agreement_reported": true,
+  "scored": true,
+  "passed": false
+}

@@ -1,6 +1,6 @@
 # Binaries
 bin/
-knodexa
+/knodexa
 
 # Ephemeral SQLite index and temp files
 .knodexa/cache.db*

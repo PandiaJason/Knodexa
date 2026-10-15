@@ -1,0 +1,5 @@
+Added [images/normalize.go](images/normalize.go) with `NormalizeLabel`: strings are trimmed, whitespace collapsed, and uppercased; nonstrings return `""`.
+
+Added malformed-value and whitespace tests. `go test ./...` passed.
+
+Recorded image-42’s image-scoped approach, reference, aliases, and stable identity in Knodexa. Handler files and work-17’s memory remain unchanged.

@@ -1,0 +1,55 @@
+{
+  "work_id": "work-17",
+  "code_anchors": [
+    {
+      "path": "handlers/reference.go",
+      "sha256": "d182cde1f276c55b575c6fd36a7904e2b75fcbfe30b49ae7c9f1c6205f8b0e17",
+      "symbols": [
+        "Handle",
+        "Observer",
+        "Transformer"
+      ]
+    }
+  ],
+  "aliases": [
+    "webhook handler"
+  ],
+  "approach": {
+    "version": 1,
+    "scopes": [
+      "handlers/"
+    ],
+    "summary": "Forward raw webhook values through an injected Transformer with ordered optional Observer notifications.",
+    "rules": [
+      "Delegate the raw input exactly once without normalization, coercion, retries, or panic recovery.",
+      "Return the original result and error unchanged, including a result returned with an error.",
+      "Call Started before Transform for a non-nil observer and Finished only on success.",
+      "Use only the Go standard library."
+    ],
+    "references": [
+      {
+        "path": "handlers/reference.go",
+        "sha256": "d182cde1f276c55b575c6fd36a7904e2b75fcbfe30b49ae7c9f1c6205f8b0e17"
+      }
+    ],
+    "recorded_at": "2026-10-14T15:24:49.994219Z"
+  },
+  "id": "work-17",
+  "title": "Event forwarding adapters",
+  "goal": "Deliver raw events through injected services with observer ordering",
+  "status": "COMPLETED",
+  "created_at": "0001-01-01T00:00:00Z",
+  "updated_at": "2026-10-14T15:24:49.994219Z",
+  "constraints": [
+    "Delegate raw values exactly once; do not normalize or coerce",
+    "Preserve result and error identity",
+    "Observer started before service; finished only on success"
+  ],
+  "touches_files": [
+    "handlers/reference.go"
+  ],
+  "baseline_commit": "3de55ba4eb28cbb55f893e1c97769a9a8d26b525",
+  "required_verification": [
+    "Service substitution, error identity, and observer ordering tests"
+  ]
+}

@@ -1,0 +1,5 @@
+id: F-cli-source-ignored
+task_id: '1'
+summary: Clean GitHub CI could not build because a broad binary ignore rule excluded cmd/knodexa.
+causal_details: 'The unanchored knodexa ignore pattern matched directories at every depth, excluding the CLI entrypoint and Knodexa-arm audit evidence from the initial publication. Narrowed it to /knodexa and added the existing source and retained evidence. Clean committed-tree validation and GitHub CI provide packaging verification; local working-tree tests alone did not catch the omission.'
+attempted_at: 2026-10-15T00:00:00Z

@@ -1,0 +1,5 @@
+Implemented [handlers/reference.go](handlers/reference.go) with exact-once delegation, unchanged result/error identity, and the required observer ordering.
+
+Tests passed with `go test ./...`.
+
+Recorded the approach, source reference, and alias **“webhook handler”** in Knodexa under **work-17**.

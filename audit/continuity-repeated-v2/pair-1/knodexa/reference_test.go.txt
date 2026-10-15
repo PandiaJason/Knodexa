@@ -1,0 +1,84 @@
+package handlers
+
+import (
+	"errors"
+	"reflect"
+	"testing"
+)
+
+type transformerFunc func(any) (any, error)
+
+func (f transformerFunc) Transform(value any) (any, error) { return f(value) }
+
+type observerFuncs struct {
+	started  func(any)
+	finished func(any)
+}
+
+func (o observerFuncs) Started(value any)   { o.started(value) }
+func (o observerFuncs) Finished(result any) { o.finished(result) }
+
+func TestHandle(t *testing.T) {
+	for _, input := range []any{"  Mixed Case  ", &struct{ N int }{7}, nil, 42} {
+		for _, failure := range []bool{false, true} {
+			for _, observed := range []bool{false, true} {
+				result := &struct{ N int }{99}
+				var serviceErr error
+				if failure {
+					serviceErr = errors.New("service failure")
+				}
+				var events []string
+				calls := 0
+				service := transformerFunc(func(value any) (any, error) {
+					calls++
+					if value != input {
+						t.Fatalf("input changed: %#v", value)
+					}
+					events = append(events, "transform")
+					return result, serviceErr
+				})
+				var observer Observer
+				if observed {
+					observer = observerFuncs{
+						started: func(value any) {
+							if value != input {
+								t.Fatal("Started input changed")
+							}
+							events = append(events, "started")
+						},
+						finished: func(value any) {
+							if value != result {
+								t.Fatal("Finished result changed")
+							}
+							events = append(events, "finished")
+						},
+					}
+				}
+				got, err := Handle(input, service, observer)
+				if got != result || err != serviceErr || calls != 1 {
+					t.Fatalf("result=%v error=%v calls=%d", got, err, calls)
+				}
+				want := []string{"transform"}
+				if observed {
+					want = []string{"started", "transform"}
+					if !failure {
+						want = append(want, "finished")
+					}
+				}
+				if !reflect.DeepEqual(events, want) {
+					t.Fatalf("events=%v want=%v", events, want)
+				}
+			}
+		}
+	}
+}
+
+func TestHandlePropagatesPanic(t *testing.T) {
+	sentinel := &struct{}{}
+	defer func() {
+		if recover() != sentinel {
+			t.Fatal("service panic was changed or recovered")
+		}
+	}()
+	Handle(nil, transformerFunc(func(any) (any, error) { panic(sentinel) }), nil)
+}

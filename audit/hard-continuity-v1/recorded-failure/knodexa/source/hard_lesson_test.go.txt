@@ -1,0 +1,3 @@
+package handlers
+import "testing"
+func TestTransferredSDKLesson(t *testing.T){if HandlerContractVersion()!="raw-v1"{t.Fatal("cross-task compatibility marker lost")}}

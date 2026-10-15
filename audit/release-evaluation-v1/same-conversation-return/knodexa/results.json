@@ -1,0 +1,65 @@
+{
+  "actual_resolver_observed": true,
+  "background_memories_enabled": false,
+  "baseline_drift_reported": true,
+  "completed_memory_preserved": true,
+  "establish": {
+    "exit_code": 0,
+    "seconds": 57.10432125,
+    "thread_id": "01a13bb1-a029-7750-ad59-2274003e302a",
+    "tool_items": 6,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 55040,
+        "input_tokens": 64186,
+        "output_tokens": 1518,
+        "reasoning_output_tokens": 0
+      }
+    ]
+  },
+  "establish_independent_checks_passed": true,
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "reference_preserved": true,
+  "resolver_request_had_no_file_path": true,
+  "resolver_request_had_no_task_id": true,
+  "response_completed": true,
+  "return": {
+    "exit_code": 0,
+    "seconds": 46.925627208,
+    "thread_id": "01a13bb1-a029-7750-ad59-2274003e302a",
+    "tool_items": 6,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 202240,
+        "input_tokens": 230670,
+        "output_tokens": 3283,
+        "reasoning_output_tokens": 27
+      }
+    ],
+    "agent_resolved_task": "work-17",
+    "agent_resolver_request": "Add another webhook handler for delivery events. Expose HandleWebhook(value any, service Transformer, observer Observer) (any,error). Keep our established layout and behavior. Add and run relevant tests."
+  },
+  "return_independent_checks_passed": true,
+  "saved_baseline_preserved": true,
+  "scope": "One real agent, shared conversation, recorded memory from producer, unrelated work, then a natural-language return without task ID or file path",
+  "status": "passed",
+  "switch": {
+    "exit_code": 0,
+    "seconds": 49.436274334,
+    "thread_id": "01a13bb1-a029-7750-ad59-2274003e302a",
+    "tool_items": 6,
+    "usage": [
+      {
+        "cache_write_input_tokens": 0,
+        "cached_input_tokens": 127360,
+        "input_tokens": 141973,
+        "output_tokens": 2564,
+        "reasoning_output_tokens": 0
+      }
+    ]
+  },
+  "unrelated_new_tasks": []
+}

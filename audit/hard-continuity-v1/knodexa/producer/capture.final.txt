@@ -1,0 +1,3 @@
+Recorded `work-prod` agreement v1 through `knodexa`, including the alias `production webhook delivery`, `handlers/` scope, hashed source reference, and raw delegation, observer, identity, and panic rules.
+
+`go test ./...` passed. Implementation and tests are unchanged; no extension was implemented.

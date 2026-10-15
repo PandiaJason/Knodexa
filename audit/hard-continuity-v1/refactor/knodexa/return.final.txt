@@ -1,0 +1,5 @@
+Added `HandleWebhook` and `HandlerContractVersion()` returning `"raw-v1"`. Tests cover delegation, identity, observer ordering, and panic propagation; `go test ./...` passes.
+
+The saved `handlers/reference.go`/`Handle` references are stale after the authorized refactor to `handlers/transport.go`/`DispatchProduction`. The original completed agreement and baseline remain unchanged.
+
+Extension memory capture was rejected because the inherited reference is missing. The separate [extension agreement](webhook-agreement.json) preserves the findings for review.
