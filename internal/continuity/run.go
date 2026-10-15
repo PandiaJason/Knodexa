@@ -1,15 +1,12 @@
 package continuity
 
 import (
-	stdcontext "context"
 	"encoding/json"
 	"fmt"
 	"knodexa/internal/approach"
 	"knodexa/internal/codegraph"
 	"knodexa/internal/identity"
 	"os"
-	"os/exec"
-	"strings"
 	"time"
 )
 
@@ -73,27 +70,8 @@ func (s *Service) Run(request identity.Request, budget int, options RunOptions) 
 		timeout = 5 * time.Minute
 	}
 	execute := func(args []string) bool {
-		ctx, cancel := stdcontext.WithTimeout(stdcontext.Background(), timeout)
-		defer cancel()
-		cmd := exec.CommandContext(ctx, args[0], args[1:]...)
-		cmd.Dir = s.store.RootDir()
-		cmd.Env = append(os.Environ(), "KNODEXA_CONTEXT_FILE="+file.Name())
-		var output cappedOutput
-		cmd.Stdout = &output
-		cmd.Stderr = &output
-		err := cmd.Run()
-		code := 0
-		if err != nil {
-			code = 1
-			if exit, ok := err.(*exec.ExitError); ok {
-				code = exit.ExitCode()
-			}
-		}
-		text := output.text.String()
-		if output.truncated {
-			text += "\n[output truncated]"
-		}
-		result.Commands = append(result.Commands, CommandOutcome{args, code, text})
+		outcome, err := executeCommand(s.store.RootDir(), args, append(os.Environ(), "KNODEXA_CONTEXT_FILE="+file.Name()), timeout)
+		result.Commands = append(result.Commands, outcome)
 		return err == nil
 	}
 	if !execute(options.Command) {
@@ -137,20 +115,4 @@ func (s *Service) Run(request identity.Request, budget int, options RunOptions) 
 	}
 	result.Captured = true
 	return result, nil
-}
-
-type cappedOutput struct {
-	text      strings.Builder
-	truncated bool
-}
-
-func (output *cappedOutput) Write(data []byte) (int, error) {
-	count := len(data)
-	remaining := 8192 - output.text.Len()
-	if count > remaining {
-		data = data[:remaining]
-		output.truncated = true
-	}
-	output.text.Write(data)
-	return count, nil
 }

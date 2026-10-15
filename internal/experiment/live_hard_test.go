@@ -274,6 +274,10 @@ func hardIndependentGrader() string {
 }
 
 func runHardCase(t *testing.T, base hardFixture, out, name string) hardResult {
+	return runHardCaseObserved(t, base, out, name, nil)
+}
+
+func runHardCaseObserved(t *testing.T, base hardFixture, out, name string, observe func(string, *hardResult)) hardResult {
 	t.Helper()
 	f := base
 	f.root = t.TempDir()
@@ -382,6 +386,9 @@ func runHardCase(t *testing.T, base hardFixture, out, name string) hardResult {
 				result.ExtensionCaptured = true
 			}
 		}
+	}
+	if observe != nil {
+		observe(f.root, &result)
 	}
 	filepath.WalkDir(filepath.Join(f.root, "handlers"), func(path string, entry os.DirEntry, err error) error {
 		if err != nil {

@@ -1,13 +1,11 @@
 package continuity
 
 import (
-	"context"
 	"fmt"
 	"knodexa/internal/approach"
 	"knodexa/internal/codegraph"
 	"knodexa/internal/identity"
 	"knodexa/internal/model"
-	"os/exec"
 	"strings"
 	"time"
 )
@@ -87,26 +85,8 @@ func (s *Service) Record(taskID string, input RecordInput, verify []string, time
 		return result, err
 	}
 	for _, command := range verify {
-		ctx, cancel := context.WithTimeout(context.Background(), timeout)
-		cmd := exec.CommandContext(ctx, "/bin/sh", "-c", command)
-		cmd.Dir = s.store.RootDir()
-		var output cappedOutput
-		cmd.Stdout = &output
-		cmd.Stderr = &output
-		err := cmd.Run()
-		cancel()
-		code := 0
-		if err != nil {
-			code = 1
-			if exit, ok := err.(*exec.ExitError); ok {
-				code = exit.ExitCode()
-			}
-		}
-		text := output.text.String()
-		if output.truncated {
-			text += "\n[output truncated]"
-		}
-		result.Verification = append(result.Verification, CommandOutcome{Command: []string{"/bin/sh", "-c", command}, ExitCode: code, Output: text})
+		outcome, err := executeCommand(s.store.RootDir(), []string{"/bin/sh", "-c", command}, nil, timeout)
+		result.Verification = append(result.Verification, outcome)
 		if err != nil {
 			return result, fmt.Errorf("verification failed; memory unchanged")
 		}

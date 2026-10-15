@@ -1,12 +1,10 @@
 package continuity
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"knodexa/internal/approach"
 	"knodexa/internal/model"
-	"os/exec"
 	"reflect"
 	"time"
 )
@@ -79,25 +77,8 @@ func (s *Service) runBehaviorChecks(contracts []approach.Contract, timeout time.
 				continue
 			}
 			seen[string(key)] = true
-			ctx, cancel := context.WithTimeout(context.Background(), timeout)
-			cmd := exec.CommandContext(ctx, "/bin/sh", "-c", check.Command)
-			cmd.Dir = s.store.RootDir()
-			var output cappedOutput
-			cmd.Stdout, cmd.Stderr = &output, &output
-			err := cmd.Run()
-			cancel()
-			code := 0
-			if err != nil {
-				code = 1
-				if exit, ok := err.(*exec.ExitError); ok {
-					code = exit.ExitCode()
-				}
-			}
-			text := output.text.String()
-			if output.truncated {
-				text += "\n[output truncated]"
-			}
-			results = append(results, BehaviorOutcome{contract.SourceTask, check.Name, CommandOutcome{[]string{"/bin/sh", "-c", check.Command}, code, text}})
+			outcome, err := executeCommand(s.store.RootDir(), []string{"/bin/sh", "-c", check.Command}, nil, timeout)
+			results = append(results, BehaviorOutcome{contract.SourceTask, check.Name, outcome})
 			if err != nil {
 				return results, fmt.Errorf("behavior check %s from %s failed; memory unchanged", check.Name, contract.SourceTask)
 			}
